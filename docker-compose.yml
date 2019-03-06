@@ -1,0 +1,98 @@
+version: '2'
+
+services:
+
+    php-fpm:
+      build: .docker/php-fpm
+      volumes_from:
+          - source
+      volumes:
+          - ~/.ssh:/root/.ssh:rw
+          - ~/.ssh:/var/www/.ssh:rw
+      links:
+          - mysql
+          - mail
+          - elasticsearch
+          #- elasticsearch_new
+      networks:
+          - bitrix
+      restart: always
+
+
+    nginx:
+        build: ./.docker/nginx
+        container_name: search_nginx
+        depends_on:
+            - source
+        volumes_from:
+            - source
+        ports:
+            - '${INTERFACE}:8080:80'
+        links:
+            - php-fpm
+        networks:
+            bitrix:
+              ipv4_address: 10.100.2.11
+        restart: always
+    mysql:
+        build: ./.docker/mysql
+        container_name: search_mysql
+        volumes_from:
+            - source
+        ports:
+            - '${INTERFACE}:3308:3307'
+        environment:
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+        networks:
+            - bitrix
+        restart: always
+    mail:
+        image: mailhog/mailhog
+        container_name: search_mail
+        ports:
+            - '${INTERFACE}:8026:8025'
+        networks:
+            - bitrix
+    elasticsearch:
+        image: elasticsearch:1.7
+        container_name: search_elasticserach
+        ports:
+            - '${INTERFACE}:9200:9200'
+            - '${INTERFACE}:9300:9300'
+        networks:
+            bitrix:
+              ipv4_address: 10.100.2.15
+        restart: always
+
+    #elasticsearch_new:
+    #        image: elasticsearch:6.5.4
+    #        container_name: search_elasticsearch_new
+    #        ports:
+    #            - '${INTERFACE}:9201:9200'
+    #            - '${INTERFACE}:9301:9300'
+    #       networks:
+    #            bitrix:
+    #              ipv4_address: 10.100.2.16
+    #        restart: always
+    source:
+        image: alpine:latest
+        container_name: search_source
+        volumes:
+            - ./.docker/logs/nginx:/var/log/nginx
+            - ./.docker/logs/php:/var/log/php
+            - ./.docker/logs/mysql:/var/log/mysql
+            - ./.docker/data/mysql:/var/lib/mysql
+            - .:/var/www:rw
+            #- /etc/localtime:/etc/localtime/:ro
+        networks:
+            - bitrix
+networks:
+    bitrix:
+        driver: bridge
+        ipam:
+            driver: default
+            config:
+                - subnet: 10.100.2.0/24
