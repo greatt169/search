@@ -27,12 +27,12 @@ services:
         volumes_from:
             - source
         ports:
-            - '${INTERFACE}:8080:80'
+            - '${INTERFACE}:83:80'
         links:
             - php-fpm
         networks:
             bitrix:
-              ipv4_address: 10.100.2.11
+              ipv4_address: 10.100.2.12
         restart: always
     mysql:
         build: ./.docker/mysql

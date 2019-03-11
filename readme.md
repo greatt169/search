@@ -7,8 +7,6 @@
 
 # Использование команд
 * docker-compose exec -u 1000 php-fpm php ./vendor/bin/jedi
-* ./scripts/codegen.sh - формирование SwaggerClient
-* ./scripts/wiremock.sh - запуск сервера wiremock
 
 # Подключение к БД
 * Требуется прописать доступы к БД в settings битрикса. Хост БД будет "mysql"
