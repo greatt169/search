@@ -1,0 +1,1 @@
+2019/04/27 09:06:15 [error] 8#8: *18 directory index of "/var/www/public/" is forbidden, client: 10.100.2.1, server: bitrix, request: "GET / HTTP/1.1", host: "localhost:83"

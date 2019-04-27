@@ -1,0 +1,1 @@
+<? $filesInfo = array( 'FILES' => array("/bitrix/components/bitrix/socserv.auth.form/templates/flat/style.css" => "15348437472462",)); ?>
