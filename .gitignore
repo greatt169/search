@@ -1,1 +1,7 @@
 vendor/
+.docker/data
+.composer
+public/bitrix/cache
+public/bitrix/managed_cache
+public/bitrix/stack_cache
+.docker/logs

@@ -7,6 +7,12 @@
  * @author   Taylor Otwell <taylor@laravel.com>
  */
 
+/**
+ * Require bitrix
+ */
+
+include($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php");
+
 /*
 |--------------------------------------------------------------------------
 | Register The Auto Loader
