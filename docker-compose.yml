@@ -2,45 +2,44 @@ version: '2'
 
 services:
 
-    php-fpm:
-      build: .docker/php-fpm
-      volumes_from:
-          - source
-      volumes:
-          - ~/.ssh:/root/.ssh:rw
-          - ~/.ssh:/var/www/.ssh:rw
-      links:
-          - mysql
-          - mail
-          - elasticsearch
-          #- elasticsearch_new
-      networks:
+  php-fpm:
+    build: .docker/php-fpm
+    volumes_from:
+      - source
+    volumes:
+      - ~/.ssh:/root/.ssh:rw
+      - ~/.ssh:/var/www/.ssh:rw
+    links:
+      - mysql
+      - mail
+      - elasticsearch
+      #- elastic${DOCKER_PROJECT_PREFIX}new
+    networks:
           - bitrix
-      restart: always
+    restart: always
 
-
-    nginx:
+  nginx:
         build: ./.docker/nginx
-        container_name: search_nginx
+        container_name: ${DOCKER_PROJECT_PREFIX}nginx
         depends_on:
             - source
         volumes_from:
             - source
         ports:
-            - '${INTERFACE}:83:80'
+            - '${INTERFACE}:${DOCKER_NGINX_PORT}:80'
         links:
             - php-fpm
         networks:
             bitrix:
-              ipv4_address: 10.100.2.12
+               ipv4_address: ${DOCKER_NETWORK_IP}
         restart: always
-    mysql:
+  mysql:
         build: ./.docker/mysql
-        container_name: search_mysql
+        container_name: ${DOCKER_PROJECT_PREFIX}mysql
         volumes_from:
             - source
         ports:
-            - '${INTERFACE}:3308:3307'
+            - '${INTERFACE}:${DOCKER_MYSQL_PORT}:3307'
         environment:
             MYSQL_DATABASE: ${MYSQL_DATABASE}
             MYSQL_USER: ${MYSQL_USER}
@@ -49,37 +48,27 @@ services:
         networks:
             - bitrix
         restart: always
-    mail:
-        image: mailhog/mailhog
-        container_name: search_mail
-        ports:
-            - '${INTERFACE}:8026:8025'
-        networks:
-            - bitrix
-    elasticsearch:
-        image: elasticsearch:1.7
-        container_name: search_elasticserach
-        ports:
-            - '${INTERFACE}:9200:9200'
-            - '${INTERFACE}:9300:9300'
-        networks:
-            bitrix:
-              ipv4_address: 10.100.2.15
-        restart: always
+  mail:
+    image: mailhog/mailhog
+    container_name: ${DOCKER_PROJECT_PREFIX}mail
+    ports:
+        - '${INTERFACE}:${DOCKER_MAIL_PORT}:8025'
+    networks:
+        - bitrix
 
-    #elasticsearch_new:
-    #        image: elasticsearch:6.5.4
-    #        container_name: search_elasticsearch_new
-    #        ports:
-    #            - '${INTERFACE}:9201:9200'
-    #            - '${INTERFACE}:9301:9300'
-    #       networks:
-    #            bitrix:
-    #              ipv4_address: 10.100.2.16
-    #        restart: always
-    source:
+  elasticsearch:
+      image: elasticsearch:6.5.4
+      container_name: ${DOCKER_PROJECT_PREFIX}elasticsearch
+      ports:
+        - '${INTERFACE}:${DOCKER_ELASTICSEARCH_PORT_1}:9200'
+        - '${INTERFACE}:${DOCKER_ELASTICSEARCH_PORT_2}:9300'
+      networks:
+        bitrix:
+          ipv4_address: ${DOCKER_ELASTICSEARCH_IP}
+      restart: always
+  source:
         image: alpine:latest
-        container_name: search_source
+        container_name: ${DOCKER_PROJECT_PREFIX}source
         volumes:
             - ./.docker/logs/nginx:/var/log/nginx
             - ./.docker/logs/php:/var/log/php
@@ -95,4 +84,4 @@ networks:
         ipam:
             driver: default
             config:
-                - subnet: 10.100.2.0/24
+                - subnet: ${DOCKER_NETWORK_SUBNET}
