@@ -13,3 +13,13 @@ php artisan key:generate
 exit
 php artisan config:cache
 exit
+php artisan 
+phpunit
+php phpunit
+./vendor/bin/phpunit 
+./vendor/bin/phpunit 
+./vendor/bin/phpunit 
+./vendor/bin/phpunit 
+./vendor/bin/phpunit 
+./vendor/bin/phpunit 
+exit
