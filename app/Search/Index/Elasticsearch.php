@@ -39,4 +39,9 @@ class Elasticsearch implements IndexInterface
     {
         // TODO: Implement prepareElementsForIndexing() method.
     }
+
+    public function gerElementsForIndexing()
+    {
+        // TODO: Implement gerElementsForIndexing() method.
+    }
 }

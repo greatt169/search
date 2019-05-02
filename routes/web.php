@@ -11,6 +11,9 @@
 |
 */
 
-Route::get('/', function () {
-    return 'Search Module development page';
+Route::group([
+    'namespace' => 'Search',
+], function () {
+    Route::get('/', 'IndexController@index')->name('home');
 });
+

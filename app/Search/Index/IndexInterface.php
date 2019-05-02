@@ -16,5 +16,7 @@ interface IndexInterface
 
     public function indexElement($id);
 
+    public function gerElementsForIndexing();
+
     public function prepareElementsForIndexing($filter = null);
 }
