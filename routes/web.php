@@ -12,5 +12,5 @@
 */
 
 Route::get('/', function () {
-    return 'ElasticSearch Module development page';
+    return 'Search Module development page';
 });

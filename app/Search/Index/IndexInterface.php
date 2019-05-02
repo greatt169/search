@@ -4,17 +4,17 @@ namespace App\Search\Index;
 
 interface IndexInterface
 {
-    public function createIndex();
+    public function createIndex($index);
 
-    public function dropIndex();
+    public function dropIndex($index);
 
-    public function indexAll();
+    public function indexAll($index);
 
-    public function removeAll();
+    public function removeAll($index);
 
-    public function getElements();
+    public function indexElements($filter = null);
 
-    public function getElement();
+    public function indexElement($id);
 
-    public function prepareElementsForIndexing();
+    public function prepareElementsForIndexing($filter = null);
 }
