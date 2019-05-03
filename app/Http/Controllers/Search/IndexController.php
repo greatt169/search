@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Search;
 
 use App\Http\Controllers\Controller;
-use App\Search\Dto\Index\Document;
-use App\Search\Dto\Index\DocumentAttribute;
+use App\Search\Entity\Index\Document;
+use App\Search\Entity\Index\DocumentAttribute;
 
 class IndexController extends Controller
 {

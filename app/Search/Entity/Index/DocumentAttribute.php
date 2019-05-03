@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Search\Dto\Index;
+namespace App\Search\Entity\Index;
 
 class DocumentAttribute
 {
