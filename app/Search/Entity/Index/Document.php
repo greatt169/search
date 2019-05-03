@@ -2,7 +2,9 @@
 
 namespace App\Search\Entity\Index;
 
-class Document
+use App\Search\Interfaces\Index\DocumentInterface;
+
+class Document implements  DocumentInterface
 {
     /**
      * @var integer

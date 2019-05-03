@@ -3,37 +3,46 @@
 namespace App\Http\Controllers\Search;
 
 use App\Http\Controllers\Controller;
-use App\Search\Entity\Index\Document;
-use App\Search\Entity\Index\DocumentAttribute;
+use App\Search\Index\Indexer;
 
 class IndexController extends Controller
 {
     public function index()
     {
+        $indexer = new Indexer();
         $data = include_once('data.php');
-        $objects = [];
         foreach ($data as $dataItem) {
-            $dto = new Document();
-            $dto->id = $dataItem['id'];
-
-            $color = new DocumentAttribute();
-            $color->code = 'colors';
-            $color->multiple = true;
-            $color->type = 'string';
-            $color->value = $dataItem['colors'];
-
-            $price = new DocumentAttribute();
-            $price->code = 'price';
-            $price->multiple = false;
-            $price->type = 'float';
-            $price->value = $dataItem['price'];
-
-            $dto->attributes[] = $color;
-            $dto->attributes[] = $price;
-
-            $objects[] = $dto;
+            $source = [
+                'id' => $dataItem['id'],
+                'attributes' => [
+                    [
+                        'code' => 'model',
+                        'type' => 'string',
+                        'multiple' => false,
+                        'value' => $dataItem['model']
+                    ],
+                    [
+                        'code' => 'colors',
+                        'type' => 'string',
+                        'multiple' => true,
+                        'value' => $dataItem['colors']
+                    ],
+                    [
+                        'code' => 'year',
+                        'type' => 'integer',
+                        'multiple' => false,
+                        'value' => $dataItem['year']
+                    ],
+                    [
+                        'code' => 'price',
+                        'type' => 'float',
+                        'multiple' => false,
+                        'value' => $dataItem['price']
+                    ]
+                ]
+            ];
+            $indexObject = $indexer->buildIndexObject($source);
         }
-        $objects = collect($objects);
-        dd($objects);
+        dd($indexObject);
     }
 }
