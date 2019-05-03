@@ -16,24 +16,32 @@ class IndexController extends Controller
                 'id' => $dataItem['id'],
                 'attributes' => [
                     [
+                        'in_query' => true,
+                        'in_body' => true,
                         'code' => 'model',
                         'type' => 'string',
                         'multiple' => false,
-                        'value' => $dataItem['model']
+                        'value' => $dataItem['model'],
                     ],
                     [
+                        'in_query' => true,
+                        'in_body' => true,
                         'code' => 'colors',
                         'type' => 'string',
                         'multiple' => true,
                         'value' => $dataItem['colors']
                     ],
                     [
+                        'in_query' => true,
+                        'in_body' => true,
                         'code' => 'year',
                         'type' => 'integer',
                         'multiple' => false,
                         'value' => $dataItem['year']
                     ],
                     [
+                        'in_query' => true,
+                        'in_body' => true,
                         'code' => 'price',
                         'type' => 'float',
                         'multiple' => false,

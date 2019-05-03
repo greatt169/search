@@ -18,11 +18,7 @@ class Indexer
         $document->id = $source['id'];
         $attributes = [];
         foreach ($source['attributes'] as $attribute) {
-            $documentAttribute = new DocumentAttribute();
-            $documentAttribute->code = $attribute['code'];
-            $documentAttribute->type = $attribute['type'];
-            $documentAttribute->multiple = $attribute['multiple'];
-            $documentAttribute->value = $attribute['value'];
+            $documentAttribute = new DocumentAttribute($attribute);
             $attributes[] = $documentAttribute;
         }
         $document->attributes = $attributes;
