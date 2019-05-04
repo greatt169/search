@@ -46,6 +46,14 @@ class IndexController extends Controller
                         'type' => 'float',
                         'multiple' => false,
                         'value' => $dataItem['price']
+                    ],
+                    [
+                        'in_query' => false,
+                        'in_body' => true,
+                        'code' => 'model_logo',
+                        'type' => 'string',
+                        'multiple' => false,
+                        'value' => $dataItem['model_logo']
                     ]
                 ]
             ];
