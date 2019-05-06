@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Search;
 
 use App\Http\Controllers\Controller;
 
-use App\Search\Entity\Index\Document;
-use App\Search\Index\Elasticsearch;
+use App\Search\Index\Entity\Document;
+use App\Search\Index\Manager\Elasticsearch;
 class IndexController extends Controller
 {
     public function index()

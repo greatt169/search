@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Search\Entity\Index;
+namespace App\Search\Index\Entity;
 
-use App\Search\Interfaces\Index\DocumentAttributeInterface;
+use App\Search\Index\Interfaces\DocumentAttributeInterface;
 
 class DocumentAttribute implements DocumentAttributeInterface
 {

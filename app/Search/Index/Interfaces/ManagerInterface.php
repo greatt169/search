@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Search\Index;
+namespace App\Search\Index\Interfaces;
 
-interface IndexInterface
+interface ManagerInterface
 {
     public function createIndex($index);
 
@@ -15,8 +15,6 @@ interface IndexInterface
     public function indexElements($filter = null);
 
     public function indexElement($id);
-
-    public function gerElementsForIndexing();
 
     public function prepareElementsForIndexing($filter = null);
 }

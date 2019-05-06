@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Search\Interfaces\Index;
+namespace App\Search\Index\Interfaces;
 
 /**
  * Interface DocumentAttributeInterface
