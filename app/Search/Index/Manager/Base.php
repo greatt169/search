@@ -5,24 +5,31 @@ namespace App\Search\Index\Manager;
 use App\Search\Index\Entity\DocumentAttribute;
 use App\Search\Index\Interfaces\DocumentInterface;
 use App\Search\Index\Interfaces\ManagerInterface;
+use App\Search\Index\Interfaces\SourceInterface;
 
 abstract class Base implements ManagerInterface
 {
+    /**
+     * @var SourceInterface $source
+     */
+    private $source;
+
     /**
      * @var DocumentInterface $document
      */
     private $document;
 
-    public function __construct(DocumentInterface $document)
+    public function __construct(DocumentInterface $document, SourceInterface $source)
     {
         $this->document = $document;
+        $this->source = $source;
     }
 
     /**
      * @param array $source
      * @return DocumentInterface
      */
-    public function buildIndexObject(array $source)
+    protected function buildIndexObject(array $source)
     {
         $this->document->id = $source['id'];
         $attributes = [];
@@ -34,17 +41,14 @@ abstract class Base implements ManagerInterface
         return $this->document;
     }
 
-    abstract public function createIndex($index);
+    public function buildIndexObjects()
+    {
+        $builObjects = [];
+        $sourceObjects = $this->source->getElementsForIndexing();
+        foreach ($sourceObjects as $source) {
+            $builObjects[] = $this->buildIndexObject($source);
+        }
 
-    abstract function dropIndex($index);
-
-    abstract public function indexAll($index);
-
-    abstract public function removeAll($index);
-
-    abstract public function indexElements($filter = null);
-
-    abstract public function indexElement($id);
-
-    abstract public function prepareElementsForIndexing($filter = null);
+        return $builObjects;
+    }
 }

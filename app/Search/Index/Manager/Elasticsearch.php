@@ -4,7 +4,6 @@ namespace App\Search\Index\Manager;
 
 class Elasticsearch extends Base
 {
-
     public function createIndex($index)
     {
         // TODO: Implement createIndex() method.
