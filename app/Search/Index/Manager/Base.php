@@ -6,7 +6,7 @@ use App\Search\Index\Entity\DocumentAttribute;
 use App\Search\Index\Interfaces\DocumentInterface;
 use App\Search\Index\Interfaces\ManagerInterface;
 
-class Base implements ManagerInterface
+abstract class Base implements ManagerInterface
 {
     /**
      * @var DocumentInterface $document
@@ -24,7 +24,6 @@ class Base implements ManagerInterface
      */
     public function buildIndexObject(array $source)
     {
-
         $this->document->id = $source['id'];
         $attributes = [];
         foreach ($source['attributes'] as $attribute) {
@@ -35,38 +34,17 @@ class Base implements ManagerInterface
         return $this->document;
     }
 
-    public function createIndex($index)
-    {
-        // TODO: Implement createIndex() method.
-    }
+    abstract public function createIndex($index);
 
-    public function dropIndex($index)
-    {
-        // TODO: Implement dropIndex() method.
-    }
+    abstract function dropIndex($index);
 
-    public function indexAll($index)
-    {
-        // TODO: Implement indexAll() method.
-    }
+    abstract public function indexAll($index);
 
-    public function removeAll($index)
-    {
-        // TODO: Implement removeAll() method.
-    }
+    abstract public function removeAll($index);
 
-    public function indexElements($filter = null)
-    {
-        // TODO: Implement indexElements() method.
-    }
+    abstract public function indexElements($filter = null);
 
-    public function indexElement($id)
-    {
-        // TODO: Implement indexElement() method.
-    }
+    abstract public function indexElement($id);
 
-    public function prepareElementsForIndexing($filter = null)
-    {
-        // TODO: Implement prepareElementsForIndexing() method.
-    }
+    abstract public function prepareElementsForIndexing($filter = null);
 }
