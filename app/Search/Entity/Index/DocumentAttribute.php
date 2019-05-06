@@ -2,7 +2,9 @@
 
 namespace App\Search\Entity\Index;
 
-class DocumentAttribute
+use App\Search\Interfaces\Index\DocumentAttributeInterface;
+
+class DocumentAttribute implements DocumentAttributeInterface
 {
     /**
      * @var bool

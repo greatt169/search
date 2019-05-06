@@ -3,13 +3,17 @@
 namespace App\Http\Controllers\Search;
 
 use App\Http\Controllers\Controller;
-use App\Search\Index\Indexer;
 
+use App\Search\Entity\Index\Document;
+use App\Search\Index\Elasticsearch;
 class IndexController extends Controller
 {
     public function index()
     {
-        $indexer = new Indexer();
+        $indexer = new Elasticsearch(
+            new Document()
+        );
+
         $data = include_once('data.php');
         foreach ($data as $dataItem) {
             $source = [

@@ -2,7 +2,7 @@
 
 namespace App\Search\Index;
 
-class Elasticsearch implements IndexInterface
+class Elasticsearch extends Indexer implements IndexInterface
 {
 
     public function createIndex($index)
