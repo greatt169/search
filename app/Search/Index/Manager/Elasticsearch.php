@@ -19,6 +19,11 @@ class Elasticsearch extends Base
      */
     protected $index;
 
+    /**
+     * @var string
+     */
+    protected $type;
+
     protected function getIndexParams()
     {
         $params = [
@@ -32,6 +37,7 @@ class Elasticsearch extends Base
         parent::__construct($document, $source);
         $this->client = ClientBuilder::create()->setHosts($this->getHosts())->build();
         $this->index = $this->source->getIndexName();
+        $this->type = $this->source->getTypeName();
     }
 
     protected function getHosts()
@@ -52,17 +58,16 @@ class Elasticsearch extends Base
 
     public function indexAll()
     {
-        // TODO: Implement indexAll() method.
+        $prepared = $this->prepareElementsForIndexing();
+        foreach ($prepared as $item) {
+            $this->client->index($item);
+        }
     }
 
     public function removeAll()
     {
-        $this->client->delete(['index' => $this->index]);
-    }
-
-    public function indexElements($filter = null)
-    {
-        // TODO: Implement indexElements() method.
+        $this->dropIndex();
+        $this->createIndex();
     }
 
     public function indexElement($id)
@@ -72,9 +77,17 @@ class Elasticsearch extends Base
 
     public function prepareElementsForIndexing()
     {
-        dd($this->documents);
+        $arPreparedElements = [];
         foreach ($this->documents as $document) {
-
+            $arPreparedElements[] = [
+                'index' => $this->index,
+                'type' => $this->type,
+                'id' => $document->id,
+                'body' => [
+                    'testField' => 'abc'
+                ]
+            ];
         }
+        return $arPreparedElements;
     }
 }

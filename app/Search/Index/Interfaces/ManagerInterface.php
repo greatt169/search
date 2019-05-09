@@ -12,8 +12,6 @@ interface ManagerInterface
 
     public function removeAll();
 
-    public function indexElements($filter = null);
-
     public function indexElement($id);
 
     public function prepareElementsForIndexing();
