@@ -57,7 +57,7 @@ class Elasticsearch extends Base
 
     public function removeAll()
     {
-        // TODO: Implement removeAll() method.
+        $this->client->delete(['index' => $this->index]);
     }
 
     public function indexElements($filter = null)

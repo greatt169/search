@@ -20,5 +20,7 @@ class IndexController extends Controller
         $indexer->createIndex();
         $indexer->buildIndexObjects();
         $indexer->prepareElementsForIndexing();
+        $indexer->indexAll();
+        $indexer->removeAll();
     }
 }
