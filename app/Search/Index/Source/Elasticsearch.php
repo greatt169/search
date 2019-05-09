@@ -6,6 +6,8 @@ use App\Search\Index\Interfaces\SourceInterface;
 
 class Elasticsearch implements SourceInterface
 {
+    protected $indexName = 'auto';
+
     public function getAttributesMapping()
     {
         $mapping = [
@@ -67,5 +69,13 @@ class Elasticsearch implements SourceInterface
         }
 
         return $objects;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIndexName()
+    {
+        return $this->indexName;
     }
 }

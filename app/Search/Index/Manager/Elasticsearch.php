@@ -2,24 +2,60 @@
 
 namespace App\Search\Index\Manager;
 
+use App\Search\Index\Interfaces\DocumentInterface;
+use App\Search\Index\Interfaces\SourceInterface;
+use Elasticsearch\Client;
+use Elasticsearch\ClientBuilder;
+
 class Elasticsearch extends Base
 {
-    public function createIndex($index)
+    /**
+     * @var Client
+     */
+    protected $client;
+
+    /**
+     * @var string
+     */
+    protected $index;
+
+    protected function getIndexParams()
     {
-        // TODO: Implement createIndex() method.
+        $params = [
+            'index' => $this->index
+        ];
+        return $params;
     }
 
-    function dropIndex($index)
+    public function __construct(DocumentInterface $document, SourceInterface $source)
     {
-        // TODO: Implement dropIndex() method.
+        parent::__construct($document, $source);
+        $this->client = ClientBuilder::create()->setHosts($this->getHosts())->build();
+        $this->index = $this->source->getIndexName();
     }
 
-    public function indexAll($index)
+    protected function getHosts()
+    {
+        $hosts = explode(',', config('search.index.elasticsearch.hosts'));
+        return $hosts;
+    }
+
+    public function createIndex()
+    {
+        $this->client->indices()->create($this->getIndexParams());
+    }
+
+    function dropIndex()
+    {
+        $this->client->indices()->delete($this->getIndexParams());
+    }
+
+    public function indexAll()
     {
         // TODO: Implement indexAll() method.
     }
 
-    public function removeAll($index)
+    public function removeAll()
     {
         // TODO: Implement removeAll() method.
     }

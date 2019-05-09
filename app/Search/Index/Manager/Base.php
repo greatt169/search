@@ -12,7 +12,7 @@ abstract class Base implements ManagerInterface
     /**
      * @var SourceInterface $source
      */
-    private $source;
+    protected $source;
 
     /**
      * @var DocumentInterface $document

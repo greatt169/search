@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'hosts' => 'elasticsearch:9200',
-    'prefix' => 'docker_'
+    'hosts' => env('ELASTICSEARCH_HOSTS'),
+    'prefix' => env('ELASTICSEARCH_PREFIX')
 ];

@@ -4,13 +4,13 @@ namespace App\Search\Index\Interfaces;
 
 interface ManagerInterface
 {
-    public function createIndex($index);
+    public function createIndex();
 
-    public function dropIndex($index);
+    public function dropIndex();
 
-    public function indexAll($index);
+    public function indexAll();
 
-    public function removeAll($index);
+    public function removeAll();
 
     public function indexElements($filter = null);
 
