@@ -17,7 +17,7 @@ class IndexController extends Controller
             new ElasticsearchSource()
         );
 
-        $objectsForIndexing = $indexer->buildIndexObjects();
-        dd($objectsForIndexing);
+        $indexer->buildIndexObjects();
+        $indexer->prepareElementsForIndexing();
     }
 }

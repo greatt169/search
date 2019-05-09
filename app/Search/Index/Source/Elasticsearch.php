@@ -6,57 +6,63 @@ use App\Search\Index\Interfaces\SourceInterface;
 
 class Elasticsearch implements SourceInterface
 {
+    public function getAttributesMapping()
+    {
+        $mapping = [
+            'model' => [
+                'in_query' => true,
+                'in_body' => true,
+                'type' => 'string',
+                'multiple' => false,
+            ],
+            'colors' => [
+                'in_query' => true,
+                'in_body' => true,
+                'type' => 'string',
+                'multiple' => true,
+            ],
+            'year' => [
+                'in_query' => true,
+                'in_body' => true,
+                'type' => 'integer',
+                'multiple' => false,
+            ],
+            'price' => [
+                'in_query' => true,
+                'in_body' => true,
+                'type' => 'float',
+                'multiple' => false,
+            ],
+            'model_logo' => [
+                'in_query' => false,
+                'in_body' => true,
+                'type' => 'string',
+                'multiple' => false,
+            ]
+        ];
+        return $mapping;
+    }
+
 
     public function getElementsForIndexing()
     {
         $data = include_once('data.php');
         $objects = [];
+        $mapping = $this->getAttributesMapping();
+
         foreach ($data as $dataItem) {
-            $source = [
-                'id' => $dataItem['id'],
-                'attributes' => [
-                    [
-                        'in_query' => true,
-                        'in_body' => true,
-                        'code' => 'model',
-                        'type' => 'string',
-                        'multiple' => false,
-                        'value' => $dataItem['model'],
-                    ],
-                    [
-                        'in_query' => true,
-                        'in_body' => true,
-                        'code' => 'colors',
-                        'type' => 'string',
-                        'multiple' => true,
-                        'value' => $dataItem['colors']
-                    ],
-                    [
-                        'in_query' => true,
-                        'in_body' => true,
-                        'code' => 'year',
-                        'type' => 'integer',
-                        'multiple' => false,
-                        'value' => $dataItem['year']
-                    ],
-                    [
-                        'in_query' => true,
-                        'in_body' => true,
-                        'code' => 'price',
-                        'type' => 'float',
-                        'multiple' => false,
-                        'value' => $dataItem['price']
-                    ],
-                    [
-                        'in_query' => false,
-                        'in_body' => true,
-                        'code' => 'model_logo',
-                        'type' => 'string',
-                        'multiple' => false,
-                        'value' => $dataItem['model_logo']
-                    ]
-                ]
-            ];
+            $source = [];
+            $sourceAttributes = [];
+            $source['id'] = $dataItem['id'];
+            foreach ($mapping as $code => $mappingItem) {
+                $sourceAttribute = $mappingItem;
+
+                $sourceAttribute['code'] = $code;
+                $sourceAttribute['value'] = $dataItem[$code];
+
+                $sourceAttributes[] = $sourceAttribute;
+            }
+            $source['attributes'] = $sourceAttributes;
             $objects[] = $source;
         }
 

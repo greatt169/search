@@ -16,5 +16,5 @@ interface ManagerInterface
 
     public function indexElement($id);
 
-    public function prepareElementsForIndexing($filter = null);
+    public function prepareElementsForIndexing();
 }

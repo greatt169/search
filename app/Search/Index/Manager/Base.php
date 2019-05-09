@@ -19,6 +19,11 @@ abstract class Base implements ManagerInterface
      */
     private $document;
 
+    /**
+     * @var DocumentInterface[] $documents
+     */
+    protected $documents;
+
     public function __construct(DocumentInterface $document, SourceInterface $source)
     {
         $this->document = $document;
@@ -48,7 +53,6 @@ abstract class Base implements ManagerInterface
         foreach ($sourceObjects as $source) {
             $builObjects[] = $this->buildIndexObject($source);
         }
-
-        return $builObjects;
+        $this->documents = $builObjects;
     }
 }

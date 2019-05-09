@@ -34,8 +34,11 @@ class Elasticsearch extends Base
         // TODO: Implement indexElement() method.
     }
 
-    public function prepareElementsForIndexing($filter = null)
+    public function prepareElementsForIndexing()
     {
-        // TODO: Implement prepareElementsForIndexing() method.
+        dd($this->documents);
+        foreach ($this->documents as $document) {
+
+        }
     }
 }
