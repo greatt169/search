@@ -57,7 +57,7 @@ services:
         - bitrix
 
   elasticsearch:
-      image: elasticsearch:6.5.4
+      image: elasticsearch:6.7.1
       container_name: ${DOCKER_PROJECT_PREFIX}elasticsearch
       ports:
         - '${INTERFACE}:${DOCKER_ELASTICSEARCH_PORT_1}:9200'
