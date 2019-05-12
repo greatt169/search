@@ -49,4 +49,20 @@ class DocumentAttribute implements DocumentAttributeInterface
         $this->inQuery = $sourceAttribute['in_query'];
         $this->inBody = $sourceAttribute['in_body'];
     }
+
+    /**
+     * @return string
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * @return array|float|int|string
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
 }

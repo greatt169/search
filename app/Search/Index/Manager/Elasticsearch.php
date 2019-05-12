@@ -2,6 +2,7 @@
 
 namespace App\Search\Index\Manager;
 
+use App\Search\Index\Interfaces\DocumentAttributeInterface;
 use App\Search\Index\Interfaces\DocumentInterface;
 use App\Search\Index\Interfaces\SourceInterface;
 use Elasticsearch\Client;
@@ -79,15 +80,45 @@ class Elasticsearch extends Base
     {
         $arPreparedElements = [];
         foreach ($this->documents as $document) {
-            $arPreparedElements[] = [
+            $arDocAttributes = [];
+            foreach ($document->getAttributes() as $attributeObject) {
+                /**
+                 * @var DocumentAttributeInterface $attributeObject
+                 */
+                $arDocAttributes[$attributeObject->getCode()] = $attributeObject->getValue();
+            }
+            $arDoc = [
                 'index' => $this->index,
                 'type' => $this->type,
-                'id' => $document->id,
-                'body' => [
-                    'testField' => 'abc'
-                ]
+                'id' => $document->getId(),
+                'body' => $arDocAttributes
             ];
+            $arPreparedElements[] = $arDoc;
         }
         return $arPreparedElements;
+    }
+
+    /**
+     * @return Client
+     */
+    public function getClient()
+    {
+        return $this->client;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIndex()
+    {
+        return $this->index;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 }

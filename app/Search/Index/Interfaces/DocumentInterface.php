@@ -11,5 +11,7 @@ namespace App\Search\Index\Interfaces;
  */
 interface DocumentInterface
 {
+    public function getId();
 
+    public function getAttributes();
 }

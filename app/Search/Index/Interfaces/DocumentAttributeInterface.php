@@ -15,5 +15,6 @@ namespace App\Search\Index\Interfaces;
  */
 interface DocumentAttributeInterface
 {
-
+    public function getCode();
+    public function getValue();
 }

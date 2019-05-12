@@ -21,6 +21,17 @@ class IndexController extends Controller
         $indexer->buildIndexObjects();
         $indexer->prepareElementsForIndexing();
         $indexer->indexAll();
-        $indexer->removeAll();
+        //$indexer->removeAll();
+
+        $client = $indexer->getClient();
+
+        $params = [
+            'index' => $indexer->getIndex(),
+            'type' => $indexer->getType(),
+            'id' => 3
+        ];
+
+        $results = $client->get($params);
+        dd($results);
     }
 }

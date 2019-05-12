@@ -16,4 +16,20 @@ class Document implements  DocumentInterface
      * @var DocumentAttributeInterface[]
      */
     public $attributes;
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return DocumentAttributeInterface[]
+     */
+    public function getAttributes()
+    {
+        return $this->attributes;
+    }
 }
