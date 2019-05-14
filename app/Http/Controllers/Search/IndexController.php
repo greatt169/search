@@ -13,11 +13,10 @@ class IndexController extends Controller
     public function index()
     {
         $indexer = new Elasticsearch(
-            new Document(),
             new ElasticsearchSource()
         );
-        $indexer->dropIndex();
-        $indexer->createIndex();
+        //$indexer->dropIndex();
+        //$indexer->createIndex();
         $indexer->buildIndexObjects();
         $indexer->prepareElementsForIndexing();
         $indexer->indexAll();
@@ -28,10 +27,32 @@ class IndexController extends Controller
         $params = [
             'index' => $indexer->getIndex(),
             'type' => $indexer->getType(),
-            'id' => 3
+            'body' => [
+                'query' => [
+                    'match' => [
+                        'model' => 'Polo'
+                    ]
+                ]
+            ]
         ];
 
-        $results = $client->get($params);
+        /*$params = [
+            'index' => [ $indexer->getIndex() ]
+        ];
+        $response = $client->indices()->getSettings($params);
+        dd($response);*/
+        //DD($params);
+        $results = $client->search($params);
         dd($results);
+    }
+
+    public function reindex()
+    {
+        /*$indexer = new Elasticsearch(
+            new ElasticsearchSource()
+        );
+        $indexer->dropIndex();
+        $indexer->createIndex();*/
+        return 'done';
     }
 }

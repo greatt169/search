@@ -3,7 +3,6 @@
 namespace App\Search\Index\Manager;
 
 use App\Search\Index\Interfaces\DocumentAttributeInterface;
-use App\Search\Index\Interfaces\DocumentInterface;
 use App\Search\Index\Interfaces\SourceInterface;
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
@@ -28,14 +27,14 @@ class Elasticsearch extends Base
     protected function getIndexParams()
     {
         $params = [
-            'index' => $this->index
+            'index' => $this->index,
         ];
         return $params;
     }
 
-    public function __construct(DocumentInterface $document, SourceInterface $source)
+    public function __construct(SourceInterface $source)
     {
-        parent::__construct($document, $source);
+        parent::__construct($source);
         $this->client = ClientBuilder::create()->setHosts($this->getHosts())->build();
         $this->index = $this->source->getIndexName();
         $this->type = $this->source->getTypeName();
@@ -61,7 +60,7 @@ class Elasticsearch extends Base
     {
         $prepared = $this->prepareElementsForIndexing();
         foreach ($prepared as $item) {
-            $this->client->index($item);
+           $this->client->index($item);
         }
     }
 

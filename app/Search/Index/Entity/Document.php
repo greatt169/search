@@ -32,4 +32,20 @@ class Document implements  DocumentInterface
     {
         return $this->attributes;
     }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @param DocumentAttributeInterface[] $attributes
+     */
+    public function setAttributes($attributes)
+    {
+        $this->attributes = $attributes;
+    }
 }
