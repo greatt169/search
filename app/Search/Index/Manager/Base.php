@@ -2,8 +2,6 @@
 
 namespace App\Search\Index\Manager;
 
-use App\Search\Index\Entity\Document;
-use App\Search\Index\Entity\DocumentAttribute;
 use App\Search\Index\Interfaces\DocumentInterface;
 use App\Search\Index\Interfaces\ManagerInterface;
 use App\Search\Index\Interfaces\SourceInterface;
@@ -26,29 +24,10 @@ abstract class Base implements ManagerInterface
     }
 
     /**
-     * @param array $source
-     * @return DocumentInterface
+     * @return SourceInterface
      */
-    protected function buildIndexObject(array $source)
+    public function getSource()
     {
-        $document = new Document();
-        $document->setId($source['id']);
-        $attributes = [];
-        foreach ($source['attributes'] as $attribute) {
-            $documentAttribute = new DocumentAttribute($attribute);
-            $attributes[] = $documentAttribute;
-        }
-        $document->setAttributes($attributes);
-        return $document;
-    }
-
-    public function buildIndexObjects()
-    {
-        $buildObjects = [];
-        $sourceObjects = $this->source->getElementsForIndexing();
-        foreach ($sourceObjects as $source) {
-            $buildObjects[] = $this->buildIndexObject($source);
-        }
-        $this->documents = $buildObjects;
+        return $this->source;
     }
 }

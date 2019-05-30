@@ -68,7 +68,6 @@ class Elasticsearch implements SourceInterface
             $source['attributes'] = $sourceAttributes;
             $objects[] = $source;
         }
-
         return $objects;
     }
 

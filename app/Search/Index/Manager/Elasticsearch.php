@@ -77,19 +77,17 @@ class Elasticsearch extends Base
 
     public function prepareElementsForIndexing()
     {
+        $arSource = $this->getSource()->getElementsForIndexing();
         $arPreparedElements = [];
-        foreach ($this->documents as $document) {
+        foreach ($arSource as $document) {
             $arDocAttributes = [];
-            foreach ($document->getAttributes() as $attributeObject) {
-                /**
-                 * @var DocumentAttributeInterface $attributeObject
-                 */
-                $arDocAttributes[$attributeObject->getCode()] = $attributeObject->getValue();
+            foreach ($document['attributes'] as $attribute) {
+                $arDocAttributes[$attribute['code']] = $attribute['value'];
             }
             $arDoc = [
                 'index' => $this->index,
                 'type' => $this->type,
-                'id' => $document->getId(),
+                'id' => $document['id'],
                 'body' => $arDocAttributes
             ];
             $arPreparedElements[] = $arDoc;
