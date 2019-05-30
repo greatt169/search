@@ -2,7 +2,6 @@
 
 namespace App\Search\Index\Manager;
 
-use App\Search\Index\Interfaces\DocumentAttributeInterface;
 use App\Search\Index\Interfaces\SourceInterface;
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
