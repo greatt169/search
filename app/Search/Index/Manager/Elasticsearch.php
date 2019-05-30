@@ -23,6 +23,8 @@ class Elasticsearch extends Base
      */
     protected $type;
 
+    private $bulkSize = 1000;
+
     protected function getIndexParams()
     {
         $params = [
@@ -57,9 +59,28 @@ class Elasticsearch extends Base
 
     public function indexAll()
     {
-        $prepared = $this->prepareElementsForIndexing();
-        foreach ($prepared as $item) {
-           $this->client->index($item);
+        $arSource = $this->getSource()->getElementsForIndexing();
+        foreach ($arSource as $i => $document) {
+            $arDocAttributes = [];
+            foreach ($document['attributes'] as $attribute) {
+                $arDocAttributes[$attribute['code']] = $attribute['value'];
+            }
+            $params['body'][] = [
+                'index' => [
+                    '_index' => $this->index,
+                    '_type' => $this->type,
+                    '_id' => $document['id']
+                ]
+            ];
+            $params['body'][] = $arDocAttributes;
+            // Every 1000 documents stop and send the bulk request
+            if ($i % $this->bulkSize == 0) {
+                $responses = $this->client->bulk($params);
+                // erase the old bulk request
+                $params = ['body' => []];
+                // unset the bulk response when you are done to save memory
+                unset($responses);
+            }
         }
     }
 
@@ -72,26 +93,6 @@ class Elasticsearch extends Base
     public function indexElement($id)
     {
         // TODO: Implement indexElement() method.
-    }
-
-    public function prepareElementsForIndexing()
-    {
-        $arSource = $this->getSource()->getElementsForIndexing();
-        $arPreparedElements = [];
-        foreach ($arSource as $document) {
-            $arDocAttributes = [];
-            foreach ($document['attributes'] as $attribute) {
-                $arDocAttributes[$attribute['code']] = $attribute['value'];
-            }
-            $arDoc = [
-                'index' => $this->index,
-                'type' => $this->type,
-                'id' => $document['id'],
-                'body' => $arDocAttributes
-            ];
-            $arPreparedElements[] = $arDoc;
-        }
-        return $arPreparedElements;
     }
 
     /**
