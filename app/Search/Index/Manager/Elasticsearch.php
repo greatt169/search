@@ -60,7 +60,9 @@ class Elasticsearch extends Base
     public function indexAll()
     {
         $arSource = $this->getSource()->getElementsForIndexing();
-        foreach ($arSource as $i => $document) {
+        $params = ['body' => []];
+        foreach ($arSource as $index => $document) {
+            $i = $index + 1;
             $arDocAttributes = [];
             foreach ($document['attributes'] as $attribute) {
                 $arDocAttributes[$attribute['code']] = $attribute['value'];
@@ -81,6 +83,13 @@ class Elasticsearch extends Base
                 // unset the bulk response when you are done to save memory
                 unset($responses);
             }
+        }
+        // Send the last batch if it exists
+        if (!empty($params['body'])) {
+            $responses = $this->client->bulk($params);
+
+            // unset the bulk response when you are done to save memory
+            unset($responses);
         }
     }
 
