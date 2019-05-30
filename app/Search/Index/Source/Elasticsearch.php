@@ -50,25 +50,22 @@ class Elasticsearch implements SourceInterface
     public function getElementsForIndexing()
     {
         $data = include_once('data.php');
-        $objects = [];
+        $elementsForIndexing = [];
         $mapping = $this->getAttributesMapping();
-
         foreach ($data as $dataItem) {
             $source = [];
             $sourceAttributes = [];
             $source['id'] = $dataItem['id'];
             foreach ($mapping as $code => $mappingItem) {
                 $sourceAttribute = $mappingItem;
-
                 $sourceAttribute['code'] = $code;
                 $sourceAttribute['value'] = $dataItem[$code];
-
                 $sourceAttributes[] = $sourceAttribute;
             }
             $source['attributes'] = $sourceAttributes;
-            $objects[] = $source;
+            $elementsForIndexing[] = $source;
         }
-        return $objects;
+        return $elementsForIndexing;
     }
 
     /**

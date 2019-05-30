@@ -22,8 +22,19 @@ class IndexController extends Controller
             'type' => $indexer->getType(),
             'body' => [
                 'query' => [
-                    'match' => [
-                        'model' => 'Polo'
+                    'bool' => [
+                        'should' => [
+                            [
+                                'match' => [
+                                    'colors' => 'black'
+                                ]
+                            ],
+                            [
+                                'match' => [
+                                    'colors' => 'white'
+                                ]
+                            ]
+                        ]
                     ]
                 ]
             ]
