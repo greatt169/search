@@ -1,0 +1,254 @@
+---
+swagger: '2.0'
+info:
+  title: SEARCH REST API
+  description: Методы для запросов
+  version: 1.0.0
+schemes:
+  - http
+basePath: ":8832/search"
+produces:
+  - application/json
+
+paths:
+
+  "/subscribe/add":
+    post:
+      summary: Добавление адреса в список подписчиков
+      description: Добавление адреса в список подписчиков
+      parameters:
+        - in: body
+          name: request
+          required: true
+          description: Параметры
+          schema:
+            type: object
+            properties:
+              email:
+                description: Адрес электронной почты
+                type: string
+                example: test@test.com
+      tags:
+        - Subscription
+      responses:
+        '200':
+          schema:
+            type: array
+            properties:
+              success:
+                type: boolean
+              status:
+                type: string
+                example: SUBSCRIBE_SUCCESS
+              data:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: SUBSCRIBE_SUCCESS
+                  data:
+                    type: object
+                    properties:
+                      result:
+                        type: object
+                        properties:
+                          message:
+                            type: string
+                            example: Успешная подписка
+                        description:
+                    description:
+                description:
+            description:
+          description: Метод успешно отработал
+        '400':
+          description: Метод отработал с ошибкой
+        '404':
+          description: Объет не найден
+        '401':
+          description: Ошибка авторизации
+        '500':
+          description: Внутренняя ошибка сервера
+
+  "/{region_code}/search/suggestions":
+    post:
+      summary: Поиск подсказок
+      description: Поиск подсказок
+      parameters:
+        - in: path
+          name: region_code
+          required: true
+          description: код региона
+          schema:
+            type: string
+            example: moskva-i-mo
+        - in: body
+          name: request
+          required: true
+          description: Параметры
+          schema:
+            type: object
+            properties:
+              QUERY:
+                description: Поисковый запрос
+                type: string
+                example: акция
+      tags:
+        - Search
+      responses:
+        '200':
+          description: Метод успешно отработал
+        '400':
+          description: Метод отработал с ошибкой
+        '404':
+          description: Объет не найден
+        '401':
+          description: Ошибка авторизации
+        '500':
+          description: Внутренняя ошибка сервера
+
+  "/region/select":
+    get:
+      summary: Выбор региона
+      description: Выбор региона
+      parameters:
+        - in: query
+          name: id
+          schema:
+            type: string
+            description: id региона
+            example: moskva-i-mo
+      tags:
+        - Misc
+      responses:
+        '200':
+          description: Метод успешно отработал
+        '400':
+          description: Метод отработал с ошибкой
+        '404':
+          description: Объет не найден
+        '401':
+          description: Ошибка авторизации
+        '500':
+          description: Внутренняя ошибка сервера
+        '405':
+          description: Доступ запрещен
+
+  "/{region_code}/search/results":
+    post:
+      summary: Страница с результатами поиска
+      description: Страница с результатами поиска
+      parameters:
+        - in: path
+          name: region_code
+          required: true
+          description: код региона
+          schema:
+            type: string
+            example: moskva-i-mo
+        - in: body
+          name: request
+          required: true
+          description: Параметры
+          schema:
+            type: object
+            properties:
+              query:
+                description: Поисковый запрос
+                type: string
+                example: акция
+              section:
+                description: Код секции
+                type: string
+                example: promo
+      tags:
+        - Search
+      responses:
+        '200':
+          description: Метод успешно отработал
+        '400':
+          description: Метод отработал с ошибкой
+        '404':
+          description: Объет не найден
+        '401':
+          description: Ошибка авторизации
+        '500':
+          description: Внутренняя ошибка сервера
+
+  "/{region_code}/promo/filter":
+    post:
+      summary: Получить акции с фильтром
+      description: Получить акции с фильтром
+      parameters:
+        - in: path
+          name: region_code
+          required: true
+          description: код региона
+          schema:
+            type: string
+            example: moskva-i-mo
+        - in: body
+          name: request
+          required: true
+          description: Параметры
+          schema:
+            type: object
+            properties:
+              page_catalog_list:
+                description: номер страницы
+                type: int
+                example: 1
+              sort:
+                description: сортировка
+                type: string
+                example: desc
+      tags:
+        - Catalog
+      responses:
+        '200':
+          description: Метод успешно отработал
+        '400':
+          description: Метод отработал с ошибкой
+        '404':
+          description: Объет не найден
+        '401':
+          description: Ошибка авторизации
+        '500':
+          description: Внутренняя ошибка сервера
+
+  "/{region_code}/partner/filter":
+    post:
+      summary: Получить партнеров с фильтром
+      description: Получить партнеров с фильтром
+      parameters:
+        - in: path
+          name: region_code
+          required: true
+          description: код региона
+          schema:
+            type: string
+            example: moskva-i-mo
+        - in: body
+          name: request
+          required: true
+          description: Параметры
+          schema:
+            type: object
+            properties:
+              page_catalog_list:
+                description: Поисковый запрос
+                type: int
+                example: 1
+      tags:
+        - Catalog
+      responses:
+        '200':
+          description: Метод успешно отработал
+        '400':
+          description: Метод отработал с ошибкой
+        '404':
+          description: Объет не найден
+        '401':
+          description: Ошибка авторизации
+        '500':
+          description: Внутренняя ошибка сервера
+
