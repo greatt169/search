@@ -57,7 +57,15 @@ services:
         - bitrix
 
   elasticsearch:
-      image: elasticsearch:6.7.1
+      image: docker.elastic.co/elasticsearch/elasticsearch:7.1.1
+      environment:
+          - bootstrap.memory_lock=true
+          - discovery.type=single-node
+          - "ES_JAVA_OPTS=-Xms128m -Xmx128m"
+      ulimits:
+          memlock:
+              soft: -1
+              hard: -1
       container_name: ${DOCKER_PROJECT_PREFIX}elasticsearch
       ports:
         - '${INTERFACE}:${DOCKER_ELASTICSEARCH_PORT_1}:9200'
