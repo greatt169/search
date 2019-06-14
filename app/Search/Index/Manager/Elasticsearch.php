@@ -23,6 +23,16 @@ class Elasticsearch extends Base
      */
     protected $type;
 
+    /**
+     * @var string
+     */
+    protected $aliasPrefix = 'alias_';
+
+    /**
+     * @var string
+     */
+    protected $reservePrefix = 'second_';
+
     private $bulkSize = 1000;
 
     protected function getIndexParams()
@@ -126,5 +136,65 @@ class Elasticsearch extends Base
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * @param $aliasName
+     * @param $index
+     * @return bool
+     */
+    public function addAlias($aliasName, $index)
+    {
+        $params['body'] = [
+            'actions' => [
+                [
+                    'add' => [
+                        'index' => $index,
+                        'alias' => $aliasName
+                    ],
+                ]
+            ]
+        ];
+
+        try {
+            $this->client->indices()->updateAliases($params);
+        } catch (\Exception $e) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @param $aliasName
+     * @param $index
+     * @return bool
+     */
+    public function removeAlias($aliasName, $index)
+    {
+        $params['body'] = [
+            'actions' => [
+                [
+                    'remove' => [
+                        'index' => $index,
+                        'alias' => $aliasName
+                    ],
+                ]
+            ]
+        ];
+
+        try {
+            $this->client->indices()->updateAliases($params);
+        } catch (\Exception $e) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @return string
+     */
+    public function reindex()
+    {
+
     }
 }

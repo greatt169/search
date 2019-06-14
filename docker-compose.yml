@@ -1,10 +1,7 @@
 version: '2'
-
 services:
-
   php-fpm:
     build: .docker/php-fpm
-    container_name: ${DOCKER_PROJECT_PREFIX}php
     volumes_from:
       - source
     volumes:
@@ -14,10 +11,11 @@ services:
       - mysql
       - mail
       - elasticsearch
+      #- elastic${DOCKER_PROJECT_PREFIX}new
+    container_name: ${DOCKER_PROJECT_PREFIX}php
     networks:
-          - search_project
+          - bitrix
     restart: always
-
   nginx:
         build: ./.docker/nginx
         container_name: ${DOCKER_PROJECT_PREFIX}nginx
@@ -30,7 +28,7 @@ services:
         links:
             - php-fpm
         networks:
-            search_project:
+            bitrix:
                ipv4_address: ${DOCKER_NETWORK_IP}
         restart: always
   mysql:
@@ -46,7 +44,7 @@ services:
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
         networks:
-            - search_project
+            - bitrix
         restart: always
   mail:
     image: mailhog/mailhog
@@ -54,26 +52,24 @@ services:
     ports:
         - '${INTERFACE}:${DOCKER_MAIL_PORT}:8025'
     networks:
-        - search_project
+        - bitrix
 
   elasticsearch:
-      image: docker.elastic.co/elasticsearch/elasticsearch:7.1.1
-      environment:
-          - bootstrap.memory_lock=true
-          - discovery.type=single-node
-          - "ES_JAVA_OPTS=-Xms128m -Xmx128m"
-      ulimits:
-          memlock:
-              soft: -1
-              hard: -1
-      container_name: ${DOCKER_PROJECT_PREFIX}elasticsearch
-      ports:
-        - '${INTERFACE}:${DOCKER_ELASTICSEARCH_PORT_1}:9200'
-        - '${INTERFACE}:${DOCKER_ELASTICSEARCH_PORT_2}:9300'
-      networks:
-        search_project:
-          ipv4_address: ${DOCKER_ELASTICSEARCH_IP}
-      restart: always
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.1.1
+        environment:
+            - bootstrap.memory_lock=true
+            - discovery.type=single-node
+            - "ES_JAVA_OPTS=-Xms128m -Xmx128m"
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+        container_name: ${DOCKER_PROJECT_PREFIX}elasticsearch
+        ports:
+          - '${INTERFACE}:${DOCKER_ELASTICSEARCH_PORT_1}:9201'
+          - '${INTERFACE}:${DOCKER_ELASTICSEARCH_PORT_2}:9301'
+        networks:
+            - bitrix
   source:
         image: alpine:latest
         container_name: ${DOCKER_PROJECT_PREFIX}source
@@ -85,9 +81,9 @@ services:
             - .:/var/www:rw
             #- /etc/localtime:/etc/localtime/:ro
         networks:
-            - search_project
+            - bitrix
 networks:
-    search_project:
+    bitrix:
         driver: bridge
         ipam:
             driver: default
