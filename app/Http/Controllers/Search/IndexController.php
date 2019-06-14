@@ -51,6 +51,7 @@ class IndexController extends Controller
         );
         $indexer->dropIndex();
         $indexer->createIndex();
+        $indexer->indexAll();
         return 'done';
     }
 }

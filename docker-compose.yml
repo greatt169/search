@@ -4,6 +4,7 @@ services:
 
   php-fpm:
     build: .docker/php-fpm
+    container_name: ${DOCKER_PROJECT_PREFIX}php
     volumes_from:
       - source
     volumes:
@@ -13,9 +14,8 @@ services:
       - mysql
       - mail
       - elasticsearch
-      #- elastic${DOCKER_PROJECT_PREFIX}new
     networks:
-          - bitrix
+          - search_project
     restart: always
 
   nginx:
@@ -30,7 +30,7 @@ services:
         links:
             - php-fpm
         networks:
-            bitrix:
+            search_project:
                ipv4_address: ${DOCKER_NETWORK_IP}
         restart: always
   mysql:
@@ -46,7 +46,7 @@ services:
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
         networks:
-            - bitrix
+            - search_project
         restart: always
   mail:
     image: mailhog/mailhog
@@ -54,7 +54,7 @@ services:
     ports:
         - '${INTERFACE}:${DOCKER_MAIL_PORT}:8025'
     networks:
-        - bitrix
+        - search_project
 
   elasticsearch:
       image: docker.elastic.co/elasticsearch/elasticsearch:7.1.1
@@ -71,7 +71,7 @@ services:
         - '${INTERFACE}:${DOCKER_ELASTICSEARCH_PORT_1}:9200'
         - '${INTERFACE}:${DOCKER_ELASTICSEARCH_PORT_2}:9300'
       networks:
-        bitrix:
+        search_project:
           ipv4_address: ${DOCKER_ELASTICSEARCH_IP}
       restart: always
   source:
@@ -85,9 +85,9 @@ services:
             - .:/var/www:rw
             #- /etc/localtime:/etc/localtime/:ro
         networks:
-            - bitrix
+            - search_project
 networks:
-    bitrix:
+    search_project:
         driver: bridge
         ipam:
             driver: default
