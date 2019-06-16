@@ -48,7 +48,16 @@ class IndexController extends Controller
         $indexer = new Elasticsearch(
             new ElasticsearchSource()
         );
-        $indexer->dropIndex();
+        $indexer->reindex();
+        return 'done';
+    }
+
+    public function build()
+    {
+        $indexer = new Elasticsearch(
+            new ElasticsearchSource()
+        );
+        //$indexer->dropIndex();
         $indexer->createIndex();
         $indexer->indexAll();
         return 'done';

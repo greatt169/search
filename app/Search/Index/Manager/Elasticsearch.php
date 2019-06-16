@@ -5,6 +5,7 @@ namespace App\Search\Index\Manager;
 use App\Search\Index\Interfaces\SourceInterface;
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
+use Exception;
 
 class Elasticsearch extends Base
 {
@@ -26,13 +27,16 @@ class Elasticsearch extends Base
     /**
      * @var string
      */
-    protected $aliasPrefix = 'alias_';
+    protected $auxiliaryPrefix = 'auxiliary_';
 
     /**
      * @var string
      */
-    protected $reservePrefix = 'second_';
+    protected $aliasPrefix = 'alias_';
 
+    /**
+     * @var int
+     */
     private $bulkSize = 1000;
 
     protected function getIndexParams()
@@ -60,11 +64,13 @@ class Elasticsearch extends Base
     public function createIndex()
     {
         $this->client->indices()->create($this->getIndexParams());
+        $this->addAlias($this->index);
     }
 
     function dropIndex()
     {
         $this->client->indices()->delete($this->getIndexParams());
+        $this->removeAlias($this->index);
     }
 
     public function indexAll()
@@ -140,61 +146,107 @@ class Elasticsearch extends Base
 
     /**
      * @param $aliasName
-     * @param $index
      * @return bool
      */
-    public function addAlias($aliasName, $index)
+    public function addAlias($aliasName)
     {
         $params['body'] = [
             'actions' => [
                 [
                     'add' => [
-                        'index' => $index,
-                        'alias' => $aliasName
+                        'index' => $this->index,
+                        'alias' => $this->getAliasWithPrefix($aliasName)
                     ],
                 ]
             ]
         ];
 
-        try {
-            $this->client->indices()->updateAliases($params);
-        } catch (\Exception $e) {
-            return false;
-        }
+        $this->client->indices()->updateAliases($params);
         return true;
     }
 
     /**
      * @param $aliasName
-     * @param $index
      * @return bool
      */
-    public function removeAlias($aliasName, $index)
+    public function removeAlias($aliasName)
     {
         $params['body'] = [
             'actions' => [
                 [
                     'remove' => [
-                        'index' => $index,
-                        'alias' => $aliasName
+                        'index' => $this->index,
+                        'alias' => $this->getAliasWithPrefix($aliasName)
                     ],
                 ]
             ]
         ];
 
+        $this->client->indices()->updateAliases($params);
+        return true;
+    }
+
+    /**
+     * @param $aliasName
+     * @return string
+     */
+    public function getAliasWithPrefix($aliasName) {
+        return $this->aliasPrefix . $aliasName;
+    }
+
+    /**
+     * @param $index
+     * @return bool
+     */
+    public function indexExists($index)
+    {
         try {
-            $this->client->indices()->updateAliases($params);
-        } catch (\Exception $e) {
+            $this->client->indices()->get(['index' => $index]);
+        } catch (Exception $e) {
             return false;
         }
         return true;
     }
 
     /**
+     * @param $index
+     * @return mixed|string
+     */
+    protected function getIndexName($index)
+    {
+        if (strpos($index, $this->auxiliaryPrefix) !== false) {
+            return str_replace($this->auxiliaryPrefix, '', $index);
+        } else {
+            return $this->auxiliaryPrefix . $index;
+        }
+    }
+
+    /**
+     * @param string $aliasName код alias
+     *
+     * @return bool | string
+     * @throws Exception
+     */
+    public function getIndexByAlias($aliasName)
+    {
+        $aliases = $this->client->indices()->getAliases();
+        $aliasWithPrefix = $this->getAliasWithPrefix($aliasName);
+        foreach ($aliases as $index => $aliasMapping) {
+            if (array_key_exists($aliasWithPrefix, $aliasMapping['aliases'])) {
+                return $index;
+            }
+        }
+        throw new Exception(sprintf('No Indexes by alias "%s"', $aliasName), 404);
+    }
+
+    /**
      * @return string
+     * @throws Exception
      */
     public function reindex()
     {
-
+        $index = $this->getIndex();
+        $indexByAlias = $this->getIndexByAlias($index);
+        dd($this->getIndexName($indexByAlias));
     }
 }
