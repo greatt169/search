@@ -272,7 +272,11 @@ class Elasticsearch extends Base
         $newIndex = $this->getNextIndexName($indexByAlias);
 
         $this->setIndex($newIndex);
+        if($this->indexExists($newIndex)) {
+            $this->dropIndex();
+        }
         $this->createIndex();
+        $this->indexAll();
 
         $this->addAlias($this->baseAliasName, $newIndex);
         $this->removeAlias($this->baseAliasName, $currentIndex);

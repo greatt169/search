@@ -49,7 +49,7 @@ class Elasticsearch implements SourceInterface
 
     public function getElementsForIndexing()
     {
-        $data = include_once('data.php');
+        $data = include_once('/var/www/public/data.php');
         $elementsForIndexing = [];
         $mapping = $this->getAttributesMapping();
         foreach ($data as $dataItem) {
