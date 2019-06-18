@@ -43,6 +43,10 @@ class IndexController extends Controller
         dd($results);
     }
 
+    /**
+     * @return string
+     * @throws \Exception
+     */
     public function reindex()
     {
         $indexer = new Elasticsearch(
@@ -57,9 +61,17 @@ class IndexController extends Controller
         $indexer = new Elasticsearch(
             new ElasticsearchSource()
         );
-        //$indexer->dropIndex();
-        $indexer->createIndex();
+        
+        $p = $indexer->getAllAliases();
+        dd($p);
+
+        if($indexer->indexExists($indexer->getIndex())) {
+            $indexer->dropIndex();
+        }
+
+        $indexer->createIndex();;
         $indexer->indexAll();
+
         return 'done';
     }
 }

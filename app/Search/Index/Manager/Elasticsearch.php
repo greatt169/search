@@ -35,6 +35,11 @@ class Elasticsearch extends Base
     protected $aliasPrefix = 'alias_';
 
     /**
+     * @var string
+     */
+    protected $baseAliasName;
+
+    /**
      * @var int
      */
     private $bulkSize = 1000;
@@ -47,11 +52,21 @@ class Elasticsearch extends Base
         return $params;
     }
 
+    /**
+     * Elasticsearch constructor.
+     * @param SourceInterface $source
+     * @throws Exception
+     */
     public function __construct(SourceInterface $source)
     {
         parent::__construct($source);
         $this->client = ClientBuilder::create()->setHosts($this->getHosts())->build();
-        $this->index = $this->source->getIndexName();
+        $this->baseAliasName = $this->source->getIndexName();
+        try {
+            $this->index = $this->getIndexByAlias($this->baseAliasName);
+        } catch (Exception $e) {
+            $this->index = $this->baseAliasName;
+        }
         $this->type = $this->source->getTypeName();
     }
 
@@ -64,13 +79,12 @@ class Elasticsearch extends Base
     public function createIndex()
     {
         $this->client->indices()->create($this->getIndexParams());
-        $this->addAlias($this->index);
+        $this->addAlias($this->baseAliasName);
     }
 
     function dropIndex()
     {
         $this->client->indices()->delete($this->getIndexParams());
-        $this->removeAlias($this->index);
     }
 
     public function indexAll()
@@ -146,15 +160,19 @@ class Elasticsearch extends Base
 
     /**
      * @param $aliasName
+     * @param $index
      * @return bool
      */
-    public function addAlias($aliasName)
+    public function addAlias($aliasName, $index = null)
     {
+        if($index === null) {
+            $index = $this->index;
+        }
         $params['body'] = [
             'actions' => [
                 [
                     'add' => [
-                        'index' => $this->index,
+                        'index' => $index,
                         'alias' => $this->getAliasWithPrefix($aliasName)
                     ],
                 ]
@@ -167,15 +185,19 @@ class Elasticsearch extends Base
 
     /**
      * @param $aliasName
+     * @param $index
      * @return bool
      */
-    public function removeAlias($aliasName)
+    public function removeAlias($aliasName, $index = null)
     {
+        if($index === null) {
+            $index = $this->index;
+        }
         $params['body'] = [
             'actions' => [
                 [
                     'remove' => [
-                        'index' => $this->index,
+                        'index' => $index,
                         'alias' => $this->getAliasWithPrefix($aliasName)
                     ],
                 ]
@@ -212,7 +234,7 @@ class Elasticsearch extends Base
      * @param $index
      * @return mixed|string
      */
-    protected function getIndexName($index)
+    protected function getNextIndexName($index)
     {
         if (strpos($index, $this->auxiliaryPrefix) !== false) {
             return str_replace($this->auxiliaryPrefix, '', $index);
@@ -245,8 +267,45 @@ class Elasticsearch extends Base
      */
     public function reindex()
     {
-        $index = $this->getIndex();
-        $indexByAlias = $this->getIndexByAlias($index);
-        dd($this->getIndexName($indexByAlias));
+        $currentIndex = $this->getIndex();
+        $indexByAlias = $this->getIndexByAlias($currentIndex);
+        $newIndex = $this->getNextIndexName($indexByAlias);
+
+        $this->setIndex($newIndex);
+        $this->createIndex();
+
+        $this->addAlias($this->baseAliasName, $newIndex);
+        $this->removeAlias($this->baseAliasName, $currentIndex);
+
+        $this->setIndex($currentIndex);
+        $this->dropIndex();
+
+        dd($newIndex);
+    }
+
+    /**
+     * @param string $index
+     */
+    public function setIndex($index)
+    {
+        $this->index = $index;
+    }
+
+    /**
+     * @return array|callable
+     */
+    public function getAllIndices()
+    {
+        $allIndices = $this->client->indices()->get([]);
+        return $allIndices;
+    }
+
+    /**
+     * @return array|callable
+     */
+    public function getAllAliases()
+    {
+        $allAliases = $this->client->indices()->getAliases();
+        return $allAliases;
     }
 }
