@@ -15,7 +15,7 @@ class IndexController extends Controller
             new ElasticsearchSource()
         );
         $client = $indexer->getClient();
-
+        dump($indexer->getIndex());
         $params = [
             'index' => $indexer->getIndex(),
             'type' => $indexer->getType(),
@@ -49,29 +49,6 @@ class IndexController extends Controller
      */
     public function reindex()
     {
-        $indexer = new Elasticsearch(
-            new ElasticsearchSource()
-        );
-        $indexer->reindex();
-        return 'done';
-    }
 
-    public function build()
-    {
-        $indexer = new Elasticsearch(
-            new ElasticsearchSource()
-        );
-        
-        $p = $indexer->getAllAliases();
-        dd($p);
-
-        if($indexer->indexExists($indexer->getIndex())) {
-            $indexer->dropIndex();
-        }
-
-        $indexer->createIndex();;
-        $indexer->indexAll();
-
-        return 'done';
     }
 }

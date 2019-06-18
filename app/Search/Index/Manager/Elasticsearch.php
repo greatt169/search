@@ -268,7 +268,7 @@ class Elasticsearch extends Base
     public function reindex()
     {
         $currentIndex = $this->getIndex();
-        $indexByAlias = $this->getIndexByAlias($currentIndex);
+        $indexByAlias = $this->getIndexByAlias($this->baseAliasName);
         $newIndex = $this->getNextIndexName($indexByAlias);
 
         $this->setIndex($newIndex);
@@ -279,8 +279,6 @@ class Elasticsearch extends Base
 
         $this->setIndex($currentIndex);
         $this->dropIndex();
-
-        dd($newIndex);
     }
 
     /**
@@ -296,7 +294,7 @@ class Elasticsearch extends Base
      */
     public function getAllIndices()
     {
-        $allIndices = $this->client->indices()->get([]);
+        $allIndices = $this->client->indices()->get(['index' => '*']);
         return $allIndices;
     }
 

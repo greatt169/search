@@ -1,8 +1,8 @@
 ---
 swagger: '2.0'
 info:
-  title: SEARCH REST API
-  description: Описание методов сервиса
+  title: Search Point REST API
+  description: API для работы с фильтрацией и поиском в приложении
   version: 1.0.0
 schemes:
   - http
@@ -11,53 +11,218 @@ produces:
   - application/json
 
 paths:
-  "/subscribe/add":
-    post:
-      summary: Добавление адреса в список подписчиков
-      description: Добавление адреса в список подписчиков
+  "/catalog/list/":
+    get:
+      summary: Получение списка элементов
+      description: Получение списка элементов
       parameters:
-        - in: body
-          name: request
-          required: true
-          description: Параметры
-          schema:
-            type: object
-            properties:
-              email:
-                description: Адрес электронной почты
-                type: string
-                example: test@test.com
+      - in: body
+        name: request
+        required: true
+        description: Параметры
+        schema:
+          type: object
+          properties:
+            sortField:
+              description: поле для сортировки price, SORT
+              type: string
+              example: "SORT"
+            sortOrder:
+              description: направление сортировки desc, asc
+              type: string
+              example: "asc"
+            pageSize:
+              description: количество товаров на странице
+              type: integer
+              example: 15
+            filterUrl:
+              description: строка фильтрации
+              type: string
+              example: "mans/obuv/filter/brand-is-adidas/apply/"
+            num:
+              description: номер страницы, которую нужно вернуть
+              type: integer
+              example: 1
       tags:
-        - Subscription
+      - Catalog
       responses:
         '200':
-          schema:
-            type: array
-            properties:
-              success:
-                type: boolean
-              status:
-                type: string
-                example: SUBSCRIBE_SUCCESS
-              data:
+          description: Метод успешно отработал
+        '400':
+          description: Метод отработал с ошибкой
+        '404':
+          description: Объет не найден
+        '401':
+          description: Ошибка авторизации
+        '500':
+          description: Внутренняя ошибка сервера
+
+  "/catalog/filter/":
+    get:
+      summary: Возвращает варианты значений для параметров фильтра
+      description: Возвращает варианты значений для параметров фильтра
+      parameters:
+      - in: body
+        name: request
+        required: true
+        description: Параметры
+        schema:
+          type: object
+          properties:
+            sectionId:
+              description: ID раздела
+              type: integer
+              example: 3026
+            query:
+              description: Поисковый запрос
+              type: string
+              example: обувь
+            filter:
+              description: Описание параметров и установленных значений
+              type: array
+              items:
                 type: object
                 properties:
-                  status:
+                  id:
                     type: string
-                    example: SUBSCRIBE_SUCCESS
-                  data:
-                    type: object
-                    properties:
-                      result:
-                        type: object
-                        properties:
-                          message:
-                            type: string
-                            example: Успешная подписка
-                        description:
-                    description:
-                description:
-            description:
+                    values:
+                      type: array
+              example: [{"id": "93", "values": ["41","42","XXL"]}, {"id": "94", "values": ["white"]}, {"id": "price_base", "values": {"min": "50", "max": "5000"}}]
+      tags:
+      - Catalog
+      responses:
+        '200':
+          description: Метод успешно отработал
+        '400':
+          description: Метод отработал с ошибкой
+        '404':
+          description: Объет не найден
+        '401':
+          description: Ошибка авторизации
+        '500':
+          description: Внутренняя ошибка сервера
+
+  "/search/suggests/":
+    get:
+      summary: Возвращает поисковые подсказки
+      description: Возвращает поисковые подсказки/предложения по товарам и товарным группам
+      parameters:
+      - in: body
+        name: request
+        required: true
+        description: Параметры
+        schema:
+          type: object
+          properties:
+            query:
+              description: Поисковый запрос
+              type: string
+              example: Футболка
+            limits:
+              description: Ограничесние выборки
+              type: object
+              properties:
+                products:
+                  type: integer
+                  example: 5
+                categories:
+                  type: integer
+                  example: 4
+      tags:
+      - Search
+      responses:
+        '200':
+          description: Метод успешно отработал
+        '400':
+          description: Метод отработал с ошибкой
+        '404':
+          description: Объет не найден
+        '401':
+          description: Ошибка авторизации
+        '500':
+          description: Внутренняя ошибка сервера
+
+  "/search/filter/":
+    get:
+      summary: Возвращает варианты значений для параметров фильтра
+      description: Возвращает варианты значений для параметров фильтра
+      parameters:
+      - in: body
+        name: request
+        required: true
+        description: Параметры
+        schema:
+          type: object
+          properties:
+            sectionId:
+              description: ID раздела
+              type: integer
+              example: 3026
+            query:
+              description: Поисковый запрос
+              type: string
+              example: обувь
+            filter:
+              description: Описание параметров и установленных значений
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    values:
+                      type: array
+              example: [{"id": "93", "values": ["41","42","XXL"]}, {"id": "94", "values": ["white"]}, {"id": "price_base", "values": {"min": "50", "max": "5000"}}]
+      tags:
+      - Search
+      responses:
+        '200':
+          description: Метод успешно отработал
+        '400':
+          description: Метод отработал с ошибкой
+        '404':
+          description: Объет не найден
+        '401':
+          description: Ошибка авторизации
+        '500':
+          description: Внутренняя ошибка сервера
+
+  "/search/list/":
+    get:
+      summary: Получение списка элементов
+      description: Получение списка товаров на основе поискового запроса и фильтрации
+      parameters:
+      - in: body
+        name: request
+        required: true
+        description: Параметры
+        schema:
+          type: object
+          properties:
+            sortField:
+              description: поле для сортировки price, SORT
+              type: string
+              example: "SORT"
+            sortOrder:
+              description: направление сортировки desc, asc
+              type: string
+              example: "asc"
+            pageSize:
+              description: количество товаров на странице
+              type: integer
+              example: 15
+            filterUrl:
+              description: строка фильтрации
+              type: string
+              example: "футболка/filter/brand-is-lacoste/apply/"
+            num:
+              description: номер страницы, которую нужно вернуть
+              type: integer
+              example: 1
+      tags:
+      - Search
+      responses:
+        '200':
           description: Метод успешно отработал
         '400':
           description: Метод отработал с ошибкой
