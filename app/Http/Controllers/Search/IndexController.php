@@ -15,7 +15,6 @@ class IndexController extends Controller
             new ElasticsearchSource()
         );
         $client = $indexer->getClient();
-        dump($indexer->getIndex());
         $params = [
             'index' => $indexer->getIndex(),
             'type' => $indexer->getType(),
@@ -40,7 +39,7 @@ class IndexController extends Controller
         ];
 
         $results = $client->search($params);
-        dd($results);
+        dump($results);
     }
 
     /**
