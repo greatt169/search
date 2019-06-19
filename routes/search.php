@@ -15,6 +15,4 @@ Route::group([
     'namespace' => 'Search',
 ], function () {
     Route::get('/', 'IndexController@index')->name('search_home');
-    Route::get('/reindex', 'IndexController@reindex')->name('reindex');
-    Route::get('/build', 'IndexController@build')->name('build');
 });

@@ -60,6 +60,7 @@ class Elasticsearch extends Base
     public function __construct(SourceInterface $source)
     {
         parent::__construct($source);
+
         $this->client = ClientBuilder::create()->setHosts($this->getHosts())->build();
         $this->baseAliasName = $this->source->getIndexName();
         try {
@@ -268,7 +269,11 @@ class Elasticsearch extends Base
     public function reindex()
     {
         $currentIndex = $this->getIndex();
-        $indexByAlias = $this->getIndexByAlias($this->baseAliasName);
+        try {
+            $indexByAlias = $this->getIndexByAlias($this->baseAliasName);
+        } catch (Exception $e) {
+            $indexByAlias = $this->baseAliasName;
+        }
         $newIndex = $this->getNextIndexName($indexByAlias);
 
         $this->setIndex($newIndex);
