@@ -1,7 +1,0 @@
-<?
-$MESS["IDEA_SUBSCRIBE_TITLE"] = "Name";
-$MESS["IDEA_SUBSCRIBE_STATUS"] = "Status";
-$MESS["IDEA_SUBSCRIBE_AUTHOR"] = "Created by";
-$MESS["IDEA_SUBSCRIBE_PUBLISHED"] = "Published on";
-$MESS["IDEA_SUBSCRIBE_TOTAL"] = "Subscriptions";
-?>

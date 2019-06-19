@@ -1,6 +1,0 @@
-<?
-$MESS["LEARNING_COURSE_COMPLEX_NAME"]="Learning course";
-$MESS["LEARNING_COURSE_COMPLEX_DESC"]="Learning course";
-$MESS["LEARNING_SERVICE"]="e-Learning";
-$MESS["LEARNING_COURSE_SERVICE"]="Courses";
-?>

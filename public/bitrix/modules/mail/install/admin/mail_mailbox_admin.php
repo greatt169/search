@@ -1,1 +1,0 @@
-<?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/mail/admin/mail_mailbox_admin.php");?>

@@ -1,1 +1,0 @@
-{"version":3,"sources":["script.js"],"names":["BX","namespace","VisualConstructor","NumberComponent","this","init","prototype"],"mappings":"CAAC,WACAA,GAAGC,UAAU,wBACbD,GAAGE,kBAAkBC,gBAAkB,WAEtCC,KAAKC,QAENL,GAAGE,kBAAkBC,gBAAgBG,WACpCD,KAAM,eAPP","file":""}

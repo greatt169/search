@@ -1,1 +1,0 @@
-<?php require($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/conversion/admin/calc.php');

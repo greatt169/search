@@ -1,1 +1,0 @@
-{"version":3,"file":"delayactivity.min.js","sources":["delayactivity.js"],"names":["DelayActivity","ob","BizProcActivity","Type","CheckFields","Properties"],"mappings":"AAGAA,cAAgB,WAEf,GAAIC,GAAK,GAAIC,gBACbD,GAAGE,KAAO,eAGVF,GAAGG,YAAc,WAEhB,QAASH,EAAGI,WAAW,mBAGxB,OAAOJ"}

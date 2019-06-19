@@ -1,1 +1,0 @@
-CREATE fulltext index IXF_IM_MESS_1 on b_im_message (MESSAGE);

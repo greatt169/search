@@ -15,3 +15,4 @@ Route::get('/', function () {
 });
 
 Route::get('/swagger/index.html')->name('search_swagger');
+Route::get('/frontend/index.html')->name('search_frontend');

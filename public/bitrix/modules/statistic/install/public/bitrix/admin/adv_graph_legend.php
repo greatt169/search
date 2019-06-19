@@ -1,1 +1,0 @@
-<? require ($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/statistic/admin/adv_graph_legend.php"); ?>
