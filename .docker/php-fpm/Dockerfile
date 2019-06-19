@@ -28,6 +28,6 @@ RUN usermod -u 1000 www-data
 
 RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer
 
-ADD ./php-bitrix.ini /usr/local/etc/php/conf.d/php.ini
+ADD ./php.ini /usr/local/etc/php/conf.d/php.ini
 
 WORKDIR "/var/www"
