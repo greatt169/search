@@ -45,12 +45,32 @@ class Elasticsearch extends Base
      */
     private $bulkSize = 1000;
 
+    /**
+     * @var string
+     */
+    protected $logChannel = 'elasticsearch';
+
+    /**
+     * @var string
+     */
+    protected $indexingStartMessageTemplate = 'Indexing from %s to %s has started';
+
+    /**
+     * @var string
+     */
+    protected $indexingFinishMessageTemplate = 'Indexing from %s to %s has finished';
+
     protected function getIndexParams()
     {
         $params = [
             'index' => $this->index,
         ];
         return $params;
+    }
+
+    private function isLogsEnable()
+    {
+        return config('search.index.elasticsearch.log_save');
     }
 
     /**
@@ -62,11 +82,10 @@ class Elasticsearch extends Base
     {
         parent::__construct($source);
         $clientBuild = ClientBuilder::create()->setHosts($this->getHosts());
-        if(config('search.index.elasticsearch.log_save')) {
-            $clientBuild->setLogger(Log::channel('elasticsearch'));
+        if($this->isLogsEnable()) {
+            $clientBuild->setLogger($this->getLogger());
         }
         $this->client = $clientBuild->build();
-
         $this->baseAliasName = $this->source->getIndexName();
         try {
             $this->index = $this->getIndexByAlias($this->baseAliasName);
@@ -127,17 +146,6 @@ class Elasticsearch extends Base
             // unset the bulk response when you are done to save memory
             unset($responses);
         }
-    }
-
-    public function removeAll()
-    {
-        $this->dropIndex();
-        $this->createIndex();
-    }
-
-    public function indexElement($id)
-    {
-        // TODO: Implement indexElement() method.
     }
 
     /**
@@ -252,8 +260,7 @@ class Elasticsearch extends Base
     /**
      * @param string $aliasName код alias
      *
-     * @return bool | string
-     * @throws Exception
+     * @return null | string
      */
     public function getIndexByAlias($aliasName)
     {
@@ -264,31 +271,21 @@ class Elasticsearch extends Base
                 return $index;
             }
         }
-        throw new Exception(sprintf('No Indexes by alias "%s"', $aliasName), 404);
+        return null;
     }
 
     /**
      * @return string
-     * @throws Exception
      */
     public function reindex()
     {
         $currentIndex = $this->getIndex();
-        try {
-            $indexByAlias = $this->getIndexByAlias($this->baseAliasName);
-        } catch (Exception $e) {
-            $indexByAlias = $this->baseAliasName;
-        }
-        $newIndex = $this->getNextIndexName($indexByAlias);
-        $this->setIndex($newIndex);
-        $this->deleteIndex();
-        $this->createIndex();
+        $newIndex = $this->getNewIndex();
+        $this->log(sprintf($this->indexingStartMessageTemplate, $currentIndex, $newIndex));
+        $this->createAuxIndexForReindex($newIndex);
         $this->indexAll();
-
-        $this->addAlias($this->baseAliasName, $newIndex);
-
-        $this->setIndex($currentIndex);
-        $this->deleteIndex();
+        $this->deleteCurrentIndex($currentIndex);
+        $this->log(sprintf($this->indexingFinishMessageTemplate, $currentIndex, $newIndex));
     }
 
     public function deleteIndex()
@@ -323,5 +320,65 @@ class Elasticsearch extends Base
     {
         $allAliases = $this->client->indices()->getAliases();
         return $allAliases;
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function getNewIndex()
+    {
+        $indexByAlias = $this->getIndexByAlias($this->baseAliasName);
+        if ($indexByAlias === null) {
+            $indexByAlias = $this->baseAliasName;
+        }
+        $newIndex = $this->getNextIndexName($indexByAlias);
+        return $newIndex;
+    }
+
+    /**
+     * @param $newIndex
+     */
+    public function createAuxIndexForReindex($newIndex)
+    {
+        $this->setIndex($newIndex);
+        $this->deleteIndex();
+        $this->createIndex();
+        $this->addAlias($this->baseAliasName, $newIndex);
+    }
+
+    /**
+     * @param $currentIndex
+     */
+    public function deleteCurrentIndex($currentIndex)
+    {
+        $this->setIndex($currentIndex);
+        $this->deleteIndex();
+    }
+
+    public function removeAll()
+    {
+        // TODO: Implement removeAll() method.
+    }
+
+    public function indexElement($id)
+    {
+        // TODO: Implement indexElement() method.
+    }
+
+    protected function log($message, $level = 'info')
+    {
+        if(!$this->isLogsEnable()) {
+            return;
+        }
+
+        $this->getLogger()->$level($message);
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function getLogger()
+    {
+        return Log::channel($this->logChannel);
     }
 }
