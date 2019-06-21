@@ -12,8 +12,6 @@ class IndexController extends Controller
 {
     public function index()
     {
-
-
         $indexer = new Elasticsearch(
             new ElasticsearchSource()
         );

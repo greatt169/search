@@ -280,19 +280,23 @@ class Elasticsearch extends Base
             $indexByAlias = $this->baseAliasName;
         }
         $newIndex = $this->getNextIndexName($indexByAlias);
-
         $this->setIndex($newIndex);
-        if($this->indexExists($newIndex)) {
-            $this->dropIndex();
-        }
+        $this->deleteIndex();
         $this->createIndex();
         $this->indexAll();
 
         $this->addAlias($this->baseAliasName, $newIndex);
-        $this->removeAlias($this->baseAliasName, $currentIndex);
 
         $this->setIndex($currentIndex);
-        $this->dropIndex();
+        $this->deleteIndex();
+    }
+
+    public function deleteIndex()
+    {
+        if($this->indexExists($this->index)) {
+            $this->removeAlias($this->baseAliasName, $this->index);
+            $this->dropIndex();
+        }
     }
 
     /**
