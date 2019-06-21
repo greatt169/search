@@ -31,7 +31,12 @@ return [
         ],
         'single' => [
             'driver' => 'single',
-            'path' => storage_path('logs/laravel-test.log'),
+            'path' => storage_path('logs/laravel.log'),
+            'level' => 'debug',
+        ],
+        'elasticsearch' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/es.log'),
             'level' => 'debug',
         ],
         'daily' => [

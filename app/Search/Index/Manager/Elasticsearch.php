@@ -6,6 +6,7 @@ use App\Search\Index\Interfaces\SourceInterface;
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class Elasticsearch extends Base
 {
@@ -60,8 +61,12 @@ class Elasticsearch extends Base
     public function __construct(SourceInterface $source)
     {
         parent::__construct($source);
+        $clientBuild = ClientBuilder::create()->setHosts($this->getHosts());
+        if(config('search.index.elasticsearch.log_save')) {
+            $clientBuild->setLogger(Log::channel('elasticsearch'));
+        }
+        $this->client = $clientBuild->build();
 
-        $this->client = ClientBuilder::create()->setHosts($this->getHosts())->build();
         $this->baseAliasName = $this->source->getIndexName();
         try {
             $this->index = $this->getIndexByAlias($this->baseAliasName);

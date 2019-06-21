@@ -7,10 +7,13 @@ use App\Http\Controllers\Controller;
 use App\Search\Index\Manager\Elasticsearch;
 use App\Search\Index\Source\Elasticsearch as ElasticsearchSource;
 
+
 class IndexController extends Controller
 {
     public function index()
     {
+
+
         $indexer = new Elasticsearch(
             new ElasticsearchSource()
         );
