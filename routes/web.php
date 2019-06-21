@@ -28,7 +28,7 @@ Route::get('/', function () {
 Route::group([
     'namespace' => 'Search',
 ], function () {
-    Route::get('/', 'IndexController@index')->name('search_home');
+    Route::get('/search', 'IndexController@index')->name('search_home');
 });
 
 Route::get('/swagger/index.html')->name('search_swagger');
