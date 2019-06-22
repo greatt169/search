@@ -122,6 +122,7 @@ class Elasticsearch extends Base
         $arSource = $this->getSource()->getElementsForIndexing();
         $params = ['body' => []];
         foreach ($arSource as $index => $document) {
+            $this->timer->start('prepare_bulk');
             $i = $index + 1;
             $arDocAttributes = [];
             foreach ($document['attributes'] as $attribute) {
@@ -135,9 +136,13 @@ class Elasticsearch extends Base
                 ]
             ];
             $params['body'][] = $arDocAttributes;
+            $this->timer->end('prepare_bulk');
+
             // Every 1000 documents stop and send the bulk request
             if ($i % $this->bulkSize == 0) {
+                $this->timer->start('index_bulk');
                 $responses = $this->client->bulk($params);
+                $this->timer->end('index_bulk');
                 // erase the old bulk request
                 $params = ['body' => []];
                 // unset the bulk response when you are done to save memory
@@ -146,7 +151,9 @@ class Elasticsearch extends Base
         }
         // Send the last batch if it exists
         if (!empty($params['body'])) {
+            $this->timer->start('index_bulk');
             $responses = $this->client->bulk($params);
+            $this->timer->end('index_bulk');
 
             // unset the bulk response when you are done to save memory
             unset($responses);
@@ -294,6 +301,10 @@ class Elasticsearch extends Base
         $total = $this->indexAll();
         $this->deleteCurrentIndex($currentIndex);
         $this->log(sprintf($this->indexingFinishMessageTemplate, $currentIndex, $newIndex, $total));
+        $arIntervalsSum = $this->timer->getIntervalsSum();
+        foreach ($arIntervalsSum as $field => $value) {
+            $this->log($field . ': ' . $value);
+        }
     }
 
     public function deleteIndex()
@@ -373,12 +384,15 @@ class Elasticsearch extends Base
         // TODO: Implement indexElement() method.
     }
 
+    /**
+     * @param string $message
+     * @param string $level
+     */
     protected function log($message, $level = 'info')
     {
         if(!$this->isLogsEnable()) {
             return;
         }
-
         $this->getLogger()->$level($message);
         $this->displayResultMessages[] = $message;
     }

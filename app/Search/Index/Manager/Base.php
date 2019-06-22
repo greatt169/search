@@ -28,8 +28,9 @@ abstract class Base implements ManagerInterface
     {
         if($timer === null) {
             $this->timer = new Timer();
+        } else {
+            $this->timer = $timer;
         }
-        $this->timer = $timer;
         $this->source = $source;
     }
 
