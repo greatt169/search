@@ -58,7 +58,12 @@ class Elasticsearch extends Base
     /**
      * @var string
      */
-    protected $indexingFinishMessageTemplate = 'Indexing from %s to %s has finished';
+    protected $indexingFinishMessageTemplate = 'Indexing from %s to %s has finished. Quantity of documents: %s';
+
+    /**
+     * @var array
+     */
+    protected $displayResultMessages = [];
 
     protected function getIndexParams()
     {
@@ -146,6 +151,9 @@ class Elasticsearch extends Base
             // unset the bulk response when you are done to save memory
             unset($responses);
         }
+
+        $total = count($arSource);
+        return $total;
     }
 
     /**
@@ -283,9 +291,9 @@ class Elasticsearch extends Base
         $newIndex = $this->getNewIndex();
         $this->log(sprintf($this->indexingStartMessageTemplate, $currentIndex, $newIndex));
         $this->createAuxIndexForReindex($newIndex);
-        $this->indexAll();
+        $total = $this->indexAll();
         $this->deleteCurrentIndex($currentIndex);
-        $this->log(sprintf($this->indexingFinishMessageTemplate, $currentIndex, $newIndex));
+        $this->log(sprintf($this->indexingFinishMessageTemplate, $currentIndex, $newIndex, $total));
     }
 
     public function deleteIndex()
@@ -372,6 +380,7 @@ class Elasticsearch extends Base
         }
 
         $this->getLogger()->$level($message);
+        $this->displayResultMessages[] = $message;
     }
 
     /**
@@ -380,5 +389,13 @@ class Elasticsearch extends Base
     protected function getLogger()
     {
         return Log::channel($this->logChannel);
+    }
+
+    /**
+     * @return array
+     */
+    public function getDisplayResultMessages()
+    {
+        return $this->displayResultMessages;
     }
 }

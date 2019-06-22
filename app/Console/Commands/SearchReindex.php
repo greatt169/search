@@ -46,7 +46,10 @@ class SearchReindex extends Command
                 new ElasticsearchSource()
             );
             $indexer->reindex();
-            $this->info('full reindex is finished');
+            $displayResultMessages = $indexer->getDisplayResultMessages();
+            foreach ($displayResultMessages as $message) {
+                $this->info($message);
+            }
         } catch (Exception $e) {
             $this->error($e->getMessage());
         }

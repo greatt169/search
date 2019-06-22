@@ -2,7 +2,9 @@
 
 namespace App\Helpers;
 
-class Timer
+use App\Search\Index\Interfaces\TimerInterface;
+
+class Timer implements TimerInterface
 {
     /**
      * @var object
