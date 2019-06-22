@@ -101,7 +101,6 @@ class Elasticsearch extends Base
     /**
      * Elasticsearch constructor.
      * @param SourceInterface $source
-     * @throws Exception
      */
     public function __construct(SourceInterface $source)
     {
@@ -111,15 +110,21 @@ class Elasticsearch extends Base
             $clientBuild->setLogger($this->getLogger('fullLogChannel'));
         }
         $this->client = $clientBuild->build();
-        $this->baseAliasName = $this->source->getIndexName();
+        $this->baseAliasName = $this->getSourceIndex();
         try {
             $this->index = $this->getIndexByAlias($this->baseAliasName);
         } catch (Exception $e) {
             $this->index = $this->baseAliasName;
         }
         $this->type = $this->source->getTypeName();
-        $this->logChannel = config('search.index.elasticsearch.log_channel');
     }
+
+    private function getSourceIndex()
+    {
+        $sourceIndex = config('search.index.elasticsearch.prefix') . $this->source->getIndexName();
+        return $sourceIndex;
+    }
+
 
     protected function getHosts()
     {

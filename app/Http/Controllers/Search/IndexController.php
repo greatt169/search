@@ -15,6 +15,7 @@ class IndexController extends Controller
         $indexer = new Elasticsearch(
             new ElasticsearchSource()
         );
+        dump($indexer->getIndex());
         $client = $indexer->getClient();
         $params = [
             'index' => $indexer->getIndex(),
