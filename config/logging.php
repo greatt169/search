@@ -34,10 +34,16 @@ return [
             'path' => storage_path('logs/laravel.log'),
             'level' => 'debug',
         ],
-        'elasticsearch' => [
+        'elasticsearch_full' => [
             'driver' => 'single',
             'path' => storage_path('logs/es.log'),
             'level' => 'debug',
+        ],
+        'elasticsearch_dev' => [
+            'driver' => 'slack',
+            'url' => env('ES_LOG_SLACK_WEBHOOK_URL'),
+            'username' => 'SearchPoint Log',
+            'level' => 'info',
         ],
         'daily' => [
             'driver' => 'daily',

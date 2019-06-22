@@ -48,7 +48,12 @@ class Elasticsearch extends Base
     /**
      * @var string
      */
-    protected $logChannel = 'elasticsearch';
+    protected $fullLogChannel = 'elasticsearch_full';
+
+    /**
+     * @var string
+     */
+    protected $devLogChannel = 'elasticsearch_dev';
 
     /**
      * @var string
@@ -103,7 +108,7 @@ class Elasticsearch extends Base
         parent::__construct($source);
         $clientBuild = ClientBuilder::create()->setHosts($this->getHosts());
         if($this->isLogsEnable()) {
-            $clientBuild->setLogger($this->getLogger());
+            $clientBuild->setLogger($this->getLogger('fullLogChannel'));
         }
         $this->client = $clientBuild->build();
         $this->baseAliasName = $this->source->getIndexName();
@@ -113,6 +118,7 @@ class Elasticsearch extends Base
             $this->index = $this->baseAliasName;
         }
         $this->type = $this->source->getTypeName();
+        $this->logChannel = config('search.index.elasticsearch.log_channel');
     }
 
     protected function getHosts()
@@ -407,19 +413,17 @@ class Elasticsearch extends Base
      */
     protected function log($message, $level = 'info')
     {
-        if(!$this->isLogsEnable()) {
-            return;
-        }
-        $this->getLogger()->$level($message);
+        $this->getLogger('devLogChannel')->$level($message);
         $this->displayResultMessages[] = $message;
     }
 
     /**
+     * @param $code
      * @return mixed
      */
-    protected function getLogger()
+    protected function getLogger($code)
     {
-        return Log::channel($this->logChannel);
+        return Log::channel($this->$code);
     }
 
     /**
