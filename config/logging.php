@@ -36,14 +36,23 @@ return [
         ],
         'elasticsearch_full' => [
             'driver' => 'single',
-            'path' => storage_path('logs/es.log'),
+            'path' => storage_path('logs/es_full.log'),
             'level' => 'debug',
         ],
         'elasticsearch_dev' => [
+            'driver' => 'stack',
+            'channels' => ['elasticsearch_dev_slack', 'elasticsearch_dev_file'],
+        ],
+        'elasticsearch_dev_slack' => [
             'driver' => 'slack',
             'url' => env('ES_LOG_SLACK_WEBHOOK_URL'),
             'username' => 'SearchPoint Log',
             'level' => 'info',
+        ],
+        'elasticsearch_dev_file' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/es_dev.log'),
+            'level' => 'debug',
         ],
         'daily' => [
             'driver' => 'daily',
