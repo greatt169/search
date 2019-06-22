@@ -16,33 +16,11 @@ paths:
       summary: Получение списка элементов
       description: Получение списка элементов
       parameters:
-      - in: body
-        name: request
-        required: true
-        description: Параметры
-        schema:
-          type: object
-          properties:
-            sortField:
-              description: поле для сортировки price, SORT
-              type: string
-              example: "SORT"
-            sortOrder:
-              description: направление сортировки desc, asc
-              type: string
-              example: "asc"
-            pageSize:
-              description: количество товаров на странице
-              type: integer
-              example: 15
-            filterUrl:
-              description: строка фильтрации
-              type: string
-              example: "mans/obuv/filter/brand-is-adidas/apply/"
-            num:
-              description: номер страницы, которую нужно вернуть
-              type: integer
-              example: 1
+        - in: body
+          name: catalogListFilter
+          required: true
+          schema:
+            $ref: '#/definitions/catalogListFilter'
       tags:
       - Catalog
       responses:
@@ -233,3 +211,20 @@ paths:
         '500':
           description: Внутренняя ошибка сервера
 
+definitions:
+  catalogListFilter:
+    description: Массив установленных значений
+    type: array
+    items:
+      $ref: '#/definitions/catalogListFilterElement'
+
+  catalogListFilterElement:
+    type: object
+    required:
+      - count
+    properties:
+      count:
+        type: integer
+        description: |
+          Количество элементов, удовлетворяющих значению
+        example: 5
