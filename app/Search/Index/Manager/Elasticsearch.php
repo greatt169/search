@@ -65,6 +65,21 @@ class Elasticsearch extends Base
      */
     protected $displayResultMessages = [];
 
+    /**
+     * @var string
+     */
+    protected $indexAllTimerLabel = 'full_index';
+
+    /**
+     * @var string
+     */
+    protected $prepareBulkTimerLabel = 'prepare_bulk';
+
+    /**
+     * @var string
+     */
+    protected $indexBulkTimerLabel = 'index_bulk';
+
     protected function getIndexParams()
     {
         $params = [
@@ -119,10 +134,11 @@ class Elasticsearch extends Base
 
     public function indexAll()
     {
+        $this->timer->start($this->indexAllTimerLabel);
         $arSource = $this->getSource()->getElementsForIndexing();
         $params = ['body' => []];
         foreach ($arSource as $index => $document) {
-            $this->timer->start('prepare_bulk');
+            $this->timer->start($this->prepareBulkTimerLabel);
             $i = $index + 1;
             $arDocAttributes = [];
             foreach ($document['attributes'] as $attribute) {
@@ -136,13 +152,13 @@ class Elasticsearch extends Base
                 ]
             ];
             $params['body'][] = $arDocAttributes;
-            $this->timer->end('prepare_bulk');
+            $this->timer->end($this->prepareBulkTimerLabel);
 
             // Every 1000 documents stop and send the bulk request
             if ($i % $this->bulkSize == 0) {
-                $this->timer->start('index_bulk');
+                $this->timer->start($this->indexBulkTimerLabel);
                 $responses = $this->client->bulk($params);
-                $this->timer->end('index_bulk');
+                $this->timer->end($this->indexBulkTimerLabel);
                 // erase the old bulk request
                 $params = ['body' => []];
                 // unset the bulk response when you are done to save memory
@@ -151,15 +167,16 @@ class Elasticsearch extends Base
         }
         // Send the last batch if it exists
         if (!empty($params['body'])) {
-            $this->timer->start('index_bulk');
+            $this->timer->start($this->indexBulkTimerLabel);
             $responses = $this->client->bulk($params);
-            $this->timer->end('index_bulk');
+            $this->timer->end($this->indexBulkTimerLabel);
 
             // unset the bulk response when you are done to save memory
             unset($responses);
         }
 
         $total = count($arSource);
+        $this->timer->end($this->indexAllTimerLabel);
         return $total;
     }
 
