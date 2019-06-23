@@ -222,6 +222,8 @@ definitions:
     type: object
     required:
       - count
+      - checked
+      - disabled
     properties:
       count:
         type: integer
@@ -232,4 +234,9 @@ definitions:
         type: boolean
         description: |
           Значение параметра выбрано
+        example: true
+      disabled:
+        type: boolean
+        description: |
+          Значение недоступно для выбора
         example: true
