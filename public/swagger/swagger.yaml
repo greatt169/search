@@ -228,3 +228,8 @@ definitions:
         description: |
           Количество элементов, удовлетворяющих значению
         example: 5
+      checked:
+        type: boolean
+        description: |
+          Значение параметра выбрано
+        example: true
