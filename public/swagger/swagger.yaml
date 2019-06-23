@@ -10,6 +10,32 @@ basePath: "/search"
 produces:
   - application/json
 
+responses:
+  400Error:
+    description: 'Ошибочный запрос, например, отсутствует один из параметров'
+    schema:
+      $ref: '#/definitions/Error'
+  401Error:
+    description: 'Требуется аутентификация'
+    schema:
+      $ref: '#/definitions/Error'
+  403Error:
+    description: 'Недостаточно прав для выполнения запроса'
+    schema:
+      $ref: '#/definitions/Error'
+  404Error:
+    description: 'Запрашиваемый ресурс, определяемый идентификатором, не найден'
+    schema:
+      $ref: '#/definitions/Error'
+  409Error:
+    description: 'Ресурс, создаваемый методом POST, уже существует'
+    schema:
+      $ref: '#/definitions/Error'
+  500Error:
+    description: 'Серверная ошибка'
+    schema:
+      $ref: '#/definitions/Error'
+
 paths:
   "/catalog/list/":
     get:
@@ -24,16 +50,16 @@ paths:
       tags:
       - Catalog
       responses:
-        '200':
+        200:
           description: Метод успешно отработал
-        '400':
-          description: Метод отработал с ошибкой
-        '404':
-          description: Объет не найден
-        '401':
-          description: Ошибка авторизации
-        '500':
-          description: Внутренняя ошибка сервера
+        400:
+          $ref: '#/responses/400Error'
+        403:
+          $ref: '#/responses/403Error'
+        404:
+          $ref: '#/responses/404Error'
+        500:
+          $ref: '#/responses/500Error'
 
   "/catalog/filter/":
     get:
@@ -213,12 +239,117 @@ paths:
 
 definitions:
   catalogListFilter:
-    description: Массив установленных значений
-    type: array
-    items:
-      $ref: '#/definitions/catalogListFilterElement'
+    type: object
+    description: Объект фильтрации
+    properties:
+      params:
+        type: object
+        properties:
+          rangeParams:
+            type: array
+            description: |
+              Массив параметров фильтра типа range
+            items:
+              $ref: '#/definitions/catalogListFilterRangeParam'
 
-  catalogListFilterElement:
+          selectParams:
+            type: array
+            description: |
+              Массив параметров фильтра остальных типов (checkbox, radio, select)
+            items:
+              $ref: '#/definitions/catalogListFilterParam'
+
+
+  catalogListFilterRangeParam:
+    type: object
+    required:
+      - type
+      - code
+      - values
+    properties:
+      code:
+        type: string
+        description: |
+          Символьный код параметра
+        example: "rent_price"
+      sort:
+        type: integer
+        description: |
+          Индекс сортировки параметра
+        example: 500
+      name:
+        type: string
+        description: |
+          Название значения параметра
+        example: 'Стоимость аренды'
+
+      disabled:
+        type: boolean
+        description: |
+          Значение недоступно для выбора
+        example: true
+      unit:
+        type: string
+        description: |
+          Единица измерения значения свойства
+        example: 'руб.'
+      minValue:
+        type: number
+        description: |
+          Минимальное значение свойства
+        example: 1500
+      maxValue:
+        type: number
+        description: |
+          Максимальное значение свойства
+        example: 10000
+      minSelectedValue:
+        type: number
+        description: |
+          Минимальное выбранное значение свойства
+        example: 3000
+      maxSelectedValue:
+        type: number
+        description: |
+          Максимальное выбранное значение свойства
+        example: 7000
+
+  catalogListFilterParam:
+    type: object
+    required:
+      - type
+      - code
+      - values
+    properties:
+      type:
+        type: string
+        enum: [checkbox, radio, select]
+        description: |
+          Тип параметра
+        example: "checkbox"
+      code:
+        type: string
+        description: |
+          Символьный код параметра
+        example: "color"
+      sort:
+        type: integer
+        description: |
+          Индекс сортировки параметра
+        example: 500
+      name:
+        type: string
+        description: |
+          Название значения параметра
+        example: 'Цвет'
+      values:
+        type: array
+        description: |
+          Массив значений параметра
+        items:
+          $ref: '#/definitions/catalogListFilterValue'
+
+  catalogListFilterValue:
     type: object
     required:
       - count
@@ -240,3 +371,41 @@ definitions:
         description: |
           Значение недоступно для выбора
         example: true
+      sort:
+        type: integer
+        description: |
+          Индекс сортировки значения
+        example: 500
+      name:
+        type: string
+        description: |
+          Название значения свойства
+        example: 'Красный'
+      value:
+        type: string
+        description: |
+          Значение свойства
+        example: 'red'
+
+
+  Error:
+    description: Описание ошибки для всех методов
+    properties:
+      applicationErrorCode:
+        description: |
+          Код ошибки, к которому привел вызов метода
+        type: string
+        example: 'tooManyRequests'
+      debug:
+        description: |
+          Дополнительная отладочная информация
+        type: string
+        example: 'org.postgresql.util.PSQLException: ERROR: canceling statement due to user request'
+      message:
+        description: |
+          Человекочитаемое сообщение об ошибке
+        type: string
+        example: 'Ошибка отправки СМС-сообщения'
+    required:
+      - applicationErrorCode
+      - message
