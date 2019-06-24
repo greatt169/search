@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\Search;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use SwaggerUnAuth\Model\CatalogListFilter;
+use SwaggerUnAuth\ObjectSerializer;
 
 class SearchController extends Controller
 {
-    public function catalogList()
+    public function catalogList(Request $request)
     {
-        return '2222';
+        $filter = ObjectSerializer::deserialize($request->toArray(), '\SwaggerUnAuth\Model\CatalogListFilter');
+        return $filter;
     }
 }

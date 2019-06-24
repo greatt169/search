@@ -1,5 +1,8 @@
 FROM php:7.1-fpm
 
+# Hack for debian-slim to make the jdk install work below.
+RUN mkdir -p /usr/share/man/man1
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
         git \
         wget \
@@ -13,6 +16,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libmcrypt-dev \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
+        default-jdk-headless \
     && docker-php-ext-install \
         iconv \
         mbstring \

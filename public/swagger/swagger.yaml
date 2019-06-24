@@ -87,7 +87,7 @@ definitions:
     type: object
     description: Объект фильтрации
     properties:
-      params:
+      filter:
         type: object
         properties:
           rangeParams:
