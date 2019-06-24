@@ -12,11 +12,7 @@
 */
 Route::group([
     'namespace' => 'Search',
-    'prefix' => '/v{version}/search',
+    'prefix' => '/v{version}/search/{engine}/{index}',
 ], function () {
-    Route::get('/', 'IndexController@index')->name('search_home');
     Route::post('/catalog/list/', 'SearchController@catalogList')->name('catalog_list');
 });
-
-Route::get('/swagger/index.html')->name('search_swagger');
-Route::get('/frontend/index.html')->name('search_frontend');

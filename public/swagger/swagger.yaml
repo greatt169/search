@@ -37,11 +37,27 @@ responses:
       $ref: '#/definitions/Error'
 
 paths:
-  "/catalog/list/":
+  "/{engine}/{index}/catalog/list/":
     post:
       summary: Получение списка элементов
       description: Получение списка элементов
       parameters:
+        - in: path
+          name: engine
+          required: true
+          description: Id поискового движка
+          schema:
+            type: string
+            enum:
+              - elasticsearch
+            example: elasticsearch
+        - in: path
+          name: index
+          required: true
+          description: Код индекса
+          schema:
+            type: string
+            example: auto
         - in: body
           name: catalogListFilter
           required: true
