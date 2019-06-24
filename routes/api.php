@@ -1,18 +1,22 @@
 <?php
 
-use Illuminate\Http\Request;
-
 /*
 |--------------------------------------------------------------------------
-| API Routes
+| Web Routes
 |--------------------------------------------------------------------------
 |
-| Here is where you can register API routes for your application. These
+| Here is where you can register web routes for your application. These
 | routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
+| contains the "web" middleware group. Now create something great!
 |
 */
+Route::group([
+    'namespace' => 'Search',
+    'prefix' => '/v{version}/search',
+], function () {
+    Route::get('/', 'IndexController@index')->name('search_home');
+    Route::post('/catalog/list/', 'SearchController@catalogList')->name('catalog_list');
+});
 
-/*Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:api');*/
+Route::get('/swagger/index.html')->name('search_swagger');
+Route::get('/frontend/index.html')->name('search_frontend');
