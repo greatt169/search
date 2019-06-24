@@ -52,6 +52,11 @@ paths:
       responses:
         200:
           description: Метод успешно отработал
+          schema:
+          uniqueItems: false
+          type: array
+          items:
+            $ref: '#/definitions/listItem'
         400:
           $ref: '#/responses/400Error'
         403:
@@ -280,9 +285,23 @@ definitions:
       name:
         type: string
         description: |
-          Название значения параметра
+          Название параметра
         example: 'Стоимость аренды'
-
+      description:
+        type: string
+        description: |
+          Описание параметра
+        example: 'Произвольное описание параметра'
+      img:
+        type: string
+        description: |
+          Картинка для параметра
+        example: 'https://cdn.fast.ru/files/1sdasd88dasdsad.jpg'
+      additional_info:
+        type: string
+        description: |
+          Дополнительная информация для параметра
+        example: 'string'
       disabled:
         type: boolean
         description: |
@@ -342,6 +361,21 @@ definitions:
         description: |
           Название значения параметра
         example: 'Цвет'
+      description:
+        type: string
+        description: |
+          Описание параметра
+        example: 'Произвольное описание параметра'
+      img:
+        type: string
+        description: |
+          Картинка для параметра
+        example: 'https://cdn.fast.ru/files/1sdasd88dasdsad.jpg'
+      additional_info:
+        type: string
+        description: |
+          Дополнительная информация для параметра
+        example: 'string'
       values:
         type: array
         description: |
@@ -381,12 +415,148 @@ definitions:
         description: |
           Название значения свойства
         example: 'Красный'
+      description:
+        type: string
+        description: |
+          Описание значения параметра
+        example: 'Произвольное описание параметра'
+      img:
+        type: string
+        description: |
+          Картинка для значения параметра
+        example: 'https://cdn.fast.ru/files/1sdasd88dasdsad.jpg'
+      additional_info:
+        type: string
+        description: |
+          Дополнительная информация для значения параметра
+        example: 'string'
       value:
         type: string
         description: |
           Значение свойства
         example: 'red'
 
+  listItem:
+    type: object
+    required:
+      - id
+      - attributes
+    properties:
+      id:
+        type: string
+        description: |
+          Идентификатор элемента
+        example: 5
+      attributes:
+        type: object
+        properties:
+          single:
+            type: array
+            description: |
+              Массив одиночных свойств элемента
+            items:
+              $ref: '#/definitions/listItemSingleAttribute'
+          multiple:
+            type: array
+            description: |
+              Массив множественных свойств элемента
+            items:
+              $ref: '#/definitions/listItemMultipleAttribute'
+
+  listItemSingleAttribute:
+    type: object
+    properties:
+      id:
+        type: string
+        description: |
+          Идентификатор аттрибута элемента
+        example: 764
+      name:
+        type: string
+        description: |
+          Название аттрибута
+        example: 'Тип коробки передач'
+      description:
+        type: string
+        description: |
+          Описание аттрибута
+        example: 'Произвольное описание параметра'
+      img:
+        type: string
+        description: |
+          Картинка для аттрибута
+        example: 'https://cdn.fast.ru/files/1sdasd88dasdsad.jpg'
+      additional_info:
+        type: string
+        description: |
+          Дополнительная информация для значения аттрибута
+        example: 'string'
+      value:
+        $ref: '#/definitions/listItemAttributeValue'
+
+  listItemMultipleAttribute:
+      type: object
+      properties:
+        id:
+          type: string
+          description: |
+            Идентификатор аттрибута элемента
+          example: 764
+        name:
+          type: string
+          description: |
+            Название аттрибута
+          example: 'Тип коробки передач'
+        description:
+          type: string
+          description: |
+            Описание аттрибута
+          example: 'Произвольное описание параметра'
+        img:
+          type: string
+          description: |
+            Картинка для аттрибута
+          example: 'https://cdn.fast.ru/files/1sdasd88dasdsad.jpg'
+        additional_info:
+          type: string
+          description: |
+            Дополнительная информация для значения аттрибута
+          example: 'string'
+        values:
+          type: array
+          description: |
+            Массив значений аттрибута
+          items:
+            $ref: '#/definitions/listItemAttributeValue'
+
+  listItemAttributeValue:
+      type: object
+      properties:
+        id:
+          type: string
+          description: |
+            Идентификатор значения аттрибута элемента
+          example: 44
+        description:
+          type: string
+          description: |
+            Описание значения аттрибута
+          example: 'Произвольное описание параметра'
+        img:
+          type: string
+          description: |
+            Картинка для значения аттрибута
+          example: 'https://cdn.fast.ru/files/1sdasd88dasdsad.jpg'
+        additional_info:
+          type: string
+          description: |
+            Дополнительная информация для значения аттрибута
+          example: 'string'
+        value:
+          type: string
+          description: |
+            Значение аттрибута
+          example: 'АКПП'
 
   Error:
     description: Описание ошибки для всех методов
