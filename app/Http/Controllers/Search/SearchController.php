@@ -7,6 +7,7 @@ use App\Search\Query\Request\Elasticsearch;
 use Exception;
 use Illuminate\Http\Request;
 use SwaggerUnAuth\Model\Error;
+use SwaggerUnAuth\Model\Filter;
 use SwaggerUnAuth\ObjectSerializer;
 
 class SearchController extends Controller
@@ -17,7 +18,7 @@ class SearchController extends Controller
         /**
          * @var \SwaggerUnAuth\Model\Filter $filter
          */
-        $filter = ObjectSerializer::deserialize($requestParam, '\SwaggerUnAuth\Model\Filter', null);
+        $filter = ObjectSerializer::deserialize($requestParam, Filter::class, null);
         try {
             switch ($engine) {
                 case 'elasticsearch': {
