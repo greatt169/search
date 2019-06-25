@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Search\Query\Entity;
+namespace App\Search\Entity;
 
 abstract class Base
 {
