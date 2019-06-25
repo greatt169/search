@@ -11,5 +11,5 @@ abstract class Base
      * @param Filter $filter
      * @return ListItem[]
      */
-    public abstract function getList(Filter $filter);
+    public abstract function postCatalogList(Filter $filter);
 }

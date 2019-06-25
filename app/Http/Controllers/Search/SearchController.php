@@ -16,14 +16,14 @@ class SearchController extends Controller
     {
         $requestParam = json_decode(json_encode($request->all()));
         /**
-         * @var \SwaggerUnAuth\Model\Filter $filter
+         * @var Filter $filter
          */
         $filter = ObjectSerializer::deserialize($requestParam, Filter::class, null);
         try {
             switch ($engine) {
                 case 'elasticsearch': {
                     $elasticSearch = new Elasticsearch();
-                    $items = $elasticSearch->getList($filter);
+                    $items = $elasticSearch->postCatalogList($filter);
                     break;
                 }
                 default: {

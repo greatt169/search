@@ -11,7 +11,7 @@ class Elasticsearch extends Base
      * @param Filter $filter
      * @return ListItem[]
      */
-    public function getList(Filter $filter)
+    public function postCatalogList(Filter $filter)
     {
         return [new ListItem()];
     }
