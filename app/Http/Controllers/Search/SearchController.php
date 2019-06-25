@@ -12,9 +12,11 @@ use SwaggerUnAuth\ObjectSerializer;
 
 class SearchController extends Controller
 {
-    public function catalogList($version, $engine, $index, Request $request)
+    public function catalogList($version, Request $request)
     {
         $requestParam = json_decode(json_encode($request->all()));
+        $engine = $request->get('engine');
+        $index = $request->get('index');
         /**
          * @var Filter $filter
          */

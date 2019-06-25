@@ -6,7 +6,7 @@ info:
   version: 1.0.0
 schemes:
   - http
-basePath: "/api/v1/search"
+basePath: "/api/v1"
 produces:
   - application/json
 
@@ -37,12 +37,12 @@ responses:
       $ref: '#/definitions/Error'
 
 paths:
-  "/{engine}/{index}/catalog/list/":
+  "/catalog-list":
     post:
       summary: Получение списка элементов
       description: Получение списка элементов
       parameters:
-        - in: path
+        - in: query
           name: engine
           required: true
           description: Id поискового движка
@@ -51,7 +51,7 @@ paths:
             enum:
               - elasticsearch
             example: elasticsearch
-        - in: path
+        - in: query
           name: index
           required: true
           description: Код индекса

@@ -12,7 +12,7 @@
 */
 Route::group([
     'namespace' => 'Search',
-    'prefix' => '/v{version}/search/{engine}/{index}',
+    'prefix' => '/v{version}',
 ], function () {
-    Route::post('/catalog/list/', 'SearchController@catalogList')->name('catalog_list');
+    Route::post('/catalog-list/', 'SearchController@catalogList')->name('catalog_list');
 });
