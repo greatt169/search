@@ -2,14 +2,14 @@
 
 namespace App\Search\Query\Request;
 
-use SwaggerUnAuth\Model\Filter;
+use SwaggerUnAuth\Model\CatalogListFilter;
 use SwaggerUnAuth\Model\ListItem;
 
 abstract class Base
 {
     /**
-     * @param Filter $filter
+     * @param CatalogListFilter $filter
      * @return ListItem[]
      */
-    public abstract function postCatalogList(Filter $filter);
+    public abstract function postCatalogList(CatalogListFilter $filter);
 }
