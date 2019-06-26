@@ -62,7 +62,7 @@ paths:
           name: filter
           required: true
           schema:
-            $ref: '#/definitions/catalogListFilter'
+            $ref: '#/definitions/Filter'
       tags:
       - Catalog
       responses:
@@ -72,7 +72,7 @@ paths:
             uniqueItems: false
             type: array
             items:
-              $ref: '#/definitions/listItem'
+              $ref: '#/definitions/ListItem'
         400:
           $ref: '#/responses/400Error'
         403:
@@ -83,7 +83,7 @@ paths:
           $ref: '#/responses/500Error'
 
 definitions:
-  catalogListFilter:
+  Filter:
     type: object
     description: Объект фильтрации
     properties:
@@ -92,18 +92,15 @@ definitions:
         description: |
           Массив параметров фильтра типа range
         items:
-          $ref: '#/definitions/catalogListFilterRangeParam'
+          $ref: '#/definitions/FilterRangeParam'
 
       selectParams:
         type: array
         description: |
           Массив параметров фильтра остальных типов (checkbox, radio, select)
         items:
-          $ref: '#/definitions/catalogListFilterParam'
-
-
-
-  catalogListFilterRangeParam:
+          $ref: '#/definitions/FilterParam'
+  FilterRangeParam:
     type: object
     required:
       - type
@@ -171,7 +168,7 @@ definitions:
           Максимальное выбранное значение свойства
         example: 7000
 
-  catalogListFilterParam:
+  FilterParam:
     type: object
     required:
       - type
@@ -219,9 +216,9 @@ definitions:
         description: |
           Массив значений параметра
         items:
-          $ref: '#/definitions/catalogListFilterValue'
+          $ref: '#/definitions/FilterValue'
 
-  catalogListFilterValue:
+  FilterValue:
     type: object
     required:
       - count
@@ -274,7 +271,7 @@ definitions:
           Значение свойства
         example: 'red'
 
-  listItem:
+  ListItem:
     type: object
     required:
       - id
@@ -293,15 +290,15 @@ definitions:
             description: |
               Массив одиночных свойств элемента
             items:
-              $ref: '#/definitions/listItemSingleAttribute'
+              $ref: '#/definitions/ListItemSingleAttribute'
           multiple:
             type: array
             description: |
               Массив множественных свойств элемента
             items:
-              $ref: '#/definitions/listItemMultipleAttribute'
+              $ref: '#/definitions/ListItemMultipleAttribute'
 
-  listItemSingleAttribute:
+  ListItemSingleAttribute:
     type: object
     required:
       - id
@@ -333,9 +330,9 @@ definitions:
           Дополнительная информация для значения аттрибута
         example: 'string'
       value:
-        $ref: '#/definitions/listItemAttributeValue'
+        $ref: '#/definitions/ListItemAttributeValue'
 
-  listItemMultipleAttribute:
+  ListItemMultipleAttribute:
       type: object
       required:
         - id
@@ -371,9 +368,9 @@ definitions:
           description: |
             Массив значений аттрибута
           items:
-            $ref: '#/definitions/listItemAttributeValue'
+            $ref: '#/definitions/ListItemAttributeValue'
 
-  listItemAttributeValue:
+  ListItemAttributeValue:
       type: object
       required:
         - value

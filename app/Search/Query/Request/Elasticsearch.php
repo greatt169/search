@@ -2,16 +2,16 @@
 
 namespace App\Search\Query\Request;
 
-use SwaggerUnAuth\Model\CatalogListFilter;
+use SwaggerUnAuth\Model\Filter;
 use SwaggerUnAuth\Model\ListItem;
 
 class Elasticsearch extends Base
 {
     /**
-     * @param CatalogListFilter $filter
+     * @param Filter $filter
      * @return ListItem[]
      */
-    public function postCatalogList(CatalogListFilter $filter)
+    public function postCatalogList(Filter $filter)
     {
         return [new ListItem()];
     }
