@@ -13,14 +13,14 @@ class CatalogListRequest extends Request
     public function rules()
     {
         return [
-
+            'engine' => 'in:elasticsearch'
         ];
     }
 
     /**
      * @throws ApiException
      */
-    public function validateFilter()
+    protected function validateFilter()
     {
         /**
          * @var Filter $filter
@@ -53,6 +53,12 @@ class CatalogListRequest extends Request
         $this->setValid('filter', $filter);
     }
 
+    protected function validateEngine()
+    {
+        $engine = $this->get('engine');
+        print_r($engine);
+    }
+
     /**
      * Configure the validator instance.
      *
@@ -65,6 +71,8 @@ class CatalogListRequest extends Request
             $this->validateFilter();
         });
     }
+
+
 
 
 }

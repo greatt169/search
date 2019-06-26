@@ -48,8 +48,7 @@ paths:
           description: Id поискового движка
           schema:
             type: string
-            enum:
-              - elasticsearch
+            enum: [elasticsearch]
             example: elasticsearch
         - in: query
           name: index
@@ -227,6 +226,7 @@ definitions:
       - count
       - checked
       - disabled
+      - value
     properties:
       count:
         type: integer
