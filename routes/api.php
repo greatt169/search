@@ -12,7 +12,6 @@
 */
 Route::group([
     'namespace' => 'Search',
-    'prefix' => '/v{version}',
 ], function () {
     Route::post('/catalog-list/', 'SearchController@catalogList')->name('catalog_list');
 });
