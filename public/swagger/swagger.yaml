@@ -86,6 +86,9 @@ definitions:
   Filter:
     type: object
     description: Объект фильтрации
+    required:
+        - rangeParams
+        - selectParams
     properties:
       rangeParams:
         type: array
