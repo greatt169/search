@@ -4,7 +4,7 @@ namespace App\Search\Helpers;
 
 use SwaggerUnAuth\Model\Error;
 
-abstract class ApiError
+class ApiError
 {
     public static function returnError($message, $debug, $code)
     {
