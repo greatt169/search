@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Api;
 
 use App\Exceptions\ApiException;
+use SwaggerUnAuth\Model\Engine;
 use SwaggerUnAuth\Model\Filter;
 use SwaggerUnAuth\Model\FilterParam;
 use SwaggerUnAuth\Model\ModelInterface;
@@ -69,6 +70,8 @@ class CatalogListRequest extends Request
             $errors = $validator->errors();
             if($errors->count() > 0) {
                 throw new ApiException('BadRequest', $errors->first(), 400);
+            } else {
+                $this->setValid('engine', ObjectSerializer::deserialize($this->getDeserializeData()->engine, Engine::class, null));
             }
         });
     }

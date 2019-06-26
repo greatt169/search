@@ -19,7 +19,15 @@ class Request extends FormRequest
         $this->validData[$key] = $value;
     }
 
+    /**
+     * @param $key
+     * @return mixed
+     * @throws ApiException
+     */
     public function getValid($key) {
+        if(!array_key_exists($key, $this->validData)) {
+            throw new ApiException('Internal Server Error', sprintf('key %s doesn\'t exist in valid data', $key), 500);
+        }
         return $this->validData[$key];
     }
 

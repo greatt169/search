@@ -60,14 +60,7 @@ paths:
               - engine
             properties:
               engine:
-                type: object
-                required:
-                  - name
-                properties:
-                  name:
-                    type: string
-                    example: elasticsearch
-                    enum: [elasticsearch, sphinx]
+                $ref: '#/definitions/Engine'
               filter:
                 $ref: '#/definitions/Filter'
       tags:
@@ -90,6 +83,16 @@ paths:
           $ref: '#/responses/500Error'
 
 definitions:
+  Engine:
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        type: string
+        example: elasticsearch
+        enum: [elasticsearch, sphinx]
+
   Filter:
     type: object
     description: Объект фильтрации
