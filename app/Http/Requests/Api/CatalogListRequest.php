@@ -13,7 +13,7 @@ class CatalogListRequest extends Request
     public function rules()
     {
         return [
-            'engine' => 'in:elasticsearch,sphinx'
+            'engine.name' => 'in:elasticsearch,sphinx'
         ];
     }
 
@@ -25,7 +25,7 @@ class CatalogListRequest extends Request
         /**
          * @var Filter $filter
          */
-        $filter = ObjectSerializer::deserialize($this->getDeserializeData(), Filter::class, null);
+        $filter = ObjectSerializer::deserialize($this->getDeserializeData()->filter, Filter::class, null);
         $this->validateBySwaggerModel($filter);
         $filterRangeParams = $filter->getRangeParams();
 

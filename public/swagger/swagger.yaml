@@ -43,14 +43,6 @@ paths:
       description: Получение списка элементов
       parameters:
         - in: query
-          name: engine
-          required: true
-          description: Id поискового движка
-          schema:
-            type: string
-            enum: [elasticsearch]
-            example: elasticsearch
-        - in: query
           name: index
           required: true
           description: Код индекса
@@ -58,10 +50,26 @@ paths:
             type: string
             example: auto
         - in: body
-          name: filter
+          name: request
           required: true
           schema:
-            $ref: '#/definitions/Filter'
+            type: object
+            description: Параметры запроса
+            required:
+              - filter
+              - engine
+            properties:
+              engine:
+                type: object
+                required:
+                  - name
+                properties:
+                  name:
+                    type: string
+                    example: elasticsearch
+                    enum: [elasticsearch, sphinx]
+              filter:
+                $ref: '#/definitions/Filter'
       tags:
       - Catalog
       responses:
