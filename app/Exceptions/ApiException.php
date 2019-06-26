@@ -11,7 +11,7 @@ class ApiException extends Exception
 
     protected $debug;
 
-    public function __construct(string $message = "", $debug, int $code = 0, $applicationCode = null, Throwable $previous = null)
+    public function __construct(string $message, $debug, int $code = 0, $applicationCode = null, Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
         $this->debug = $debug;

@@ -13,7 +13,6 @@ class SearchController extends Controller
     /**
      * @param CatalogListRequest $request
      * @return \SwaggerUnAuth\Model\ListItem[]
-     * @throws ApiException
      */
     public function catalogList(CatalogListRequest $request)
     {
@@ -21,14 +20,12 @@ class SearchController extends Controller
          * @var Filter $filter
          */
         $filter = $request->getValid('filter');
+        $items = null;
         switch ($request->get('engine')) {
             case 'elasticsearch': { // TODO: ИИ
                 $elasticSearch = new Elasticsearch();
                 $items = $elasticSearch->postCatalogList($filter);
                 break;
-            }
-            default: {
-                throw new ApiException('EngineNotFound', sprintf('engine %s not found', $request->get('engine')), 404);
             }
         }
         return $items;
