@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api;
 
+use App\Exceptions\ApiException;
 use SwaggerUnAuth\Model\Filter;
 use SwaggerUnAuth\ObjectSerializer;
 
@@ -32,8 +33,12 @@ class CatalogListRequest extends Request
         $this->setValid('filter', $filter);
 
         $validator->after(function ($validator) {
-            if (1) {
-                $validator->errors()->add('field', 'Something is wrong with this field!');
+            if (0) {
+
+                /**
+                 * @var \Illuminate\Validation\Validator  $validator
+                 */
+                throw new ApiException('Bad Request', 'Валидация не пройдена', 400);
             }
         });
     }
