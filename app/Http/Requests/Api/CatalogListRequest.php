@@ -4,11 +4,12 @@ namespace App\Http\Requests\Api;
 
 use App\Exceptions\ApiException;
 use SwaggerUnAuth\Model\Filter;
+use SwaggerUnAuth\Model\FilterParam;
+use SwaggerUnAuth\Model\ModelInterface;
 use SwaggerUnAuth\ObjectSerializer;
 
 class CatalogListRequest extends Request
 {
-
     public function rules()
     {
         return [
@@ -16,9 +17,40 @@ class CatalogListRequest extends Request
         ];
     }
 
-    public function isValid()
+    /**
+     * @throws ApiException
+     */
+    public function validateFilter()
     {
-        //$filter = ObjectSerializer::deserialize($this, Filter::class, null);
+        /**
+         * @var Filter $filter
+         */
+        $filter = ObjectSerializer::deserialize($this->getDeserializeData(), Filter::class, null);
+        $this->validateBySwaggerModel($filter);
+        $filterRangeParams = $filter->getRangeParams();
+
+        /**
+         * @var ModelInterface $filterRangeParam
+         */
+        foreach ($filterRangeParams as $filterRangeParam) {
+            $this->validateBySwaggerModel($filterRangeParam);
+        }
+        $filterSelectParams = $filter->getSelectParams();
+
+        /**
+         * @var FilterParam $filterSelectParam
+         */
+        foreach ($filterSelectParams as $filterSelectParam) {
+            $this->validateBySwaggerModel($filterSelectParam);
+            $filterSelectParamValues = $filterSelectParam->getValues();
+            /**
+             * @var ModelInterface $filterSelectParamValue
+             */
+            foreach ($filterSelectParamValues as $filterSelectParamValue) {
+                $this->validateBySwaggerModel($filterSelectParamValue);
+            }
+        }
+        $this->setValid('filter', $filter);
     }
 
     /**
@@ -29,17 +61,8 @@ class CatalogListRequest extends Request
      */
     public function withValidator($validator)
     {
-        $filter = ObjectSerializer::deserialize($this, Filter::class, null);
-        $this->setValid('filter', $filter);
-
         $validator->after(function ($validator) {
-            if (0) {
-
-                /**
-                 * @var \Illuminate\Validation\Validator  $validator
-                 */
-                throw new ApiException('Bad Request', 'Валидация не пройдена', 400);
-            }
+            $this->validateFilter();
         });
     }
 
