@@ -4,14 +4,14 @@ namespace App\Search\Entity\Engine;
 
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
-use Psr\Log\LoggerInterface;
+use Illuminate\Support\Facades\Log;
 
 class Elasticsearch extends Base
 {
     /**
      * @var Client
      */
-    protected $client;
+    protected $client = null;
 
     protected function getHosts()
     {
@@ -19,19 +19,18 @@ class Elasticsearch extends Base
         return $hosts;
     }
 
+    protected function isLogsEnable()
+    {
+        return config('search.index.elasticsearch.log_save');
+    }
+
     /**
      * Elasticsearch constructor.
      * @param string $index|null
-     * @param LoggerInterface|null $logger
      */
-    public function __construct(string $index = null, LoggerInterface $logger = null)
+    public function __construct(string $index = null)
     {
         parent::__construct($index);
-        $clientBuild = ClientBuilder::create()->setHosts($this->getHosts());
-        if($logger !== null) {
-            $clientBuild->setLogger($logger);
-        }
-        $this->client = $clientBuild->build();
 
     }
 
@@ -40,6 +39,14 @@ class Elasticsearch extends Base
      */
     public function getClient(): Client
     {
+        if($this->client !== null) {
+            return $this->client;
+        }
+        $clientBuild = ClientBuilder::create()->setHosts($this->getHosts());
+        if($this->isLogsEnable()) {
+            $clientBuild->setLogger(Log::channel('fullLogChannel'));
+        }
+        $this->client = $clientBuild->build();
         return $this->client;
     }
 }

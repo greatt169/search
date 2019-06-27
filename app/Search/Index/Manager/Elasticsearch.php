@@ -6,17 +6,11 @@ use App\Search\Entity\Interfaces\EntityInterface;
 use App\Search\Index\Interfaces\SourceInterface;
 use App\Search\Index\Interfaces\TimerInterface;
 use Elasticsearch\Client;
-use Elasticsearch\ClientBuilder;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
 class Elasticsearch extends Base
 {
-    /**
-     * @var Client
-     */
-    protected $client;
-
     /**
      * @var string
      */
@@ -109,11 +103,6 @@ class Elasticsearch extends Base
     public function __construct(SourceInterface $source, EntityInterface $entity, TimerInterface $timer = null)
     {
         parent::__construct($source, $entity);
-        $clientBuild = ClientBuilder::create()->setHosts($this->getHosts());
-        if($this->isLogsEnable()) {
-            $clientBuild->setLogger($this->getLogger('fullLogChannel'));
-        }
-        $this->client = $clientBuild->build();
         $this->baseAliasName = $this->getSourceIndex();
         try {
             $this->index = $this->getIndexByAlias($this->baseAliasName);
@@ -138,13 +127,13 @@ class Elasticsearch extends Base
 
     public function createIndex()
     {
-        $this->client->indices()->create($this->getIndexParams());
+        $this->getClient()->indices()->create($this->getIndexParams());
         $this->addAlias($this->baseAliasName);
     }
 
     function dropIndex()
     {
-        $this->client->indices()->delete($this->getIndexParams());
+        $this->getClient()->indices()->delete($this->getIndexParams());
     }
 
     public function indexAll()
@@ -172,7 +161,7 @@ class Elasticsearch extends Base
             // Every 1000 documents stop and send the bulk request
             if ($i % $this->bulkSize == 0) {
                 $this->timer->start($this->indexBulkTimerLabel);
-                $responses = $this->client->bulk($params);
+                $responses = $this->getClient()->bulk($params);
                 $this->timer->end($this->indexBulkTimerLabel);
                 // erase the old bulk request
                 $params = ['body' => []];
@@ -183,7 +172,7 @@ class Elasticsearch extends Base
         // Send the last batch if it exists
         if (!empty($params['body'])) {
             $this->timer->start($this->indexBulkTimerLabel);
-            $responses = $this->client->bulk($params);
+            $responses = $this->getClient()->bulk($params);
             $this->timer->end($this->indexBulkTimerLabel);
 
             // unset the bulk response when you are done to save memory
@@ -200,7 +189,7 @@ class Elasticsearch extends Base
      */
     public function getClient()
     {
-        return $this->client;
+        return $this->entity->getClient();
     }
 
     /**
@@ -240,7 +229,7 @@ class Elasticsearch extends Base
             ]
         ];
 
-        $this->client->indices()->updateAliases($params);
+        $this->getClient()->indices()->updateAliases($params);
         return true;
     }
 
@@ -265,7 +254,7 @@ class Elasticsearch extends Base
             ]
         ];
 
-        $this->client->indices()->updateAliases($params);
+        $this->getClient()->indices()->updateAliases($params);
         return true;
     }
 
@@ -284,7 +273,7 @@ class Elasticsearch extends Base
     public function indexExists($index)
     {
         try {
-            $this->client->indices()->get(['index' => $index]);
+            $this->getClient()->indices()->get(['index' => $index]);
         } catch (Exception $e) {
             return false;
         }
@@ -311,7 +300,7 @@ class Elasticsearch extends Base
      */
     public function getIndexByAlias($aliasName)
     {
-        $aliases = $this->client->indices()->getAliases();
+        $aliases = $this->getClient()->indices()->getAliases();
         $aliasWithPrefix = $this->getAliasWithPrefix($aliasName);
         foreach ($aliases as $index => $aliasMapping) {
             if (array_key_exists($aliasWithPrefix, $aliasMapping['aliases'])) {
@@ -360,7 +349,7 @@ class Elasticsearch extends Base
      */
     public function getAllIndices()
     {
-        $allIndices = $this->client->indices()->get(['index' => '*']);
+        $allIndices = $this->getClient()->indices()->get(['index' => '*']);
         return $allIndices;
     }
 
@@ -369,7 +358,7 @@ class Elasticsearch extends Base
      */
     public function getAllAliases()
     {
-        $allAliases = $this->client->indices()->getAliases();
+        $allAliases = $this->getClient()->indices()->getAliases();
         return $allAliases;
     }
 
