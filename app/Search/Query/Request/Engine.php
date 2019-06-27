@@ -31,7 +31,7 @@ abstract class Engine implements RequestEngineInterface
                 throw new ApiException('Internal Server Error', $debugMessage, 500);
             }
 
-            static::$instances[$engine] = new $className($engine);
+            static::$instances[$engine] = app()->make($className, ['engine' => $engine]);
         }
         return static::$instances[$engine];
     }

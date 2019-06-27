@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Search\Entity\Engine\Elasticsearch as ElasticsearchEntity;
+use App\Search\Entity\Interfaces\EntityInterface;
+use App\Search\Query\Request\Elasticsearch;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,6 +26,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->when(Elasticsearch::class)
+            ->needs(EntityInterface::class)
+            ->give(ElasticsearchEntity::class);
     }
 }
