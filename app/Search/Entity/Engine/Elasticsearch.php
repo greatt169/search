@@ -13,6 +13,8 @@ class Elasticsearch extends Base
      */
     protected $client = null;
 
+    protected $aliasPrefix = 'alias_';
+
     protected function getHosts()
     {
         $hosts = explode(',', config('search.index.elasticsearch.hosts'));
@@ -22,6 +24,31 @@ class Elasticsearch extends Base
     protected function isLogsEnable()
     {
         return config('search.index.elasticsearch.log_save');
+    }
+
+    /**
+     * @param string $aliasName код alias
+     *
+     * @return null | string
+     */
+    public function getIndexByAlias($aliasName)
+    {
+        $aliases = $this->getClient()->indices()->getAliases();
+        $aliasWithPrefix = $this->getAliasWithPrefix($aliasName);
+        foreach ($aliases as $index => $aliasMapping) {
+            if (array_key_exists($aliasWithPrefix, $aliasMapping['aliases'])) {
+                return $index;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param $aliasName
+     * @return string
+     */
+    public function getAliasWithPrefix($aliasName) {
+        return $this->aliasPrefix . $aliasName;
     }
 
     /**

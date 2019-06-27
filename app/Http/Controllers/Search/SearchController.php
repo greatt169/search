@@ -28,11 +28,13 @@ class SearchController extends Controller
          */
         $engine = $request->getValid('engine');
 
+        $index = $request->get('index');
+
         $items = null;
         /**
          * @var RequestEngineInterface $engineRequest
          */
-        $engineRequest = RequestEngine::getInstance($engine->getName());
+        $engineRequest = RequestEngine::getInstance($engine->getName(), $index);
         $items = $engineRequest->postCatalogList($filter);
         return $items;
     }

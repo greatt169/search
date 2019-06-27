@@ -29,11 +29,6 @@ class Elasticsearch extends Base
     /**
      * @var string
      */
-    protected $aliasPrefix = 'alias_';
-
-    /**
-     * @var string
-     */
     protected $baseAliasName;
 
     /**
@@ -89,11 +84,6 @@ class Elasticsearch extends Base
         return $params;
     }
 
-    private function isLogsEnable()
-    {
-        return config('search.index.elasticsearch.log_save');
-    }
-
     /**
      * Elasticsearch constructor.
      * @param SourceInterface $source
@@ -102,10 +92,10 @@ class Elasticsearch extends Base
      */
     public function __construct(SourceInterface $source, EntityInterface $entity, TimerInterface $timer = null)
     {
-        parent::__construct($source, $entity);
+        parent::__construct($source, $entity, $timer);
         $this->baseAliasName = $this->getSourceIndex();
         try {
-            $this->index = $this->getIndexByAlias($this->baseAliasName);
+            $this->index = $this->entity->getIndexByAlias($this->baseAliasName);
         } catch (Exception $e) {
             $this->index = $this->baseAliasName;
         }
@@ -116,13 +106,6 @@ class Elasticsearch extends Base
     {
         $sourceIndex = config('search.index.elasticsearch.prefix') . $this->source->getIndexName();
         return $sourceIndex;
-    }
-
-
-    protected function getHosts()
-    {
-        $hosts = explode(',', config('search.index.elasticsearch.hosts'));
-        return $hosts;
     }
 
     public function createIndex()
@@ -223,7 +206,7 @@ class Elasticsearch extends Base
                 [
                     'add' => [
                         'index' => $index,
-                        'alias' => $this->getAliasWithPrefix($aliasName)
+                        'alias' => $this->entity->getAliasWithPrefix($aliasName)
                     ],
                 ]
             ]
@@ -248,7 +231,7 @@ class Elasticsearch extends Base
                 [
                     'remove' => [
                         'index' => $index,
-                        'alias' => $this->getAliasWithPrefix($aliasName)
+                        'alias' => $this->entity->getAliasWithPrefix($aliasName)
                     ],
                 ]
             ]
@@ -256,14 +239,6 @@ class Elasticsearch extends Base
 
         $this->getClient()->indices()->updateAliases($params);
         return true;
-    }
-
-    /**
-     * @param $aliasName
-     * @return string
-     */
-    public function getAliasWithPrefix($aliasName) {
-        return $this->aliasPrefix . $aliasName;
     }
 
     /**
@@ -293,26 +268,6 @@ class Elasticsearch extends Base
         }
     }
 
-    /**
-     * @param string $aliasName код alias
-     *
-     * @return null | string
-     */
-    public function getIndexByAlias($aliasName)
-    {
-        $aliases = $this->getClient()->indices()->getAliases();
-        $aliasWithPrefix = $this->getAliasWithPrefix($aliasName);
-        foreach ($aliases as $index => $aliasMapping) {
-            if (array_key_exists($aliasWithPrefix, $aliasMapping['aliases'])) {
-                return $index;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * @return string
-     */
     public function reindex()
     {
         $currentIndex = $this->getIndex();
@@ -367,7 +322,7 @@ class Elasticsearch extends Base
      */
     public function getNewIndex()
     {
-        $indexByAlias = $this->getIndexByAlias($this->baseAliasName);
+        $indexByAlias = $this->entity->getIndexByAlias($this->baseAliasName);
         if ($indexByAlias === null) {
             $indexByAlias = $this->baseAliasName;
         }
