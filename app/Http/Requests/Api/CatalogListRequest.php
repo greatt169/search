@@ -11,10 +11,31 @@ use SwaggerUnAuth\ObjectSerializer;
 
 class CatalogListRequest extends Request
 {
+    protected $engine = null;
+
+    /**
+     * @param bool $withData
+     * @return Engine
+     */
+    protected function getEngine($withData = true)
+    {
+        $data = '';
+        if($withData) {
+            $data = $this->getDeserializeData()->engine;
+        }
+        /**
+         * @var Engine $engine
+         */
+        $engine = ObjectSerializer::deserialize($data, Engine::class, null);
+        $this->engine = $engine;
+        return $engine;
+    }
+
     public function rules()
     {
+        $allowableValues = implode(',', $this->getEngine(false)->getNameAllowableValues());
         return [
-            'engine.name' => 'in:elasticsearch,sphinx'
+            'engine.name' => 'in:' . $allowableValues
         ];
     }
 
@@ -71,12 +92,8 @@ class CatalogListRequest extends Request
             if($errors->count() > 0) {
                 throw new ApiException('BadRequest', $errors->first(), 400);
             } else {
-                $this->setValid('engine', ObjectSerializer::deserialize($this->getDeserializeData()->engine, Engine::class, null));
+                $this->setValid('engine', $this->getEngine());
             }
         });
     }
-
-
-
-
 }
