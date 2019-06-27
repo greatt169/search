@@ -2,6 +2,8 @@
 
 namespace App\Search\Index\Interfaces;
 
+use App\Search\Entity\Interfaces\EntityInterface;
+
 interface ManagerInterface
 {
     public function createIndex();
@@ -13,4 +15,6 @@ interface ManagerInterface
     public function removeAll();
 
     public function indexElement($id);
+
+    public function __construct(SourceInterface $source, EntityInterface $entity, TimerInterface $timer = null);
 }

@@ -3,6 +3,7 @@
 namespace App\Search\Index\Manager;
 
 use App\Helpers\Timer;
+use App\Search\Entity\Interfaces\EntityInterface;
 use App\Search\Index\Interfaces\ManagerInterface;
 use App\Search\Index\Interfaces\SourceInterface;
 use App\Search\Index\Interfaces\TimerInterface;
@@ -15,6 +16,11 @@ abstract class Base implements ManagerInterface
     protected $source;
 
     /**
+     * @var EntityInterface $entity
+     */
+    protected $entity;
+
+    /**
      * @var TimerInterface|null $timer
      */
     protected $timer;
@@ -22,9 +28,10 @@ abstract class Base implements ManagerInterface
     /**
      * Base constructor.
      * @param SourceInterface $source
+     * @param EntityInterface $entity
      * @param TimerInterface|null $timer
      */
-    public function __construct(SourceInterface $source, TimerInterface $timer = null)
+    public function __construct(SourceInterface $source, EntityInterface $entity, TimerInterface $timer = null)
     {
         if($timer === null) {
             $this->timer = new Timer();
@@ -32,6 +39,7 @@ abstract class Base implements ManagerInterface
             $this->timer = $timer;
         }
         $this->source = $source;
+        $this->entity = $entity;
     }
 
     /**

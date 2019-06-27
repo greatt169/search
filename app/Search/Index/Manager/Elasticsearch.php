@@ -2,7 +2,9 @@
 
 namespace App\Search\Index\Manager;
 
+use App\Search\Entity\Interfaces\EntityInterface;
 use App\Search\Index\Interfaces\SourceInterface;
+use App\Search\Index\Interfaces\TimerInterface;
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 use Exception;
@@ -101,10 +103,12 @@ class Elasticsearch extends Base
     /**
      * Elasticsearch constructor.
      * @param SourceInterface $source
+     * @param EntityInterface $entity
+     * @param TimerInterface|null $timer
      */
-    public function __construct(SourceInterface $source)
+    public function __construct(SourceInterface $source, EntityInterface $entity, TimerInterface $timer = null)
     {
-        parent::__construct($source);
+        parent::__construct($source, $entity);
         $clientBuild = ClientBuilder::create()->setHosts($this->getHosts());
         if($this->isLogsEnable()) {
             $clientBuild->setLogger($this->getLogger('fullLogChannel'));

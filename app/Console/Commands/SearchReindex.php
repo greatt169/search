@@ -6,6 +6,7 @@ use App\Search\Index\Manager\Elasticsearch;
 use Exception;
 use Illuminate\Console\Command;
 use App\Search\Index\Source\Elasticsearch as ElasticsearchSource;
+use App\Search\Entity\Engine\Elasticsearch as ElasticsearchEntity;
 
 class SearchReindex extends Command
 {
@@ -43,7 +44,8 @@ class SearchReindex extends Command
     {
         try {
             $indexer = new Elasticsearch(
-                new ElasticsearchSource()
+                new ElasticsearchSource(),
+                new ElasticsearchEntity()
             );
             $indexer->reindex();
             $displayResultMessages = $indexer->getDisplayResultMessages();
