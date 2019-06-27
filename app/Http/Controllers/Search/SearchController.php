@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Search;
 use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\CatalogListRequest;
-use App\Search\Query\Request\Elasticsearch;
+use App\Search\Query\Interfaces\RequestEngineInterface;
 use SwaggerUnAuth\Model\Engine;
+use App\Search\Query\Request\Engine as RequestEngine;
 use SwaggerUnAuth\Model\Filter;
 
 class SearchController extends Controller
@@ -26,15 +27,13 @@ class SearchController extends Controller
          * @var Engine $engine
          */
         $engine = $request->getValid('engine');
-        print_r($engine->getName());
+
         $items = null;
-        switch ($request->get('engine')) {
-            case 'elasticsearch': { // TODO: ИИ
-                $elasticSearch = new Elasticsearch();
-                $items = $elasticSearch->postCatalogList($filter);
-                break;
-            }
-        }
+        /**
+         * @var RequestEngineInterface $engineRequest
+         */
+        $engineRequest = RequestEngine::getInstance($engine->getName());
+        $items = $engineRequest->postCatalogList($filter);
         return $items;
     }
 }

@@ -1,15 +1,14 @@
 <?php
-
-namespace App\Search\Query\Request;
+namespace App\Search\Query\Interfaces;
 
 use SwaggerUnAuth\Model\Filter;
 use SwaggerUnAuth\Model\ListItem;
 
-abstract class Base
+interface RequestEngineInterface
 {
     /**
      * @param Filter $filter
      * @return ListItem[]
      */
-    public abstract function postCatalogList(Filter $filter);
+    public function postCatalogList(Filter $filter);
 }

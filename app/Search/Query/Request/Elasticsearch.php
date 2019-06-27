@@ -5,7 +5,7 @@ namespace App\Search\Query\Request;
 use SwaggerUnAuth\Model\Filter;
 use SwaggerUnAuth\Model\ListItem;
 
-class Elasticsearch extends Base
+class Elasticsearch extends Engine
 {
     /**
      * @param Filter $filter
