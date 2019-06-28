@@ -4,8 +4,8 @@ namespace App\Http\Requests\Api;
 
 use App\Exceptions\ApiException;
 use SwaggerUnAuth\Model\Engine;
-use SwaggerUnAuth\Model\Filter;
-use SwaggerUnAuth\Model\FilterParam;
+use SwaggerUnAuth\Model\InputFilter;
+use SwaggerUnAuth\Model\InputFilterParam;
 use SwaggerUnAuth\Model\ModelInterface;
 use SwaggerUnAuth\ObjectSerializer;
 
@@ -45,9 +45,9 @@ class CatalogListRequest extends Request
     protected function validateFilter()
     {
         /**
-         * @var Filter $filter
+         * @var InputFilter $filter
          */
-        $filter = ObjectSerializer::deserialize($this->getDeserializeData()->filter, Filter::class, null);
+        $filter = ObjectSerializer::deserialize($this->getDeserializeData()->filter, InputFilter::class, null);
         $this->validateBySwaggerModel($filter);
         $filterRangeParams = $filter->getRangeParams();
 
@@ -60,7 +60,7 @@ class CatalogListRequest extends Request
         $filterSelectParams = $filter->getSelectParams();
 
         /**
-         * @var FilterParam $filterSelectParam
+         * @var InputFilterParam $filterSelectParam
          */
         foreach ($filterSelectParams as $filterSelectParam) {
             $this->validateBySwaggerModel($filterSelectParam);

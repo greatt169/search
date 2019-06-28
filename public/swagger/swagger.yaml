@@ -62,7 +62,7 @@ paths:
               engine:
                 $ref: '#/definitions/Engine'
               filter:
-                $ref: '#/definitions/Filter'
+                $ref: '#/definitions/InputFilter'
       tags:
       - Catalog
       responses:
@@ -93,9 +93,9 @@ definitions:
         example: elasticsearch
         enum: [elasticsearch, sphinx]
 
-  Filter:
+  InputFilter:
     type: object
-    description: Объект фильтрации
+    description: Объект фильтрации на вход
     required:
         - rangeParams
         - selectParams
@@ -103,17 +103,90 @@ definitions:
       rangeParams:
         type: array
         description: |
-          Массив параметров фильтра типа range
+          Массив входных параметров фильтра типа range
         items:
-          $ref: '#/definitions/FilterRangeParam'
+          $ref: '#/definitions/InputFilterRangeParam'
 
       selectParams:
         type: array
         description: |
-          Массив параметров фильтра остальных типов (checkbox, radio, select)
+          Массив входных параметров фильтра остальных типов (checkbox, radio, select)
         items:
-          $ref: '#/definitions/FilterParam'
-  FilterRangeParam:
+          $ref: '#/definitions/InputFilterParam'
+
+  InputFilterRangeParam:
+    type: object
+    required:
+      - code
+      - values
+    properties:
+      code:
+        type: string
+        description: |
+          Символьный код параметра
+        example: "rent_price"
+      minValue:
+        type: number
+        description: |
+          Минимальное значение свойства
+        example: 1500
+      maxValue:
+        type: number
+        description: |
+          Максимальное значение свойства
+        example: 10000
+
+  InputFilterParam:
+    type: object
+    required:
+      - code
+      - values
+    properties:
+      code:
+        type: string
+        description: |
+          Символьный код параметра
+        example: "color"
+      values:
+        type: array
+        description: |
+          Массив значений параметра
+        items:
+          $ref: '#/definitions/InputFilterValue'
+
+  InputFilterValue:
+    type: object
+    required:
+      - value
+    properties:
+      value:
+        type: string
+        description: |
+          Значение свойства
+        example: 'red'
+
+  OutputFilter:
+      type: object
+      description: Объект фильтрации на выходе
+      required:
+          - rangeParams
+          - selectParams
+      properties:
+        rangeParams:
+          type: array
+          description: |
+            Массив параметров фильтра типа range на выходе
+          items:
+            $ref: '#/definitions/OutputFilterRangeParam'
+
+        selectParams:
+          type: array
+          description: |
+            Массив параметров фильтра остальных типов (checkbox, radio, select) на выходе
+          items:
+            $ref: '#/definitions/OutputFilterParam'
+
+  OutputFilterRangeParam:
     type: object
     required:
       - type
@@ -181,7 +254,7 @@ definitions:
           Максимальное выбранное значение свойства
         example: 7000
 
-  FilterParam:
+  OutputFilterParam:
     type: object
     required:
       - type
@@ -229,9 +302,9 @@ definitions:
         description: |
           Массив значений параметра
         items:
-          $ref: '#/definitions/FilterValue'
+          $ref: '#/definitions/OutputFilterValue'
 
-  FilterValue:
+  OutputFilterValue:
     type: object
     required:
       - count
