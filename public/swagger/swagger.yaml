@@ -146,7 +146,7 @@ definitions:
         type: string
         description: |
           Символьный код параметра
-        example: "color"
+        example: "colors"
       values:
         type: array
         description: |
@@ -163,7 +163,7 @@ definitions:
         type: string
         description: |
           Значение свойства
-        example: 'red'
+        example: 'white'
 
   OutputFilter:
       type: object
@@ -356,7 +356,7 @@ definitions:
         type: string
         description: |
           Значение свойства
-        example: 'red'
+        example: 'white'
 
   ListItem:
     type: object

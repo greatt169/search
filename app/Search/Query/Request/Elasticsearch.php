@@ -73,7 +73,7 @@ class Elasticsearch extends Engine
         $client = $this->entity->getClient();
         $results = $client->search($params);
         //print_r($this->getEngineConvertedFilter($filter));
-        //print_r($results);
+        print_r($results);
         return [new ListItem()];
     }
 }
