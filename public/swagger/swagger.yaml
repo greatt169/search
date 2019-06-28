@@ -72,7 +72,7 @@ paths:
             uniqueItems: false
             type: array
             items:
-              $ref: '#/definitions/ListItem'
+              $ref: '#/definitions/ListItems'
         400:
           $ref: '#/responses/400Error'
         403:
@@ -85,6 +85,7 @@ paths:
 definitions:
   Engine:
     type: object
+    description: Вид поискового движка
     required:
       - name
     properties:
@@ -357,9 +358,20 @@ definitions:
         description: |
           Значение свойства
         example: 'white'
+  ListItems:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/ListItem'
+    description: |
+      Массив элементов
 
   ListItem:
     type: object
+    description: |
+        Объект элемента списка
     required:
       - id
       - attributes
@@ -373,88 +385,24 @@ definitions:
         type: object
         properties:
           single:
-            type: array
+            type: object
             description: |
               Массив одиночных свойств элемента
-            items:
-              $ref: '#/definitions/ListItemSingleAttribute'
+            additionalProperties:
+              $ref: '#/definitions/ListItemAttributeValue'
           multiple:
-            type: array
+            type: object
             description: |
               Массив множественных свойств элемента
-            items:
+            additionalProperties:
               $ref: '#/definitions/ListItemMultipleAttribute'
-
-  ListItemSingleAttribute:
-    type: object
-    required:
-      - id
-      - value
-    properties:
-      id:
-        type: string
-        description: |
-          Идентификатор аттрибута элемента
-        example: 764
-      name:
-        type: string
-        description: |
-          Название аттрибута
-        example: 'Тип коробки передач'
-      description:
-        type: string
-        description: |
-          Описание аттрибута
-        example: 'Произвольное описание параметра'
-      img:
-        type: string
-        description: |
-          Картинка для аттрибута
-        example: 'https://cdn.fast.ru/files/1sdasd88dasdsad.jpg'
-      additionalInfo:
-        type: string
-        description: |
-          Дополнительная информация для значения аттрибута
-        example: 'string'
-      value:
-        $ref: '#/definitions/ListItemAttributeValue'
 
   ListItemMultipleAttribute:
       type: object
       required:
         - id
         - values
-        - valueType
       properties:
-        id:
-          type: string
-          description: |
-            Идентификатор аттрибута элемента
-          example: 764
-        name:
-          type: string
-          description: |
-            Название аттрибута
-          example: 'Тип коробки передач'
-        description:
-          type: string
-          description: |
-            Описание аттрибута
-          example: 'Произвольное описание параметра'
-        img:
-          type: string
-          description: |
-            Картинка для аттрибута
-          example: 'https://cdn.fast.ru/files/1sdasd88dasdsad.jpg'
-        additionalInfo:
-          type: string
-          description: |
-            Дополнительная информация для значения аттрибута
-          example: 'string'
-        valueType:
-          type: string
-          enum: [string, float, boolean]
-          example: 'string'
         values:
           type: array
           description: |
@@ -467,11 +415,6 @@ definitions:
       required:
         - value
       properties:
-        id:
-          type: string
-          description: |
-            Идентификатор значения аттрибута элемента
-          example: 44
         description:
           type: string
           description: |

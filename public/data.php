@@ -1,5 +1,5 @@
 <?php
-return [
+/*return [
     [
         'id' => 1,
         'brand' => 'BMW',
@@ -44,4 +44,78 @@ return [
         'year' => 2013,
         'price' => 10000,
     ]
-];
+];*/
+
+return json_encode(
+    [
+        [
+            "items" => [
+                [
+                    "id" => 5,
+                    "attributes" => [
+                        "single" => [
+                            "name" => [
+                                "description" => null,
+                                "img" => null,
+                                "additionalInfo" => null,
+                                "value" => "Внедорожник BMW-X5"
+                            ],
+                            "brand" => [
+                                "description" => null,
+                                "img" => null,
+                                "additionalInfo" => null,
+                                "value" => "BMV"
+                            ],
+                            "model" => [
+                                "description" => null,
+                                "img" => null,
+                                "additionalInfo" => null,
+                                "value" => "X5"
+                            ],
+                            "price" => [
+                                "description" => null,
+                                "img" => null,
+                                "additionalInfo" => null,
+                                "value" => 10000
+                            ]
+                        ],
+                        "multiple" => [
+                            "color" => [
+                                "values" => [
+                                    [
+                                        "description" => null,
+                                        "img" => null,
+                                        "additionalInfo" => null,
+                                        "value" => 'red'
+                                    ],
+                                    [
+                                        "description" => null,
+                                        "img" => null,
+                                        "additionalInfo" => null,
+                                        "value" => 'blue'
+                                    ],
+                                    [
+                                        "description" => null,
+                                        "img" => null,
+                                        "additionalInfo" => null,
+                                        "value" => 'black'
+                                    ]
+                                ]
+                            ],
+                            "insurance" => [
+                                "values" => [
+                                    [
+                                        "description" => null,
+                                        "img" => null,
+                                        "additionalInfo" => null,
+                                        "value" => "kasko"
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ]
+);
