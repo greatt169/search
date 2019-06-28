@@ -8,6 +8,7 @@ use App\Search\Entity\Engine\Elasticsearch as ElasticsearchEntity;
 use App\Search\Index\Manager\Elasticsearch;
 use App\Search\Index\Source\Elasticsearch as ElasticsearchSource;
 use SwaggerUnAuth\Model\ListItem;
+use SwaggerUnAuth\Model\ListItems;
 use SwaggerUnAuth\ObjectSerializer;
 
 
@@ -16,39 +17,203 @@ class IndexController extends Controller
     public function index()
     {
         $d = [
-            [
-                "id" => 5,
-                "attributes" => [
-                    "single" => [
-                        [
-                            "id" => 764,
-                            "name" => "Тип коробки передач",
-                            "description" => "Произвольное описание параметра",
-                            "img" => "https=>//cdn.fast.ru/files/1sdasd88dasdsad.jpg",
-                            "additional_info" => "string",
-                            "value" => [
-                                "id" => 44,
-                                "description" => "Произвольное описание параметра",
-                                "img" => "https=>//cdn.fast.ru/files/1sdasd88dasdsad.jpg",
-                                "additional_info" => "string",
-                                "value" => "АКПП"
+            "items" => [
+                [
+                    "id" => 1,
+                    "attributes" => [
+                        "single" => [
+                            "name" => [
+                                "description" => null,
+                                "img" => null,
+                                "additionalInfo" => null,
+                                "value" => "Внедорожник BMW-X5"
+                            ],
+                            "brand" => [
+                                "description" => null,
+                                "img" => null,
+                                "additionalInfo" => null,
+                                "value" => "BMV"
+                            ],
+                            "model" => [
+                                "description" => null,
+                                "img" => null,
+                                "additionalInfo" => null,
+                                "value" => "X5"
+                            ],
+                            "year" => [
+                                "description" => null,
+                                "img" => null,
+                                "additionalInfo" => null,
+                                "value" => 2008
+                            ],
+                            "price" => [
+                                "description" => null,
+                                "img" => null,
+                                "additionalInfo" => null,
+                                "value" => 10000
+                            ]
+                        ],
+                        "multiple" => [
+                            "color" => [
+                                "values" => [
+                                    [
+                                        "description" => null,
+                                        "img" => null,
+                                        "additionalInfo" => null,
+                                        "value" => 'red'
+                                    ],
+                                    [
+                                        "description" => null,
+                                        "img" => null,
+                                        "additionalInfo" => null,
+                                        "value" => 'blue'
+                                    ],
+                                    [
+                                        "description" => null,
+                                        "img" => null,
+                                        "additionalInfo" => null,
+                                        "value" => 'black'
+                                    ]
+                                ]
+                            ],
+                            "insurance" => [
+                                "values" => [
+                                    [
+                                        "description" => null,
+                                        "img" => null,
+                                        "additionalInfo" => null,
+                                        "value" => "kasko"
+                                    ]
+                                ]
                             ]
                         ]
-                    ],
-                    "multiple" => [
-                        [
-                            "id" => 764,
-                            "name" => "Тип коробки передач",
-                            "description" => "Произвольное описание параметра",
-                            "img" => "https=>//cdn.fast.ru/files/1sdasd88dasdsad.jpg",
-                            "additional_info" => "string",
-                            "values" => [
-                                [
-                                    "id" => 44,
-                                    "description" => "Произвольное описание параметра",
-                                    "img" => "https=>//cdn.fast.ru/files/1sdasd88dasdsad.jpg",
-                                    "additional_info" => "string",
-                                    "value" => "АКПП"
+                    ]
+                ],
+                [
+                    "id" => 2,
+                    "attributes" => [
+                        "single" => [
+                            "name" => [
+                                "description" => null,
+                                "img" => null,
+                                "additionalInfo" => null,
+                                "value" => "Старая Lada Granda"
+                            ],
+                            "brand" => [
+                                "description" => null,
+                                "img" => null,
+                                "additionalInfo" => null,
+                                "value" => "Lada"
+                            ],
+                            "model" => [
+                                "description" => null,
+                                "img" => null,
+                                "additionalInfo" => null,
+                                "value" => "Granda"
+                            ],
+                            "year" => [
+                                "description" => null,
+                                "img" => null,
+                                "additionalInfo" => null,
+                                "value" => 1997
+                            ],
+                            "price" => [
+                                "description" => null,
+                                "img" => null,
+                                "additionalInfo" => null,
+                                "value" => 1000
+                            ]
+                        ],
+                        "multiple" => [
+                            "color" => [
+                                "values" => [
+                                    [
+                                        "description" => null,
+                                        "img" => null,
+                                        "additionalInfo" => null,
+                                        "value" => 'white'
+                                    ]
+                                ]
+                            ],
+                            "insurance" => [
+                                "values" => [
+                                    [
+                                        "description" => null,
+                                        "img" => null,
+                                        "additionalInfo" => null,
+                                        "value" => "kasko"
+                                    ],
+                                    [
+                                        "description" => null,
+                                        "img" => null,
+                                        "additionalInfo" => null,
+                                        "value" => "osago"
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+                [
+                    "id" => 3,
+                    "attributes" => [
+                        "single" => [
+                            "name" => [
+                                "description" => null,
+                                "img" => null,
+                                "additionalInfo" => null,
+                                "value" => "Управляемый Volkswagen Polo"
+                            ],
+                            "brand" => [
+                                "description" => null,
+                                "img" => null,
+                                "additionalInfo" => null,
+                                "value" => "Volkswagen"
+                            ],
+                            "model" => [
+                                "description" => null,
+                                "img" => null,
+                                "additionalInfo" => null,
+                                "value" => "Polo"
+                            ],
+                            "year" => [
+                                "description" => null,
+                                "img" => null,
+                                "additionalInfo" => null,
+                                "value" => 2015
+                            ],
+                            "price" => [
+                                "description" => null,
+                                "img" => null,
+                                "additionalInfo" => null,
+                                "value" => 4000
+                            ]
+                        ],
+                        "multiple" => [
+                            "color" => [
+                                "values" => [
+                                    [
+                                        "description" => null,
+                                        "img" => null,
+                                        "additionalInfo" => null,
+                                        "value" => 'gray'
+                                    ],
+                                    [
+                                        "description" => null,
+                                        "img" => null,
+                                        "additionalInfo" => null,
+                                        "value" => 'white'
+                                    ]
+                                ]
+                            ],
+                            "insurance" => [
+                                "values" => [
+                                    [
+                                        "description" => null,
+                                        "img" => null,
+                                        "additionalInfo" => null,
+                                        "value" => "osago"
+                                    ]
                                 ]
                             ]
                         ]
@@ -57,7 +222,7 @@ class IndexController extends Controller
             ]
         ];
         echo '<pre>';
-        print_r(ObjectSerializer::deserialize(json_decode(json_encode($d)), ListItem::class, null));
+        print_r(ObjectSerializer::deserialize(json_decode(json_encode($d)), ListItems::class, null));
         echo '</pre>';
 
 

@@ -3,6 +3,9 @@
 namespace App\Search\Index\Source;
 
 use App\Search\Index\Interfaces\SourceInterface;
+use SwaggerUnAuth\Model\ListItem;
+use SwaggerUnAuth\Model\ListItems;
+use SwaggerUnAuth\ObjectSerializer;
 
 class Elasticsearch implements SourceInterface
 {
@@ -50,16 +53,40 @@ class Elasticsearch implements SourceInterface
     public function getElementsForIndexing()
     {
         $data = include_once('/var/www/public/data.php');
+        /**
+         * @var ListItems $listItems
+         */
+        $listItems = ObjectSerializer::deserialize(json_decode(json_encode($data)), ListItems::class, null);
+
         $elementsForIndexing = [];
         $mapping = $this->getAttributesMapping();
+        $data = $listItems->getItems();
+        /**
+         * @var ListItem $dataItem
+         */
         foreach ($data as $dataItem) {
             $source = [];
             $sourceAttributes = [];
-            $source['id'] = $dataItem['id'];
+            $source['id'] = $dataItem->getId();
             foreach ($mapping as $code => $mappingItem) {
+
+                $singleAttributes = [];
+                $multipleAttributes = [];
+
+                $attributes = $dataItem->getAttributes();
+                if($attributes) {
+                    $singleAttributes = $attributes->getSingle();
+                    $multipleAttributes = $attributes->getMultiple();
+                }
+
                 $sourceAttribute = $mappingItem;
                 $sourceAttribute['code'] = $code;
-                $sourceAttribute['value'] = $dataItem[$code];
+
+                if(array_key_exists($code, $singleAttributes)) {
+                    $sourceAttribute['value'] = $singleAttributes[$code];
+                } elseif(array_key_exists($code, $multipleAttributes)) {
+                    $sourceAttribute['value'] = $multipleAttributes[$code];
+                }
                 $sourceAttributes[] = $sourceAttribute;
             }
             $source['attributes'] = $sourceAttributes;
