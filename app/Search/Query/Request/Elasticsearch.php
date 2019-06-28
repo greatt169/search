@@ -28,7 +28,6 @@ class Elasticsearch extends Engine
     {
         $elasticFilter = [];
         $selectParams = $filter->getSelectParams();
-
         /**
          * @var InputFilterParam $selectParam
          */
@@ -38,7 +37,6 @@ class Elasticsearch extends Engine
             /**
              * @var InputFilterValue $value
              */
-
             $term = [];
             foreach ($values as $value) {
                 $paramValue = $value->getValue();
@@ -52,9 +50,7 @@ class Elasticsearch extends Engine
             unset($term);
         }
 
-
         $rangeParams = $filter->getRangeParams();
-
         /**
          * @var  InputFilterRangeParam $rangeParam
          */

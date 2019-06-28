@@ -124,7 +124,7 @@ definitions:
         type: string
         description: |
           Символьный код параметра
-        example: "rent_price"
+        example: "price"
       minValue:
         type: number
         description: |
@@ -197,7 +197,7 @@ definitions:
         type: string
         description: |
           Символьный код параметра
-        example: "rent_price"
+        example: "price"
       sort:
         type: integer
         description: |
@@ -218,7 +218,7 @@ definitions:
         description: |
           Картинка для параметра
         example: 'https://cdn.fast.ru/files/1sdasd88dasdsad.jpg'
-      additional_info:
+      additionalInfo:
         type: string
         description: |
           Дополнительная информация для параметра
@@ -292,7 +292,7 @@ definitions:
         description: |
           Картинка для параметра
         example: 'https://cdn.fast.ru/files/1sdasd88dasdsad.jpg'
-      additional_info:
+      additionalInfo:
         type: string
         description: |
           Дополнительная информация для параметра
@@ -347,7 +347,7 @@ definitions:
         description: |
           Картинка для значения параметра
         example: 'https://cdn.fast.ru/files/1sdasd88dasdsad.jpg'
-      additional_info:
+      additionalInfo:
         type: string
         description: |
           Дополнительная информация для значения параметра
@@ -411,7 +411,7 @@ definitions:
         description: |
           Картинка для аттрибута
         example: 'https://cdn.fast.ru/files/1sdasd88dasdsad.jpg'
-      additional_info:
+      additionalInfo:
         type: string
         description: |
           Дополнительная информация для значения аттрибута
@@ -424,6 +424,7 @@ definitions:
       required:
         - id
         - values
+        - valueType
       properties:
         id:
           type: string
@@ -445,10 +446,14 @@ definitions:
           description: |
             Картинка для аттрибута
           example: 'https://cdn.fast.ru/files/1sdasd88dasdsad.jpg'
-        additional_info:
+        additionalInfo:
           type: string
           description: |
             Дополнительная информация для значения аттрибута
+          example: 'string'
+        valueType:
+          type: string
+          enum: [string, float, boolean]
           example: 'string'
         values:
           type: array
@@ -477,7 +482,7 @@ definitions:
           description: |
             Картинка для значения аттрибута
           example: 'https://cdn.fast.ru/files/1sdasd88dasdsad.jpg'
-        additional_info:
+        additionalInfo:
           type: string
           description: |
             Дополнительная информация для значения аттрибута
