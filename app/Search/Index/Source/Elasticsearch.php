@@ -4,6 +4,7 @@ namespace App\Search\Index\Source;
 
 use App\Search\Index\Interfaces\SourceInterface;
 use SwaggerUnAuth\Model\ListItem;
+use SwaggerUnAuth\Model\ListItemAttributeValue;
 use SwaggerUnAuth\Model\ListItems;
 use SwaggerUnAuth\ObjectSerializer;
 
@@ -61,7 +62,7 @@ class Elasticsearch implements SourceInterface
         $elementsForIndexing = [];
         $mapping = $this->getAttributesMapping();
         $data = $listItems->getItems();
-        dump($listItems);
+
         /**
          * @var ListItem $dataItem
          */
@@ -70,29 +71,32 @@ class Elasticsearch implements SourceInterface
             $sourceAttributes = [];
             $source['id'] = $dataItem->getId();
             foreach ($mapping as $code => $mappingItem) {
-
                 $singleAttributes = [];
                 $multipleAttributes = [];
-
                 $attributes = $dataItem->getAttributes();
                 if($attributes) {
                     $singleAttributes = $attributes->getSingle();
                     $multipleAttributes = $attributes->getMultiple();
                 }
-
                 $sourceAttribute = $mappingItem;
                 $sourceAttribute['code'] = $code;
 
                 if(array_key_exists($code, $singleAttributes)) {
-                    $sourceAttribute['value'] = $singleAttributes[$code];
+                    $valueObject = $singleAttributes[$code];
                 } elseif(array_key_exists($code, $multipleAttributes)) {
-                    $sourceAttribute['value'] = $multipleAttributes[$code];
+                    $valueObject = $multipleAttributes[$code];
                 }
+
+                /**
+                 * @var ListItemAttributeValue $valueObject
+                 */
+                $sourceAttribute['value'] = $valueObject->getValue();
                 $sourceAttributes[] = $sourceAttribute;
             }
             $source['attributes'] = $sourceAttributes;
             $elementsForIndexing[] = $source;
         }
+        dump($elementsForIndexing);
         return $elementsForIndexing;
     }
 
