@@ -52,15 +52,16 @@ class Elasticsearch implements SourceInterface
 
     public function getElementsForIndexing()
     {
-        $data = include_once('/var/www/public/data.php');
+        $sourceData = include_once('/var/www/public/data.php');
         /**
          * @var ListItems $listItems
          */
-        $listItems = ObjectSerializer::deserialize(json_decode(json_encode($data)), ListItems::class, null);
+        $listItems = ObjectSerializer::deserialize(json_decode(json_encode($sourceData)), ListItems::class, null);
 
         $elementsForIndexing = [];
         $mapping = $this->getAttributesMapping();
         $data = $listItems->getItems();
+        dump($listItems);
         /**
          * @var ListItem $dataItem
          */
