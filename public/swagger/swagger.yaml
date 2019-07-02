@@ -62,7 +62,7 @@ paths:
               engine:
                 $ref: '#/definitions/Engine'
               filter:
-                $ref: '#/definitions/InputFilter'
+                $ref: '#/definitions/Filter'
       tags:
       - Catalog
       responses:
@@ -94,7 +94,7 @@ definitions:
         example: elasticsearch
         enum: [elasticsearch, sphinx]
 
-  InputFilter:
+  Filter:
     type: object
     description: Объект фильтрации на вход
     required:
@@ -106,16 +106,16 @@ definitions:
         description: |
           Массив входных параметров фильтра типа range
         items:
-          $ref: '#/definitions/InputFilterRangeParam'
+          $ref: '#/definitions/FilterRangeParam'
 
       selectParams:
         type: array
         description: |
           Массив входных параметров фильтра остальных типов (checkbox, radio, select)
         items:
-          $ref: '#/definitions/InputFilterParam'
+          $ref: '#/definitions/FilterParam'
 
-  InputFilterRangeParam:
+  FilterRangeParam:
     type: object
     required:
       - code
@@ -137,7 +137,7 @@ definitions:
           Максимальное значение свойства
         example: 10000
 
-  InputFilterParam:
+  FilterParam:
     type: object
     required:
       - code
@@ -153,206 +153,13 @@ definitions:
         description: |
           Массив значений параметра
         items:
-          $ref: '#/definitions/InputFilterValue'
+          $ref: '#/definitions/FilterValue'
 
-  InputFilterValue:
+  FilterValue:
     type: object
     required:
       - value
     properties:
-      value:
-        type: string
-        description: |
-          Значение свойства
-        example: 'white'
-
-  OutputFilter:
-      type: object
-      description: Объект фильтрации на выходе
-      required:
-          - rangeParams
-          - selectParams
-      properties:
-        rangeParams:
-          type: array
-          description: |
-            Массив параметров фильтра типа range на выходе
-          items:
-            $ref: '#/definitions/OutputFilterRangeParam'
-
-        selectParams:
-          type: array
-          description: |
-            Массив параметров фильтра остальных типов (checkbox, radio, select) на выходе
-          items:
-            $ref: '#/definitions/OutputFilterParam'
-
-  OutputFilterRangeParam:
-    type: object
-    required:
-      - type
-      - code
-      - values
-    properties:
-      code:
-        type: string
-        description: |
-          Символьный код параметра
-        example: "price"
-      sort:
-        type: integer
-        description: |
-          Индекс сортировки параметра
-        example: 500
-      name:
-        type: string
-        description: |
-          Название параметра
-        example: 'Стоимость аренды'
-      description:
-        type: string
-        description: |
-          Описание параметра
-        example: 'Произвольное описание параметра'
-      img:
-        type: string
-        description: |
-          Картинка для параметра
-        example: 'https://cdn.fast.ru/files/1sdasd88dasdsad.jpg'
-      additionalInfo:
-        type: string
-        description: |
-          Дополнительная информация для параметра
-        example: 'string'
-      disabled:
-        type: boolean
-        description: |
-          Значение недоступно для выбора
-        example: true
-      unit:
-        type: string
-        description: |
-          Единица измерения значения свойства
-        example: 'руб.'
-      minValue:
-        type: number
-        description: |
-          Минимальное значение свойства
-        example: 1500
-      maxValue:
-        type: number
-        description: |
-          Максимальное значение свойства
-        example: 10000
-      minSelectedValue:
-        type: number
-        description: |
-          Минимальное выбранное значение свойства
-        example: 3000
-      maxSelectedValue:
-        type: number
-        description: |
-          Максимальное выбранное значение свойства
-        example: 7000
-
-  OutputFilterParam:
-    type: object
-    required:
-      - type
-      - code
-      - values
-    properties:
-      type:
-        type: string
-        enum: [checkbox, radio, select]
-        description: |
-          Тип параметра
-        example: "checkbox"
-      code:
-        type: string
-        description: |
-          Символьный код параметра
-        example: "color"
-      sort:
-        type: integer
-        description: |
-          Индекс сортировки параметра
-        example: 500
-      name:
-        type: string
-        description: |
-          Название значения параметра
-        example: 'Цвет'
-      description:
-        type: string
-        description: |
-          Описание параметра
-        example: 'Произвольное описание параметра'
-      img:
-        type: string
-        description: |
-          Картинка для параметра
-        example: 'https://cdn.fast.ru/files/1sdasd88dasdsad.jpg'
-      additionalInfo:
-        type: string
-        description: |
-          Дополнительная информация для параметра
-        example: 'string'
-      values:
-        type: array
-        description: |
-          Массив значений параметра
-        items:
-          $ref: '#/definitions/OutputFilterValue'
-
-  OutputFilterValue:
-    type: object
-    required:
-      - count
-      - checked
-      - disabled
-      - value
-    properties:
-      count:
-        type: integer
-        description: |
-          Количество элементов, удовлетворяющих значению
-        example: 5
-      checked:
-        type: boolean
-        description: |
-          Значение параметра выбрано
-        example: true
-      disabled:
-        type: boolean
-        description: |
-          Значение недоступно для выбора
-        example: true
-      sort:
-        type: integer
-        description: |
-          Индекс сортировки значения
-        example: 500
-      name:
-        type: string
-        description: |
-          Название значения свойства
-        example: 'Красный'
-      description:
-        type: string
-        description: |
-          Описание значения параметра
-        example: 'Произвольное описание параметра'
-      img:
-        type: string
-        description: |
-          Картинка для значения параметра
-        example: 'https://cdn.fast.ru/files/1sdasd88dasdsad.jpg'
-      additionalInfo:
-        type: string
-        description: |
-          Дополнительная информация для значения параметра
-        example: 'string'
       value:
         type: string
         description: |
@@ -381,60 +188,23 @@ definitions:
         description: |
           Идентификатор элемента
         example: 5
-      attributes:
+      singleAttributes:
         type: object
-        properties:
-          single:
-            type: object
-            description: |
-              Массив одиночных свойств элемента
-            additionalProperties:
-              $ref: '#/definitions/ListItemAttributeValue'
-          multiple:
-            type: object
-            description: |
-              Массив множественных свойств элемента
-            additionalProperties:
-              $ref: '#/definitions/ListItemMultipleAttribute'
-
-  ListItemMultipleAttribute:
-      type: object
-      required:
-        - id
-        - values
-      properties:
-        values:
+        description: |
+          Массив одиночных свойств элемента
+        additionalProperties:
+          type: string
+          example: 'BMV'
+      multipleAttributes:
+        type: object
+        description: |
+          Массив множественных свойств элемента
+        additionalProperties:
           type: array
-          description: |
-            Массив значений аттрибута
           items:
-            $ref: '#/definitions/ListItemAttributeValue'
+            type: string
+            example: 'red'
 
-  ListItemAttributeValue:
-      type: object
-      required:
-        - value
-      properties:
-        description:
-          type: string
-          description: |
-            Описание значения аттрибута
-          example: 'Произвольное описание параметра'
-        img:
-          type: string
-          description: |
-            Картинка для значения аттрибута
-          example: 'https://cdn.fast.ru/files/1sdasd88dasdsad.jpg'
-        additionalInfo:
-          type: string
-          description: |
-            Дополнительная информация для значения аттрибута
-          example: 'string'
-        value:
-          type: string
-          description: |
-            Значение аттрибута
-          example: 'АКПП'
 
   Error:
     description: Описание ошибки для всех методов

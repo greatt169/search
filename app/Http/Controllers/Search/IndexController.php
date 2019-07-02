@@ -28,14 +28,13 @@ class IndexController extends Controller
         $client = $indexer->getClient();
         $params = [
             'index' => $indexer->getIndex(),
-            'type' => $indexer->getType(),
             'body' => [
                 'query' => [
                     'bool' => [
                         'should' => [
                             [
                                 'match' => [
-                                    'insurance.value' => 'osago'
+                                    'insurance' => 'osago'
                                 ]
                             ]
                         ]

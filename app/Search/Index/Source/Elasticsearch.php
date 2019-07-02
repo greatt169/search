@@ -4,6 +4,7 @@ namespace App\Search\Index\Source;
 
 use App\Search\Index\Interfaces\SourceInterface;
 use SwaggerUnAuth\Model\ListItem;
+use SwaggerUnAuth\Model\ListItemAttribute;
 use SwaggerUnAuth\Model\ListItemAttributes;
 use SwaggerUnAuth\Model\ListItemAttributeValue;
 use SwaggerUnAuth\Model\ListItemMultipleAttribute;
@@ -47,31 +48,26 @@ class Elasticsearch implements SourceInterface
             }
 
             /**
-             * @var ListItemAttributeValue $singleAttribute
+             * @var ListItemAttribute $singleAttribute
              */
             foreach ($singleAttributes as $attributeCode => $singleAttribute) {
-                $sourceAttribute = [];
-                foreach ($singleAttribute::getters() as $code => $method) {
-                    $sourceAttribute[$code] = $singleAttribute->$method();
+                $valueObject = $singleAttribute->getValue();
+                if($valueObject) {
+                    $sourceAttributes[$attributeCode] = $valueObject->getValue();
                 }
-                $sourceAttributes[$attributeCode] = $sourceAttribute;
             }
 
             /**
              * @var  ListItemMultipleAttribute $multipleAttribute
              */
             foreach ($multipleAttributes as $attributeCode => $multipleAttribute) {
-                $sourceAttribute = [];
                 $values = $multipleAttribute->getValues();
                 /**
                  * @var ListItemAttributeValue $singleAttribute
                  */
                 $sourceAttributeValues = [];
                 foreach ($values as $singleAttribute) {
-                    foreach ($singleAttribute::getters() as $code => $method) {
-                        $sourceAttribute[$code] = $singleAttribute->$method();
-                    }
-                    $sourceAttributeValues[] = $sourceAttribute;
+                    $sourceAttributeValues[] = $singleAttribute->getValue();
                 }
 
                 $sourceAttributes[$attributeCode] = $sourceAttributeValues;
