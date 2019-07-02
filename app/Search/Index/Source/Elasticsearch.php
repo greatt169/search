@@ -4,7 +4,9 @@ namespace App\Search\Index\Source;
 
 use App\Search\Index\Interfaces\SourceInterface;
 use SwaggerUnAuth\Model\ListItem;
+use SwaggerUnAuth\Model\ListItemAttributes;
 use SwaggerUnAuth\Model\ListItemAttributeValue;
+use SwaggerUnAuth\Model\ListItemMultipleAttribute;
 use SwaggerUnAuth\Model\ListItems;
 use SwaggerUnAuth\ObjectSerializer;
 
@@ -12,43 +14,6 @@ class Elasticsearch implements SourceInterface
 {
     protected $indexName = 'auto';
     protected $typeName = 'auto';
-
-    public function getAttributesMapping()
-    {
-        $mapping = [
-            'model' => [
-                'in_query' => true,
-                'in_body' => true,
-                'type' => 'string',
-                'multiple' => false,
-            ],
-            'colors' => [
-                'in_query' => true,
-                'in_body' => true,
-                'type' => 'string',
-                'multiple' => true,
-            ],
-            'year' => [
-                'in_query' => true,
-                'in_body' => true,
-                'type' => 'integer',
-                'multiple' => false,
-            ],
-            'price' => [
-                'in_query' => true,
-                'in_body' => true,
-                'type' => 'float',
-                'multiple' => false,
-            ],
-            'model_logo' => [
-                'in_query' => false,
-                'in_body' => true,
-                'type' => 'string',
-                'multiple' => false,
-            ]
-        ];
-        return $mapping;
-    }
 
 
     public function getElementsForIndexing()
@@ -60,7 +25,6 @@ class Elasticsearch implements SourceInterface
         $listItems = ObjectSerializer::deserialize(json_decode(json_encode($sourceData)), ListItems::class, null);
 
         $elementsForIndexing = [];
-        $mapping = $this->getAttributesMapping();
         $data = $listItems->getItems();
 
         /**
@@ -69,34 +33,52 @@ class Elasticsearch implements SourceInterface
         foreach ($data as $dataItem) {
             $source = [];
             $sourceAttributes = [];
+            $singleAttributes = [];
+            $multipleAttributes = [];
             $source['id'] = $dataItem->getId();
-            foreach ($mapping as $code => $mappingItem) {
-                $singleAttributes = [];
-                $multipleAttributes = [];
-                $attributes = $dataItem->getAttributes();
-                if($attributes) {
-                    $singleAttributes = $attributes->getSingle();
-                    $multipleAttributes = $attributes->getMultiple();
-                }
-                $sourceAttribute = $mappingItem;
-                $sourceAttribute['code'] = $code;
 
-                if(array_key_exists($code, $singleAttributes)) {
-                    $valueObject = $singleAttributes[$code];
-                } elseif(array_key_exists($code, $multipleAttributes)) {
-                    $valueObject = $multipleAttributes[$code];
-                }
+            /**
+             * @var ListItemAttributes $attributes
+             */
+            $attributes = $dataItem->getAttributes();
+            if($attributes !== null) {
+                $singleAttributes = $attributes->getSingle();
+                $multipleAttributes = $attributes->getMultiple();
+            }
 
+            /**
+             * @var ListItemAttributeValue $singleAttribute
+             */
+            foreach ($singleAttributes as $attributeCode => $singleAttribute) {
+                $sourceAttribute = [];
+                foreach ($singleAttribute::getters() as $code => $method) {
+                    $sourceAttribute[$code] = $singleAttribute->$method();
+                }
+                $sourceAttributes[$attributeCode] = $sourceAttribute;
+            }
+
+            /**
+             * @var  ListItemMultipleAttribute $multipleAttribute
+             */
+            foreach ($multipleAttributes as $attributeCode => $multipleAttribute) {
+                $sourceAttribute = [];
+                $values = $multipleAttribute->getValues();
                 /**
-                 * @var ListItemAttributeValue $valueObject
+                 * @var ListItemAttributeValue $singleAttribute
                  */
-                $sourceAttribute['value'] = $valueObject->getValue();
-                $sourceAttributes[] = $sourceAttribute;
+                $sourceAttributeValues = [];
+                foreach ($values as $singleAttribute) {
+                    foreach ($singleAttribute::getters() as $code => $method) {
+                        $sourceAttribute[$code] = $singleAttribute->$method();
+                    }
+                    $sourceAttributeValues[] = $sourceAttribute;
+                }
+
+                $sourceAttributes[$attributeCode] = $sourceAttributeValues;
             }
             $source['attributes'] = $sourceAttributes;
             $elementsForIndexing[] = $source;
         }
-        dump($elementsForIndexing);
         return $elementsForIndexing;
     }
 

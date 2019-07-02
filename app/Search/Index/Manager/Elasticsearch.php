@@ -128,8 +128,8 @@ class Elasticsearch extends Base
             $this->timer->start($this->prepareBulkTimerLabel);
             $i = $index + 1;
             $arDocAttributes = [];
-            foreach ($document['attributes'] as $attribute) {
-                $arDocAttributes[$attribute['code']] = $attribute['value'];
+            foreach ($document['attributes'] as $attributeCode => $attributeValue) {
+                $arDocAttributes[$attributeCode] = $attributeValue;
             }
             $params['body'][] = [
                 'index' => [

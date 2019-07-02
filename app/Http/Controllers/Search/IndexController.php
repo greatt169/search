@@ -21,8 +21,10 @@ class IndexController extends Controller
             new ElasticsearchSource(),
             new ElasticsearchEntity()
         );
-        $indexer->reindex();
-        dump($indexer->getIndex());
+        //$indexer->reindex();
+
+        $indexer->getSource()->getElementsForIndexing();
+
         $client = $indexer->getClient();
         $params = [
             'index' => $indexer->getIndex(),
@@ -33,12 +35,7 @@ class IndexController extends Controller
                         'should' => [
                             [
                                 'match' => [
-                                    'colors' => 'black'
-                                ]
-                            ],
-                            [
-                                'match' => [
-                                    'colors' => 'white'
+                                    'insurance.value' => 'osago'
                                 ]
                             ]
                         ]
