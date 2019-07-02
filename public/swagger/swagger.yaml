@@ -130,7 +130,7 @@ definitions:
         type: number
         description: |
           Минимальное значение свойства
-        example: 1500
+        example: 0
       maxValue:
         type: number
         description: |
