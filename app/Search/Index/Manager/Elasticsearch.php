@@ -8,7 +8,6 @@ use App\Search\Index\Interfaces\TimerInterface;
 use Elasticsearch\Client;
 use Exception;
 use Illuminate\Support\Facades\Log;
-use SwaggerUnAuth\Model\ListItemAttributeValue;
 
 class Elasticsearch extends Base
 {
@@ -123,9 +122,7 @@ class Elasticsearch extends Base
             $this->timer->start($this->prepareBulkTimerLabel);
             $i = $index + 1;
             $arDocAttributes = [];
-            /**
-             * @var ListItemAttributeValue $attribute
-             */
+
             foreach ($document['attributes'] as $attributeCode => $attributeValue) {
                 $arDocAttributes[$attributeCode] = $attributeValue;
             }

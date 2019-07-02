@@ -6,10 +6,10 @@ use App\Exceptions\ApiException;
 use App\Search\Entity\Interfaces\EntityInterface;
 use Elasticsearch\Client;
 use Exception;
-use SwaggerUnAuth\Model\InputFilter;
-use SwaggerUnAuth\Model\InputFilterParam;
-use SwaggerUnAuth\Model\InputFilterRangeParam;
-use SwaggerUnAuth\Model\InputFilterValue;
+use SwaggerUnAuth\Model\Filter;
+use SwaggerUnAuth\Model\FilterParam;
+use SwaggerUnAuth\Model\FilterRangeParam;
+use SwaggerUnAuth\Model\FilterValue;
 use SwaggerUnAuth\Model\ListItem;
 
 class Elasticsearch extends Engine
@@ -21,21 +21,21 @@ class Elasticsearch extends Engine
     }
 
     /**
-     * @param InputFilter $filter
+     * @param Filter $filter
      * @return array
      */
-    protected function getEngineConvertedFilter(InputFilter $filter)
+    protected function getEngineConvertedFilter(Filter $filter)
     {
         $elasticFilter = [];
         $selectParams = $filter->getSelectParams();
         /**
-         * @var InputFilterParam $selectParam
+         * @var FilterParam $selectParam
          */
         foreach ($selectParams as $selectParam) {
             $paramCode = $selectParam->getCode();
             $values = $selectParam->getValues();
             /**
-             * @var InputFilterValue $value
+             * @var FilterValue $value
              */
             $term = [];
             foreach ($values as $value) {
@@ -52,7 +52,7 @@ class Elasticsearch extends Engine
 
         $rangeParams = $filter->getRangeParams();
         /**
-         * @var  InputFilterRangeParam $rangeParam
+         * @var  FilterRangeParam $rangeParam
          */
         foreach ($rangeParams as $rangeParam) {
             $paramCode = $rangeParam->getCode();
@@ -75,11 +75,11 @@ class Elasticsearch extends Engine
     }
 
     /**
-     * @param InputFilter $filter
+     * @param Filter $filter
      * @return ListItem[]
      * @throws ApiException
      */
-    public function postCatalogList(InputFilter $filter)
+    public function postCatalogList(Filter $filter)
     {
         try {
             $params = [

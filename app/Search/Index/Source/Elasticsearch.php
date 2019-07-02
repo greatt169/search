@@ -4,18 +4,12 @@ namespace App\Search\Index\Source;
 
 use App\Search\Index\Interfaces\SourceInterface;
 use SwaggerUnAuth\Model\ListItem;
-use SwaggerUnAuth\Model\ListItemAttribute;
-use SwaggerUnAuth\Model\ListItemAttributes;
-use SwaggerUnAuth\Model\ListItemAttributeValue;
-use SwaggerUnAuth\Model\ListItemMultipleAttribute;
 use SwaggerUnAuth\Model\ListItems;
 use SwaggerUnAuth\ObjectSerializer;
 
 class Elasticsearch implements SourceInterface
 {
     protected $indexName = 'auto';
-    protected $typeName = 'auto';
-
 
     public function getElementsForIndexing()
     {
@@ -34,42 +28,20 @@ class Elasticsearch implements SourceInterface
         foreach ($data as $dataItem) {
             $source = [];
             $sourceAttributes = [];
-            $singleAttributes = [];
-            $multipleAttributes = [];
             $source['id'] = $dataItem->getId();
 
-            /**
-             * @var ListItemAttributes $attributes
-             */
-            $attributes = $dataItem->getAttributes();
-            if($attributes !== null) {
-                $singleAttributes = $attributes->getSingle();
-                $multipleAttributes = $attributes->getMultiple();
+            $singleAttributes = $dataItem->getSingleAttributes();
+            $multipleAttributes = $dataItem->getMultipleAttributes();
+
+            foreach ($singleAttributes as $attributeCode => $value) {
+                $sourceAttributes[$attributeCode] = $value;
             }
 
-            /**
-             * @var ListItemAttribute $singleAttribute
-             */
-            foreach ($singleAttributes as $attributeCode => $singleAttribute) {
-                $valueObject = $singleAttribute->getValue();
-                if($valueObject) {
-                    $sourceAttributes[$attributeCode] = $valueObject->getValue();
-                }
-            }
-
-            /**
-             * @var  ListItemMultipleAttribute $multipleAttribute
-             */
-            foreach ($multipleAttributes as $attributeCode => $multipleAttribute) {
-                $values = $multipleAttribute->getValues();
-                /**
-                 * @var ListItemAttributeValue $singleAttribute
-                 */
+            foreach ($multipleAttributes as $attributeCode => $multipleAttributeValues) {
                 $sourceAttributeValues = [];
-                foreach ($values as $singleAttribute) {
-                    $sourceAttributeValues[] = $singleAttribute->getValue();
+                foreach ($multipleAttributeValues as $value) {
+                    $sourceAttributeValues[] = $value;
                 }
-
                 $sourceAttributes[$attributeCode] = $sourceAttributeValues;
             }
             $source['attributes'] = $sourceAttributes;
@@ -84,13 +56,5 @@ class Elasticsearch implements SourceInterface
     public function getIndexName()
     {
         return $this->indexName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTypeName()
-    {
-        return $this->typeName;
     }
 }

@@ -8,7 +8,7 @@ use App\Http\Requests\Api\CatalogListRequest;
 use App\Search\Query\Interfaces\RequestEngineInterface;
 use SwaggerUnAuth\Model\Engine;
 use App\Search\Query\Request\Engine as RequestEngine;
-use SwaggerUnAuth\Model\InputFilter;
+use SwaggerUnAuth\Model\Filter;
 
 class SearchController extends Controller
 {
@@ -20,7 +20,7 @@ class SearchController extends Controller
     public function catalogList(CatalogListRequest $request)
     {
         /**
-         * @var InputFilter $filter
+         * @var Filter $filter
          */
         $filter = $request->getValid('filter');
         /**
