@@ -147,7 +147,7 @@ definitions:
         type: string
         description: |
           Символьный код параметра
-        example: "colors"
+        example: "color"
       values:
         type: array
         description: |

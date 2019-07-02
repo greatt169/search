@@ -84,7 +84,6 @@ class Elasticsearch extends Engine
         try {
             $params = [
                 'index' => $this->entity->getIndexByAlias($this->index),
-                'type' => $this->index,
                 'body' => [
                     'query' => [
                         'constant_score' => [
@@ -98,6 +97,7 @@ class Elasticsearch extends Engine
              */
             $client = $this->entity->getClient();
             $results = $client->search($params);
+            print_r($results);
         } catch (Exception $exception) {
             throw new ApiException(class_basename($exception), $exception->getMessage(), $exception->getCode());
         }

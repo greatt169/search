@@ -33,6 +33,7 @@ class Elasticsearch extends Base
      */
     public function getIndexByAlias($aliasName)
     {
+        $aliasName = config('search.index.elasticsearch.prefix') . $aliasName;
         $aliases = $this->getClient()->indices()->getAliases();
         $aliasWithPrefix = $this->getAliasWithPrefix($aliasName);
         foreach ($aliases as $index => $aliasMapping) {
