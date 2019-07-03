@@ -3,12 +3,13 @@ namespace App\Search\Query\Interfaces;
 
 use SwaggerUnAuth\Model\Filter;
 use SwaggerUnAuth\Model\ListItem;
+use SwaggerUnAuth\Model\ListItems;
 
 interface RequestEngineInterface
 {
     /**
      * @param Filter $filter
-     * @return ListItem[]
+     * @return ListItems
      */
-    public function postCatalogList(Filter $filter);
+    public function postCatalogList(Filter $filter) : ListItems;
 }

@@ -11,6 +11,7 @@ use SwaggerUnAuth\Model\FilterParam;
 use SwaggerUnAuth\Model\FilterRangeParam;
 use SwaggerUnAuth\Model\FilterValue;
 use SwaggerUnAuth\Model\ListItem;
+use SwaggerUnAuth\Model\ListItems;
 
 class Elasticsearch extends Engine
 {
@@ -76,10 +77,10 @@ class Elasticsearch extends Engine
 
     /**
      * @param Filter $filter
-     * @return ListItem[]
+     * @return ListItems
      * @throws ApiException
      */
-    public function postCatalogList(Filter $filter)
+    public function postCatalogList(Filter $filter) : ListItems
     {
         try {
             $params = [
@@ -97,20 +98,19 @@ class Elasticsearch extends Engine
              */
             $client = $this->entity->getClient();
             $results = $client->search($params);
-
             $total = $results['hits']['total']['value'];
             $hits = $results['hits']['hits'];
-
-
+            $items = [];
             foreach ($hits as $hit) {
-                $item = $this->entity->getConvertedEngineData($hit);
-                print_r($item);
+                $items[] = $this->entity->getConvertedEngineData($hit);
             }
-
+            $response = new ListItems();
+            $response->setTotal($total);
+            $response->setItems($items);
         } catch (Exception $exception) {
             throw new ApiException(class_basename($exception), $exception->getMessage(), $exception->getCode());
         }
 
-        return [new ListItem()];
+        return $response;
     }
 }
