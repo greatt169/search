@@ -15,10 +15,6 @@ responses:
     description: 'Ошибочный запрос, например, отсутствует один из параметров'
     schema:
       $ref: '#/definitions/Error'
-  401Error:
-    description: 'Требуется аутентификация'
-    schema:
-      $ref: '#/definitions/Error'
   403Error:
     description: 'Недостаточно прав для выполнения запроса'
     schema:
@@ -66,13 +62,16 @@ paths:
           schema:
             type: object
             description: Параметры запроса
-            required:
-              - filter
             properties:
-              engine:
-                $ref: '#/definitions/Engine'
               filter:
                 $ref: '#/definitions/Filter'
+              sort:
+                $ref: '#/definitions/Sort'
+              slectedFields:
+                $ref: '#/definitions/SelectedFields'
+              engine:
+                $ref: '#/definitions/Engine'
+
       tags:
       - Catalog
       responses:
@@ -104,6 +103,25 @@ definitions:
         default: elasticsearch
         example: elasticsearch
         enum: [elasticsearch, sphinx]
+
+  Sort:
+    type: object
+    description: Объект соритровки на вход
+    required:
+      - field
+      - order
+    properties:
+      field:
+        description: Поле для сорировки
+        type: string
+        default: 'id'
+        example: 'id'
+      order:
+        description: Направление для сорировки
+        type: string
+        default: 'asc'
+        example: 'asc'
+        enum: [asc, desc]
 
   Filter:
     type: object

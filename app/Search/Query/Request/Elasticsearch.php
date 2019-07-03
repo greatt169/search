@@ -71,7 +71,6 @@ class Elasticsearch extends Engine
 
             $elasticFilter['bool']['must'][] = $term;
         }
-
         return $elasticFilter;
     }
 
@@ -80,18 +79,21 @@ class Elasticsearch extends Engine
      * @return ListItems
      * @throws ApiException
      */
-    public function postCatalogList(Filter $filter) : ListItems
+    public function postCatalogList(Filter $filter = null) : ListItems
     {
         try {
+
+            $requestBody = [];
+            if($filter !== null) {
+                $requestBody['query'] = [
+                    'constant_score' => [
+                        'filter' => $this->getEngineConvertedFilter($filter)
+                    ]
+                ];
+            }
             $params = [
                 'index' => $this->entity->getIndexByAlias($this->index),
-                'body' => [
-                    'query' => [
-                        'constant_score' => [
-                            'filter' => $this->getEngineConvertedFilter($filter)
-                        ]
-                    ]
-                ]
+                'body' => $requestBody
             ];
             /**
              * @var Client $client

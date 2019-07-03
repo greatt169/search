@@ -11,5 +11,5 @@ interface RequestEngineInterface
      * @param Filter $filter
      * @return ListItems
      */
-    public function postCatalogList(Filter $filter) : ListItems;
+    public function postCatalogList(Filter $filter = null) : ListItems;
 }
