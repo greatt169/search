@@ -29,6 +29,7 @@ class IndexController extends Controller
         $params = [
             'index' => $indexer->getIndex(),
             'body' => [
+
                 'query' => [
                     'bool' => [
                         'should' => [

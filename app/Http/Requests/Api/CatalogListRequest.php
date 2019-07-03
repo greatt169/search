@@ -21,7 +21,10 @@ class CatalogListRequest extends Request
     {
         $data = '';
         if($withData) {
-            $data = $this->getDeserializeData()->engine;
+            $sourceData = $this->getDeserializeData();
+            if(property_exists($sourceData, 'engine')) {
+                $data = $sourceData->engine;
+            }
         }
         /**
          * @var Engine $engine
@@ -47,7 +50,11 @@ class CatalogListRequest extends Request
         /**
          * @var Filter $filter
          */
-        $filter = ObjectSerializer::deserialize($this->getDeserializeData()->filter, Filter::class, null);
+        $sourceData = $this->getDeserializeData();
+        if(!property_exists($sourceData, 'filter')) {
+            throw new ApiException('BadRequest', 'param filter is required', 400);
+        }
+        $filter = ObjectSerializer::deserialize($sourceData->filter, Filter::class, null);
         $this->validateBySwaggerModel($filter);
         $filterRangeParams = $filter->getRangeParams();
 

@@ -14,7 +14,7 @@ class SearchController extends Controller
 {
     /**
      * @param CatalogListRequest $request
-     * @return \SwaggerUnAuth\Model\ListItem[]
+     * @return \SwaggerUnAuth\Model\ListItems
      * @throws ApiException
      */
     public function catalogList(CatalogListRequest $request)
