@@ -1,6 +1,12 @@
 <?php
 
 return [
+    "mapping" => [
+        "name" => [
+            "type" => "keyword",
+            "price" => "float"
+        ]
+    ],
     "items" => [
         [
             "id" => 1,
