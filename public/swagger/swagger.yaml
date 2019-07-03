@@ -123,6 +123,22 @@ definitions:
         example: 'asc'
         enum: [asc, desc]
 
+  SelectedFields:
+    type: object
+    description: Объект полей для выборки на вход
+    required:
+      - fields
+    properties:
+      fields:
+        description: Поле для выборки | Доступно при engine = elasticsearch
+        type: array
+        items:
+          type: string
+        example:
+          - 'color'
+          - 'brand'
+          - 'model'
+
   Filter:
     type: object
     description: Объект фильтрации на вход
