@@ -53,7 +53,6 @@ paths:
           name: page
           description: Номер запрашиваемой страницы результата
           minimum: 1
-          required: true
           type: integer
           default: 1
         - in: query
