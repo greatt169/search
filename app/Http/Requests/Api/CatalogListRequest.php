@@ -3,10 +3,12 @@
 namespace App\Http\Requests\Api;
 
 use App\Exceptions\ApiException;
+use Exception;
 use SwaggerUnAuth\Model\Engine;
 use SwaggerUnAuth\Model\Filter;
 use SwaggerUnAuth\Model\FilterParam;
 use SwaggerUnAuth\Model\ModelInterface;
+use SwaggerUnAuth\Model\Sort;
 use SwaggerUnAuth\ObjectSerializer;
 
 class CatalogListRequest extends Request
@@ -86,6 +88,27 @@ class CatalogListRequest extends Request
     }
 
     /**
+     * @throws ApiException
+     */
+    private function validateSort()
+    {
+        /**
+         * @var Sort $sort
+         */
+        $sourceData = $this->getDeserializeData();
+        if(property_exists($sourceData, 'sort')) {
+            $sortData = $sourceData->sort;
+        } else {
+            $this->setValid('sort', null);
+            return;
+        }
+        $sort = ObjectSerializer::deserialize($sortData, Sort::class, null);
+
+        $this->validateBySwaggerModel($sort);
+        $this->setValid('sort', $sort);
+    }
+
+    /**
      * Configure the validator instance.
      *
      * @param  \Illuminate\Validation\Validator  $validator
@@ -94,15 +117,20 @@ class CatalogListRequest extends Request
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            $this->validateFilter();
-            /**
-             * @var \Illuminate\Validation\Validator  $validator
-             */
-            $errors = $validator->errors();
-            if($errors->count() > 0) {
-                throw new ApiException('BadRequest', $errors->first(), 400);
-            } else {
-                $this->setValid('engine', $this->getEngine());
+            try {
+                $this->validateFilter();
+                $this->validateSort();
+                /**
+                 * @var \Illuminate\Validation\Validator  $validator
+                 */
+                $errors = $validator->errors();
+                if($errors->count() > 0) {
+                    throw new ApiException('BadRequest', $errors->first(), 400);
+                } else {
+                    $this->setValid('engine', $this->getEngine());
+                }
+            } catch (Exception $exception) {
+                throw new ApiException('BadRequest', $exception->getMessage(), 400);
             }
         });
     }

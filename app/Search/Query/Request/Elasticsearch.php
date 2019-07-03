@@ -12,6 +12,8 @@ use SwaggerUnAuth\Model\FilterRangeParam;
 use SwaggerUnAuth\Model\FilterValue;
 use SwaggerUnAuth\Model\ListItem;
 use SwaggerUnAuth\Model\ListItems;
+use SwaggerUnAuth\Model\SelectedFields;
+use SwaggerUnAuth\Model\Sort;
 
 class Elasticsearch extends Engine
 {
@@ -59,7 +61,6 @@ class Elasticsearch extends Engine
             $paramCode = $rangeParam->getCode();
             $minValue = $rangeParam->getMinValue();
             $maxValue = $rangeParam->getMaxValue();
-
             $term[] = [
                 'range' => [
                     $paramCode => [
@@ -68,18 +69,19 @@ class Elasticsearch extends Engine
                     ]
                 ]
             ];
-
             $elasticFilter['bool']['must'][] = $term;
         }
         return $elasticFilter;
     }
 
     /**
-     * @param Filter $filter
+     * @param Filter|null $filter
+     * @param Sort|null $sort
+     * @param SelectedFields|null $selectedFields
      * @return ListItems
      * @throws ApiException
      */
-    public function postCatalogList(Filter $filter = null) : ListItems
+    public function postCatalogList(Filter $filter = null, Sort $sort = null, SelectedFields $selectedFields = null) : ListItems
     {
         try {
 
