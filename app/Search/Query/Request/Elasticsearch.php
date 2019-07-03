@@ -93,6 +93,9 @@ class Elasticsearch extends Engine
                     ]
                 ];
             }
+            if($sort !== null) {
+
+            }
             $params = [
                 'index' => $this->entity->getIndexByAlias($this->index),
                 'body' => $requestBody
