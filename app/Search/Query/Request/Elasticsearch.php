@@ -10,10 +10,9 @@ use SwaggerUnAuth\Model\Filter;
 use SwaggerUnAuth\Model\FilterParam;
 use SwaggerUnAuth\Model\FilterRangeParam;
 use SwaggerUnAuth\Model\FilterValue;
-use SwaggerUnAuth\Model\ListItem;
 use SwaggerUnAuth\Model\ListItems;
 use SwaggerUnAuth\Model\SelectedFields;
-use SwaggerUnAuth\Model\Sort;
+use SwaggerUnAuth\Model\Sorts;
 
 class Elasticsearch extends Engine
 {
@@ -24,10 +23,24 @@ class Elasticsearch extends Engine
     }
 
     /**
+     * @param Sorts $sorts
+     * @return array
+     */
+    public function getEngineConvertedSorts(Sorts $sorts): array
+    {
+        $elasticSort = [];
+        $sortItems = $sorts->getItems();
+        foreach ($sortItems as $sort) {
+            $elasticSort[] = [$sort->getField() => ['order' => $sort->getOrder()]];
+        }
+        return $elasticSort;
+    }
+
+    /**
      * @param Filter $filter
      * @return array
      */
-    protected function getEngineConvertedFilter(Filter $filter)
+    public function getEngineConvertedFilter(Filter $filter): array
     {
         $elasticFilter = [];
         $selectParams = $filter->getSelectParams();
@@ -76,12 +89,12 @@ class Elasticsearch extends Engine
 
     /**
      * @param Filter|null $filter
-     * @param Sort|null $sort
+     * @param Sorts|null $sorts
      * @param SelectedFields|null $selectedFields
      * @return ListItems
      * @throws ApiException
      */
-    public function postCatalogList(Filter $filter = null, Sort $sort = null, SelectedFields $selectedFields = null) : ListItems
+    public function postCatalogList(Filter $filter = null, Sorts $sorts = null, SelectedFields $selectedFields = null) : ListItems
     {
         try {
 
@@ -93,8 +106,8 @@ class Elasticsearch extends Engine
                     ]
                 ];
             }
-            if($sort !== null) {
-
+            if($sorts !== null) {
+                $requestBody['sort'] = $this->getEngineConvertedSorts($sorts);
             }
             $params = [
                 'index' => $this->entity->getIndexByAlias($this->index),

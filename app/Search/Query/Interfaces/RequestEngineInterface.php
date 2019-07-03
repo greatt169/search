@@ -2,18 +2,29 @@
 namespace App\Search\Query\Interfaces;
 
 use SwaggerUnAuth\Model\Filter;
-use SwaggerUnAuth\Model\ListItem;
 use SwaggerUnAuth\Model\ListItems;
 use SwaggerUnAuth\Model\SelectedFields;
-use SwaggerUnAuth\Model\Sort;
+use SwaggerUnAuth\Model\Sorts;
 
 interface RequestEngineInterface
 {
     /**
      * @param Filter|null $filter
-     * @param Sort|null $sort
+     * @param Sorts|null $sorts
      * @param SelectedFields|null $selectedFields
      * @return ListItems
      */
-    public function postCatalogList(Filter $filter = null, Sort $sort = null, SelectedFields $selectedFields = null) : ListItems;
+    public function postCatalogList(Filter $filter = null, Sorts $sorts = null, SelectedFields $selectedFields = null) : ListItems;
+
+    /**
+     * @param Sorts $sorts
+     * @return array
+     */
+    public function getEngineConvertedSorts(Sorts $sorts): array;
+
+    /**
+     * @param Filter $filter
+     * @return array
+     */
+    public function getEngineConvertedFilter(Filter $filter): array;
 }

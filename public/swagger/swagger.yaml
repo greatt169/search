@@ -65,8 +65,8 @@ paths:
             properties:
               filter:
                 $ref: '#/definitions/Filter'
-              sort:
-                $ref: '#/definitions/Sort'
+              sorts:
+                $ref: '#/definitions/Sorts'
               slectedFields:
                 $ref: '#/definitions/SelectedFields'
               engine:
@@ -103,6 +103,17 @@ definitions:
         default: elasticsearch
         example: elasticsearch
         enum: [elasticsearch, sphinx]
+
+  Sorts:
+    type: object
+    description: Объект, содержащий массив правил сортировки
+    required:
+      - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/Sort'
 
   Sort:
     type: object

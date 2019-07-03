@@ -9,6 +9,7 @@ use SwaggerUnAuth\Model\Filter;
 use SwaggerUnAuth\Model\FilterParam;
 use SwaggerUnAuth\Model\ModelInterface;
 use SwaggerUnAuth\Model\Sort;
+use SwaggerUnAuth\Model\Sorts;
 use SwaggerUnAuth\ObjectSerializer;
 
 class CatalogListRequest extends Request
@@ -93,19 +94,24 @@ class CatalogListRequest extends Request
     private function validateSort()
     {
         /**
+         * @var Sorts $sorts
          * @var Sort $sort
          */
         $sourceData = $this->getDeserializeData();
-        if(property_exists($sourceData, 'sort')) {
-            $sortData = $sourceData->sort;
+        if(property_exists($sourceData, 'sorts')) {
+            $sortData = $sourceData->sorts;
         } else {
-            $this->setValid('sort', null);
+            $this->setValid('sorts', null);
             return;
         }
-        $sort = ObjectSerializer::deserialize($sortData, Sort::class, null);
+        $sorts = ObjectSerializer::deserialize($sortData, Sorts::class, null);
+        $this->validateBySwaggerModel($sorts);
+        $sortItems = $sorts->getItems();
 
-        $this->validateBySwaggerModel($sort);
-        $this->setValid('sort', $sort);
+        foreach ($sortItems as $sort) {
+            $this->validateBySwaggerModel($sort);
+        }
+        $this->setValid('sorts', $sorts);
     }
 
     /**

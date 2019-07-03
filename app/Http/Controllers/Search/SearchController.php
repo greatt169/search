@@ -9,7 +9,7 @@ use App\Search\Query\Interfaces\RequestEngineInterface;
 use SwaggerUnAuth\Model\Engine;
 use App\Search\Query\Request\Engine as RequestEngine;
 use SwaggerUnAuth\Model\Filter;
-use SwaggerUnAuth\Model\Sort;
+use SwaggerUnAuth\Model\Sorts;
 
 class SearchController extends Controller
 {
@@ -26,9 +26,9 @@ class SearchController extends Controller
         $filter = $request->getValid('filter');
 
         /**
-         * @var Sort $sort
+         * @var Sorts $sorts
          */
-        $sort = $request->getValid('sort');
+        $sorts = $request->getValid('sorts');
 
         /**
          * @var Engine $engine
@@ -41,7 +41,7 @@ class SearchController extends Controller
          * @var RequestEngineInterface $engineRequest
          */
         $engineRequest = RequestEngine::getInstance($engine->getName(), $index);
-        $items = $engineRequest->postCatalogList($filter, $sort);
+        $items = $engineRequest->postCatalogList($filter, $sorts);
         return $items;
     }
 }
