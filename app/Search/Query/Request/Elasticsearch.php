@@ -97,7 +97,16 @@ class Elasticsearch extends Engine
              */
             $client = $this->entity->getClient();
             $results = $client->search($params);
-            print_r($results);
+
+            $total = $results['hits']['total']['value'];
+            $hits = $results['hits']['hits'];
+
+
+            foreach ($hits as $hit) {
+                $item = $this->entity->getConvertedEngineData($hit);
+                print_r($item);
+            }
+
         } catch (Exception $exception) {
             throw new ApiException(class_basename($exception), $exception->getMessage(), $exception->getCode());
         }

@@ -2,6 +2,8 @@
 
 namespace App\Search\Entity\Interfaces;
 
+use SwaggerUnAuth\Model\ListItem;
+
 /**
  * Interface EntityInterface
  * @package App\Search\Entity\Interfaces
@@ -23,4 +25,10 @@ interface EntityInterface
      * @return string
      */
     public function getAliasWithPrefix($aliasName);
+
+    /**
+     * @param $data
+     * @return mixed
+     */
+    public function getConvertedEngineData($data) : ListItem;
 }

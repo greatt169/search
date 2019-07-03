@@ -168,6 +168,9 @@ definitions:
   ListItems:
     type: object
     properties:
+      total:
+        type: integer
+        example: 10
       items:
         type: array
         items:

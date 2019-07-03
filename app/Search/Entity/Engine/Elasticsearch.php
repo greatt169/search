@@ -5,6 +5,7 @@ namespace App\Search\Entity\Engine;
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 use Illuminate\Support\Facades\Log;
+use SwaggerUnAuth\Model\ListItem;
 
 class Elasticsearch extends Base
 {
@@ -76,5 +77,32 @@ class Elasticsearch extends Base
         }
         $this->client = $clientBuild->build();
         return $this->client;
+    }
+
+    /**
+     * @param $hit
+     * @return mixed
+     */
+    public function getConvertedEngineData($hit) : ListItem
+    {
+        $source = $hit['_source'];
+        $listItem = new ListItem();
+
+        $singleAttributes = [];
+        $multipleAttributes = [];
+
+        foreach ($source as $key => $value) {
+            if(is_array($value)) {
+                $multipleAttributes[$key] = $value;
+            } else {
+                $singleAttributes[$key] = $value;
+            }
+        }
+
+        $listItem->setId($hit['_id']);
+        $listItem->setSingleAttributes($singleAttributes);
+        $listItem->setMultipleAttributes($multipleAttributes);
+
+        return $listItem;
     }
 }
