@@ -3,6 +3,7 @@
 namespace App\Search\Index\Interfaces;
 
 use App\Search\Entity\Interfaces\EntityInterface;
+use App\Helpers\Interfaces\TimerInterface;
 
 interface ManagerInterface
 {

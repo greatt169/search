@@ -4,7 +4,7 @@ namespace App\Search\Index\Manager;
 
 use App\Search\Entity\Interfaces\EntityInterface;
 use App\Search\Index\Interfaces\SourceInterface;
-use App\Search\Index\Interfaces\TimerInterface;
+use App\Helpers\Interfaces\TimerInterface;
 use Elasticsearch\Client;
 use Exception;
 use Illuminate\Support\Facades\Log;

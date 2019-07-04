@@ -3,10 +3,11 @@
 namespace App\Search\Index\Manager;
 
 use App\Helpers\Timer;
+use App\Helpers\Interfaces\TimerInterface;
+
 use App\Search\Entity\Interfaces\EntityInterface;
 use App\Search\Index\Interfaces\ManagerInterface;
 use App\Search\Index\Interfaces\SourceInterface;
-use App\Search\Index\Interfaces\TimerInterface;
 
 abstract class Base implements ManagerInterface
 {

@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Search\Index\Interfaces;
+namespace App\Helpers\Interfaces;
 /**
  * Interface TimerInterface
- * @package App\Search\Index\Interfaces
- *
+ * @package App\Helpers\Interfaces
  */
 interface TimerInterface
 {

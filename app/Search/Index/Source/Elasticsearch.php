@@ -10,13 +10,17 @@ class Elasticsearch extends Base
 {
     protected $indexName = 'auto';
 
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     public function getElementsForIndexing()
     {
-        $sourceData = include_once('/var/www/public/data.php');
         /**
          * @var SourceIndex $sourceIndex
          */
-        $sourceIndex = ObjectSerializer::deserialize(json_decode(json_encode($sourceData)), SourceIndex::class, null);
+        $sourceIndex = ObjectSerializer::deserialize(json_decode(json_encode($this->sourceData)), SourceIndex::class, null);
 
         $elementsForIndexing = [];
         $data = $sourceIndex->getItems();
