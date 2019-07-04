@@ -386,7 +386,7 @@ class Elasticsearch extends Base
     }
 
 
-    protected function setMapping()
+    public function setMapping()
     {
         $params = [
             'index' => $this->index,
