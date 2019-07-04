@@ -35,6 +35,8 @@ class SearchController extends Controller
          */
         $engine = $request->getValid('engine');
         $index = $request->get('index');
+        $page = $request->get('page');
+        $pageSize = $request->get('pageSize');
 
         $items = null;
         /**

@@ -91,10 +91,12 @@ class Elasticsearch extends Engine
      * @param Filter|null $filter
      * @param Sorts|null $sorts
      * @param SelectedFields|null $selectedFields
+     * @param int $page
+     * @param int $pageSize
      * @return ListItems
      * @throws ApiException
      */
-    public function postCatalogList(Filter $filter = null, Sorts $sorts = null, SelectedFields $selectedFields = null) : ListItems
+    public function postCatalogList(Filter $filter = null, Sorts $sorts = null, SelectedFields $selectedFields = null, $page = 1, $pageSize = 20) : ListItems
     {
         try {
 
