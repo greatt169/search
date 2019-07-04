@@ -1,12 +1,17 @@
 <?php
 
 return [
-    "mapping" => [
+    /*"mapping" => [
         "name" => [
             "type" => "keyword",
-            "price" => "float"
+            "model" => "keyword",
+            "color" => "keyword",
+            "insurance" => "keyword",
+            "brand" => "keyword",
+            "price" => "float",
+            "year" => "integer",
         ]
-    ],
+    ],*/
     "items" => [
         [
             "id" => 1,
