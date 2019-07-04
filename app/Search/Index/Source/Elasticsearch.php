@@ -20,7 +20,10 @@ class Elasticsearch extends Base
         /**
          * @var SourceIndex $sourceIndex
          */
-        $sourceIndex = ObjectSerializer::deserialize(json_decode(json_encode($this->sourceData)), SourceIndex::class, null);
+        $sourceIndex = ObjectSerializer::deserialize(
+            $this->serializer::__toArray($this->sourceData),
+            SourceIndex::class, null
+        );
 
         $elementsForIndexing = [];
         $data = $sourceIndex->getItems();
