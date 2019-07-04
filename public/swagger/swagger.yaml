@@ -264,6 +264,31 @@ definitions:
             type: string
             example: 'red'
 
+  SourceIndex:
+    type: object
+    description: |
+        Объект, содержащий данные для индексации
+    required:
+      - items
+      - mapping
+    properties:
+      items:
+        type: array
+        description: |
+            Массив элементов для индексации
+        items:
+          $ref: '#/definitions/ListItem'
+      mapping:
+        type: object
+        description: |
+          Массив правил для индексации полей
+        additionalProperties:
+          type: object
+          properties:
+            type:
+              type: string
+              example: keyword
+              enum: [keyword, text, float, integer, boolean]
 
   Error:
     description: Описание ошибки для всех методов

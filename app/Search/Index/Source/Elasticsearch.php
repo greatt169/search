@@ -4,23 +4,25 @@ namespace App\Search\Index\Source;
 
 use App\Search\Index\Interfaces\SourceInterface;
 use SwaggerUnAuth\Model\ListItem;
-use SwaggerUnAuth\Model\ListItems;
+use SwaggerUnAuth\Model\SourceIndex;
 use SwaggerUnAuth\ObjectSerializer;
 
 class Elasticsearch implements SourceInterface
 {
     protected $indexName = 'auto';
 
+
+
     public function getElementsForIndexing()
     {
         $sourceData = include_once('/var/www/public/data.php');
         /**
-         * @var ListItems $listItems
+         * @var SourceIndex $sourceIndex
          */
-        $listItems = ObjectSerializer::deserialize(json_decode(json_encode($sourceData)), ListItems::class, null);
+        $sourceIndex = ObjectSerializer::deserialize(json_decode(json_encode($sourceData)), SourceIndex::class, null);
 
         $elementsForIndexing = [];
-        $data = $listItems->getItems();
+        $data = $sourceIndex->getItems();
 
         /**
          * @var ListItem $dataItem
