@@ -111,7 +111,19 @@ class Elasticsearch extends Engine
             if($sorts !== null) {
                 $requestBody['sort'] = $this->getEngineConvertedSorts($sorts);
             }
-            
+
+            //
+            $num = $page;
+            $size = $pageSize;
+            $from = $num * $size - $size;
+
+            if ($from < 0) {
+                $from = 0;
+            }
+
+            $requestBody['size'] = $size;
+            $requestBody['from'] = $from;
+            //
             $params = [
                 'index' => $this->entity->getIndexByAlias($this->index),
                 'body' => $requestBody
