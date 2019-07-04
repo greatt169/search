@@ -7,5 +7,5 @@ namespace App\Helpers\Interfaces;
  */
 interface SerializerInterface
 {
-    public static function __toArray($data): array;
+    public static function __toArray($data);
 }

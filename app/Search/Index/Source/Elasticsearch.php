@@ -4,7 +4,6 @@ namespace App\Search\Index\Source;
 
 use SwaggerUnAuth\Model\ListItem;
 use SwaggerUnAuth\Model\SourceIndex;
-use SwaggerUnAuth\ObjectSerializer;
 
 class Elasticsearch extends Base
 {
@@ -20,10 +19,7 @@ class Elasticsearch extends Base
         /**
          * @var SourceIndex $sourceIndex
          */
-        $sourceIndex = ObjectSerializer::deserialize(
-            $this->serializer::__toArray($this->sourceData),
-            SourceIndex::class, null
-        );
+        $sourceIndex = $this->getSourceIndex();
 
         $elementsForIndexing = [];
         $data = $sourceIndex->getItems();
