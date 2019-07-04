@@ -279,19 +279,16 @@ definitions:
         items:
           $ref: '#/definitions/ListItem'
       mapping:
-        $ref: '#/definitions/SourceIndexMapping'
-
-  SourceIndexMapping:
-    type: object
-    description: |
-      Массив правил для индексации полей
-    additionalProperties:
-      type: object
-      properties:
-        type:
-          type: string
-          example: keyword
-          enum: [keyword, text, float, integer, boolean]
+        type: object
+        description: |
+          Массив правил для индексации полей
+        additionalProperties:
+          type: object
+          properties:
+            type:
+              type: string
+              example: keyword
+              enum: [keyword, text, float, integer, boolean]
 
   Error:
     description: Описание ошибки для всех методов
