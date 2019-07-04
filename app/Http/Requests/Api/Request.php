@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Api;
 
 use App\Exceptions\ApiException;
+use App\Helpers\Interfaces\SerializerInterface;
 use Illuminate\Foundation\Http\FormRequest;
 use SwaggerUnAuth\Model\ModelInterface;
 
@@ -13,10 +14,21 @@ class Request extends FormRequest
      */
     protected $validData;
 
+    /**
+     * @var SerializerInterface
+     */
+    protected $serializer;
+
     protected $data = null;
 
     public function setValid($key, $value) {
         $this->validData[$key] = $value;
+    }
+
+    public function __construct(array $query = [], array $request = [], array $attributes = [], array $cookies = [], array $files = [], array $server = [], $content = null, SerializerInterface $serializer)
+    {
+        parent::__construct($query, $request, $attributes, $cookies, $files, $server, $content);
+        $this->serializer = $serializer;
     }
 
     /**
@@ -34,7 +46,7 @@ class Request extends FormRequest
     protected function getDeserializeData()
     {
         if($this->data === null) {
-            $data = json_decode(json_encode($this->input()));
+            $data = $this->serializer::__toArray($this->input());
             $this->data = $data;
             return $data;
         }
