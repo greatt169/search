@@ -11,6 +11,8 @@ interface ManagerInterface
 
     public function dropIndex();
 
+    public function setMapping();
+
     public function indexAll();
 
     public function removeAll();

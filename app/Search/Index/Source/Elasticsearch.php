@@ -4,6 +4,7 @@ namespace App\Search\Index\Source;
 
 use SwaggerUnAuth\Model\ListItem;
 use SwaggerUnAuth\Model\SourceIndex;
+use SwaggerUnAuth\Model\SourceIndexMapping;
 
 class Elasticsearch extends Base
 {
@@ -50,5 +51,25 @@ class Elasticsearch extends Base
             $elementsForIndexing[] = $source;
         }
         return $elementsForIndexing;
+    }
+
+    public function getMappingForIndexing()
+    {
+        /**
+         * @var SourceIndex $sourceIndex
+         */
+        $sourceIndex = $this->getSourceIndex();
+        $mappingParams = [];
+        $mapping = $sourceIndex->getMapping();
+        /**
+         * @var SourceIndexMapping $attributeMapping
+         */
+        foreach ($mapping as $attributeCode => $attributeMapping) {
+            $mappingParams[$attributeCode] = [
+                'type' => $attributeMapping->getType()
+            ];
+        }
+
+        return $mappingParams;
     }
 }

@@ -8,6 +8,7 @@ use App\Helpers\Interfaces\TimerInterface;
 use Elasticsearch\Client;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use SwaggerUnAuth\Model\SourceIndexMapping;
 
 class Elasticsearch extends Base
 {
@@ -116,47 +117,8 @@ class Elasticsearch extends Base
     public function indexAll()
     {
         $this->timer->start($this->indexAllTimerLabel);
-        $arSource = $this->getSource()->getElementsForIndexing();
-        $params = ['body' => []];
-        foreach ($arSource as $index => $document) {
-            $this->timer->start($this->prepareBulkTimerLabel);
-            $i = $index + 1;
-            $arDocAttributes = [];
-
-            foreach ($document['attributes'] as $attributeCode => $attributeValue) {
-                $arDocAttributes[$attributeCode] = $attributeValue;
-            }
-            $params['body'][] = [
-                'index' => [
-                    '_index' => $this->index,
-                    '_id' => $document['id']
-                ]
-            ];
-            $params['body'][] = $arDocAttributes;
-            $this->timer->end($this->prepareBulkTimerLabel);
-
-            // Every 1000 documents stop and send the bulk request
-            if ($i % $this->bulkSize == 0) {
-                $this->timer->start($this->indexBulkTimerLabel);
-                $responses = $this->getClient()->bulk($params);
-                $this->timer->end($this->indexBulkTimerLabel);
-                // erase the old bulk request
-                $params = ['body' => []];
-                // unset the bulk response when you are done to save memory
-                unset($responses);
-            }
-        }
-        // Send the last batch if it exists
-        if (!empty($params['body'])) {
-            $this->timer->start($this->indexBulkTimerLabel);
-            $responses = $this->getClient()->bulk($params);
-            $this->timer->end($this->indexBulkTimerLabel);
-
-            // unset the bulk response when you are done to save memory
-            unset($responses);
-        }
-
-        $total = count($arSource);
+        $this->setMapping();
+        $total = $this->indexAllElements();
         $this->timer->end($this->indexAllTimerLabel);
         return $total;
     }
@@ -371,5 +333,71 @@ class Elasticsearch extends Base
     public function getDisplayResultMessages()
     {
         return $this->displayResultMessages;
+    }
+
+    /**
+     * @return int
+     */
+    protected function indexAllElements(): int
+    {
+        $arSource = $this->getSource()->getElementsForIndexing();
+
+        $params = ['body' => []];
+        foreach ($arSource as $index => $document) {
+            $this->timer->start($this->prepareBulkTimerLabel);
+            $i = $index + 1;
+            $arDocAttributes = [];
+
+            foreach ($document['attributes'] as $attributeCode => $attributeValue) {
+                $arDocAttributes[$attributeCode] = $attributeValue;
+            }
+            $params['body'][] = [
+                'index' => [
+                    '_index' => $this->index,
+                    '_id' => $document['id']
+                ]
+            ];
+            $params['body'][] = $arDocAttributes;
+            $this->timer->end($this->prepareBulkTimerLabel);
+
+            // Every 1000 documents stop and send the bulk request
+            if ($i % $this->bulkSize == 0) {
+                $this->timer->start($this->indexBulkTimerLabel);
+                $responses = $this->getClient()->bulk($params);
+                $this->timer->end($this->indexBulkTimerLabel);
+                // erase the old bulk request
+                $params = ['body' => []];
+                // unset the bulk response when you are done to save memory
+                unset($responses);
+            }
+        }
+        // Send the last batch if it exists
+        if (!empty($params['body'])) {
+            $this->timer->start($this->indexBulkTimerLabel);
+            $responses = $this->getClient()->bulk($params);
+            $this->timer->end($this->indexBulkTimerLabel);
+
+            // unset the bulk response when you are done to save memory
+            unset($responses);
+        }
+
+        $total = count($arSource);
+        return $total;
+    }
+
+
+    protected function setMapping()
+    {
+        $params = [
+            'index' => $this->index,
+            'body' => [
+                '_source' => [
+                    'enabled' => true
+                ],
+                'properties' => $this->getSource()->getMappingForIndexing()
+            ]
+        ];
+
+        $this->getClient()->indices()->putMapping($params);
     }
 }
