@@ -18,6 +18,11 @@ abstract class Base implements SourceInterface
     protected $sourceData;
 
     /**
+     * @var string
+     */
+    protected $indexName;
+
+    /**
      * @var SerializerInterface
      */
     protected $serializer;
@@ -48,5 +53,13 @@ abstract class Base implements SourceInterface
             $this->sourceIndex = $sourceIndex;
         }
         return $this->sourceIndex;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIndexName()
+    {
+        return $this->indexName;
     }
 }

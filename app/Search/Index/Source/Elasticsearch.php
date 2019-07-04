@@ -51,12 +51,4 @@ class Elasticsearch extends Base
         }
         return $elementsForIndexing;
     }
-
-    /**
-     * @return string
-     */
-    public function getIndexName()
-    {
-        return $this->indexName;
-    }
 }
