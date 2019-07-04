@@ -2,16 +2,13 @@
 
 namespace App\Search\Index\Source;
 
-use App\Search\Index\Interfaces\SourceInterface;
 use SwaggerUnAuth\Model\ListItem;
 use SwaggerUnAuth\Model\SourceIndex;
 use SwaggerUnAuth\ObjectSerializer;
 
-class Elasticsearch implements SourceInterface
+class Elasticsearch extends Base
 {
     protected $indexName = 'auto';
-
-
 
     public function getElementsForIndexing()
     {
