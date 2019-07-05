@@ -37,13 +37,14 @@ class SearchController extends Controller
         $index = $request->get('index');
         $page = $request->get('page');
         $pageSize = $request->get('pageSize');
+        $selectedFields = null; // TODO:
 
         $items = null;
         /**
          * @var RequestEngineInterface $engineRequest
          */
         $engineRequest = RequestEngine::getInstance($engine->getName(), $index);
-        $items = $engineRequest->postCatalogList($filter, $sorts);
+        $items = $engineRequest->postCatalogList($filter, $sorts, $selectedFields, $page, $pageSize);
         return $items;
     }
 }

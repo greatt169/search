@@ -112,18 +112,11 @@ class Elasticsearch extends Engine
                 $requestBody['sort'] = $this->getEngineConvertedSorts($sorts);
             }
 
-            //
-            $num = $page;
-            $size = $pageSize;
-            $from = $num * $size - $size;
 
-            if ($from < 0) {
-                $from = 0;
-            }
-
-            $requestBody['size'] = $size;
+            $from = $page * $pageSize - $pageSize;
+            $requestBody['size'] = $pageSize;
             $requestBody['from'] = $from;
-            //
+
             $params = [
                 'index' => $this->entity->getIndexByAlias($this->index),
                 'body' => $requestBody
