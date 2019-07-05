@@ -25,11 +25,22 @@ abstract class Engine implements RequestEngineInterface
      */
     protected $index;
 
+    /**
+     * Engine constructor.
+     * @param $engine
+     * @param $index
+     * @param EntityInterface $entity
+     * @throws ApiException
+     */
     protected function __construct($engine, $index, EntityInterface $entity)
     {
         $this->entity = $entity;
         $this->engine = $engine;
-        $this->index = $index;
+        $aliasIndex = $this->entity->getIndexByAlias($index);
+        if($aliasIndex === null) {
+            throw new ApiException('Bad Request', sprintf('Alias for index %s not founded', $index), 500);
+        }
+        $this->index = $aliasIndex;
     }
 
     /**

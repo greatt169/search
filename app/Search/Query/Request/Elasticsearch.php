@@ -118,7 +118,7 @@ class Elasticsearch extends Engine
             $requestBody['from'] = $from;
 
             $params = [
-                'index' => $this->entity->getIndexByAlias($this->index),
+                'index' => $this->index,
                 'body' => $requestBody
             ];
             /**
