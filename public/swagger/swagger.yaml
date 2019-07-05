@@ -67,7 +67,7 @@ paths:
                 $ref: '#/definitions/Filter'
               sorts:
                 $ref: '#/definitions/Sorts'
-              slectedFields:
+              selectedFields:
                 $ref: '#/definitions/SelectedFields'
               engine:
                 $ref: '#/definitions/Engine'
