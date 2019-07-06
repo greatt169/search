@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Api;
 
 use App\Exceptions\ApiException;
-use Exception;
+use Illuminate\Validation\Validator as ValidatorAlias;
 use SwaggerUnAuth\Model\Engine;
 use SwaggerUnAuth\Model\Filter;
 use SwaggerUnAuth\Model\FilterParam;
@@ -24,9 +24,9 @@ class CatalogListRequest extends Request
     protected function getEngine($withData = true)
     {
         $data = '';
-        if($withData) {
+        if ($withData) {
             $sourceData = $this->getDeserializeData();
-            if(property_exists($sourceData, 'engine')) {
+            if (property_exists($sourceData, 'engine')) {
                 $data = $sourceData->engine;
             }
         }
@@ -55,7 +55,7 @@ class CatalogListRequest extends Request
          * @var Filter $filter
          */
         $sourceData = $this->getDeserializeData();
-        if(property_exists($sourceData, 'filter')) {
+        if (property_exists($sourceData, 'filter')) {
             $filterData = $sourceData->filter;
         } else {
             $this->setValid('filter', null);
@@ -99,7 +99,7 @@ class CatalogListRequest extends Request
          * @var Sort $sort
          */
         $sourceData = $this->getDeserializeData();
-        if(property_exists($sourceData, 'sorts')) {
+        if (property_exists($sourceData, 'sorts')) {
             $sortData = $sourceData->sorts;
         } else {
             $this->setValid('sorts', null);
@@ -121,13 +121,12 @@ class CatalogListRequest extends Request
     protected function validateSelectedFields()
     {
         $sourceData = $this->getDeserializeData();
-        if(property_exists($sourceData, 'selectedFields')) {
-            $selectedFieldsData = $sourceData->filter;
+        if (property_exists($sourceData, 'selectedFields')) {
+            $selectedFieldsData = $sourceData->selectedFields;
         } else {
             $this->setValid('selectedFields', null);
             return;
         }
-
         /**
          * @var SelectedFields $selectedFields
          */
@@ -139,27 +138,23 @@ class CatalogListRequest extends Request
     /**
      * Configure the validator instance.
      *
-     * @param  \Illuminate\Validation\Validator  $validator
+     * @param ValidatorAlias $validator
      * @return void
      */
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            try {
-                $this->validateFilter();
-                $this->validateSort();
-                //$this->validateSelectedFields();
-                /**
-                 * @var \Illuminate\Validation\Validator  $validator
-                 */
-                $errors = $validator->errors();
-                if($errors->count() > 0) {
-                    throw new ApiException('BadRequest', $errors->first(), 400);
-                } else {
-                    $this->setValid('engine', $this->getEngine());
-                }
-            } catch (Exception $exception) {
-                throw new ApiException('BadRequest', $exception->getMessage(), 400);
+            $this->validateFilter();
+            $this->validateSort();
+            $this->validateSelectedFields();
+            /**
+             * @var ValidatorAlias $validator
+             */
+            $errors = $validator->errors();
+            if ($errors->count() > 0) {
+                throw new ApiException('BadRequest', $errors->first(), 400);
+            } else {
+                $this->setValid('engine', $this->getEngine());
             }
         });
     }

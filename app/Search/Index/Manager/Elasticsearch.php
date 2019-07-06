@@ -71,6 +71,7 @@ class Elasticsearch extends Base
      * @var string
      */
     protected $indexBulkTimerLabel = 'index_bulk';
+    private $indexMappingAppliedTemplate = 'Mapping has applied: %s';
 
     protected function getIndexParams()
     {
@@ -90,9 +91,10 @@ class Elasticsearch extends Base
     {
         parent::__construct($source, $entity, $timer);
         $this->baseAliasName = $this->getSourceIndex();
-        try {
-            $this->index = $this->entity->getIndexByAlias($this->baseAliasName);
-        } catch (Exception $e) {
+        $indexByAlias = $this->entity->getIndexByAlias($this->baseAliasName);
+        if($indexByAlias) {
+            $this->index = $indexByAlias;
+        } else {
             $this->index = $this->baseAliasName;
         }
     }
@@ -397,7 +399,7 @@ class Elasticsearch extends Base
                 'properties' => $this->getSource()->getMappingForIndexing()
             ]
         ];
-
-        $this->getClient()->indices()->putMapping($params);
+        $response = $this->getClient()->indices()->putMapping($params);
+        $this->log(sprintf($this->indexMappingAppliedTemplate, json_encode($response)));
     }
 }

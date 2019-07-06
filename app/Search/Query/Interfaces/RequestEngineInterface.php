@@ -29,4 +29,10 @@ interface RequestEngineInterface
      * @return array
      */
     public function getEngineConvertedFilter(Filter $filter): array;
+
+    /**
+     * @param SelectedFields $selectedFields
+     * @return array
+     */
+    public function getEngineConvertedSelectedFields(SelectedFields $selectedFields): array;
 }

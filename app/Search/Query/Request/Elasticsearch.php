@@ -37,6 +37,15 @@ class Elasticsearch extends Engine
     }
 
     /**
+     * @param SelectedFields $selectedFields
+     * @return array
+     */
+    public function getEngineConvertedSelectedFields(SelectedFields $selectedFields): array
+    {
+        return $selectedFields->getFields();
+    }
+
+    /**
      * @param Filter $filter
      * @return array
      */
@@ -111,7 +120,9 @@ class Elasticsearch extends Engine
             if($sorts !== null) {
                 $requestBody['sort'] = $this->getEngineConvertedSorts($sorts);
             }
-
+            if($selectedFields !== null) {
+                $requestBody['_source'] = $this->getEngineConvertedSelectedFields($selectedFields);
+            }
 
             $from = $page * $pageSize - $pageSize;
             $requestBody['size'] = $pageSize;
