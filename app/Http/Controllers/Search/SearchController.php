@@ -9,6 +9,7 @@ use App\Search\Query\Interfaces\RequestEngineInterface;
 use SwaggerUnAuth\Model\Engine;
 use App\Search\Query\Request\Engine as RequestEngine;
 use SwaggerUnAuth\Model\Filter;
+use SwaggerUnAuth\Model\SelectedFields;
 use SwaggerUnAuth\Model\Sorts;
 
 class SearchController extends Controller
@@ -31,13 +32,17 @@ class SearchController extends Controller
         $sorts = $request->getValid('sorts');
 
         /**
+         * @var SelectedFields $selectedFields
+         */
+        $selectedFields = $request->getValid('selectedFields');
+
+        /**
          * @var Engine $engine
          */
         $engine = $request->getValid('engine');
         $index = $request->get('index');
         $page = $request->get('page');
         $pageSize = $request->get('pageSize');
-        $selectedFields = $request->getValid('selectedFields');
 
         $items = null;
         /**
