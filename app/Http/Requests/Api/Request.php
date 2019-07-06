@@ -25,7 +25,7 @@ class Request extends FormRequest
         $this->validData[$key] = $value;
     }
 
-    public function __construct(array $query = [], array $request = [], array $attributes = [], array $cookies = [], array $files = [], array $server = [], $content = null, SerializerInterface $serializer)
+    public function __construct(array $query = [], array $request = [], array $attributes = [], array $cookies = [], array $files = [], array $server = [], $content = null, SerializerInterface $serializer = null)
     {
         parent::__construct($query, $request, $attributes, $cookies, $files, $server, $content);
         $this->serializer = $serializer;

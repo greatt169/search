@@ -8,6 +8,7 @@ use SwaggerUnAuth\Model\Engine;
 use SwaggerUnAuth\Model\Filter;
 use SwaggerUnAuth\Model\FilterParam;
 use SwaggerUnAuth\Model\ModelInterface;
+use SwaggerUnAuth\Model\SelectedFields;
 use SwaggerUnAuth\Model\Sort;
 use SwaggerUnAuth\Model\Sorts;
 use SwaggerUnAuth\ObjectSerializer;
@@ -91,7 +92,7 @@ class CatalogListRequest extends Request
     /**
      * @throws ApiException
      */
-    private function validateSort()
+    protected function validateSort()
     {
         /**
          * @var Sorts $sorts
@@ -115,6 +116,27 @@ class CatalogListRequest extends Request
     }
 
     /**
+     * @throws ApiException
+     */
+    protected function validateSelectedFields()
+    {
+        $sourceData = $this->getDeserializeData();
+        if(property_exists($sourceData, 'selectedFields')) {
+            $selectedFieldsData = $sourceData->filter;
+        } else {
+            $this->setValid('selectedFields', null);
+            return;
+        }
+
+        /**
+         * @var SelectedFields $selectedFields
+         */
+        $selectedFields = ObjectSerializer::deserialize($selectedFieldsData, SelectedFields::class, null);
+        $this->validateBySwaggerModel($selectedFields);
+        $this->setValid('selectedFields', $selectedFields);
+    }
+
+    /**
      * Configure the validator instance.
      *
      * @param  \Illuminate\Validation\Validator  $validator
@@ -126,6 +148,7 @@ class CatalogListRequest extends Request
             try {
                 $this->validateFilter();
                 $this->validateSort();
+                //$this->validateSelectedFields();
                 /**
                  * @var \Illuminate\Validation\Validator  $validator
                  */

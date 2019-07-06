@@ -37,7 +37,8 @@ class SearchController extends Controller
         $index = $request->get('index');
         $page = $request->get('page');
         $pageSize = $request->get('pageSize');
-        $selectedFields = $request->getValid('selectedFields');
+        $selectedFields = null;
+        //$selectedFields = $request->getValid('selectedFields');
 
         $items = null;
         /**

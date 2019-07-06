@@ -26,6 +26,7 @@ class ApiException extends Exception
      */
     public function render($request)
     {
+        //print_r($this->getTraceAsString());
         return response([
             'application_error_code' => $this->getApplicationCode(),
             'debug' => $this->getDebug(),
