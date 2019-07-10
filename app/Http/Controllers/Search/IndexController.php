@@ -7,9 +7,9 @@ use App\Http\Controllers\Controller;
 use App\Search\Entity\Engine\Elasticsearch as ElasticsearchEntity;
 use App\Search\Index\Manager\Elasticsearch;
 use App\Search\Index\Source\Elasticsearch as ElasticsearchSource;
-use SwaggerUnAuth\Model\ListItem;
-use SwaggerUnAuth\Model\ListItems;
-use SwaggerUnAuth\ObjectSerializer;
+use SwaggerSearch\Model\ListItem;
+use SwaggerSearch\Model\ListItems;
+use SwaggerSearch\ObjectSerializer;
 
 
 class IndexController extends Controller

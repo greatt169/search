@@ -2,9 +2,9 @@
 
 namespace App\Search\Index\Source;
 
-use SwaggerUnAuth\Model\ListItem;
-use SwaggerUnAuth\Model\SourceIndex;
-use SwaggerUnAuth\Model\SourceIndexMapping;
+use SwaggerSearch\Model\ListItem;
+use SwaggerSearch\Model\SourceIndex;
+use SwaggerSearch\Model\SourceIndexMapping;
 
 class Elasticsearch extends Base
 {

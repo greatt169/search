@@ -5,7 +5,7 @@ namespace App\Search\Entity\Engine;
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 use Illuminate\Support\Facades\Log;
-use SwaggerUnAuth\Model\ListItem;
+use SwaggerSearch\Model\ListItem;
 
 class Elasticsearch extends Base
 {
@@ -34,7 +34,6 @@ class Elasticsearch extends Base
      */
     public function getIndexByAlias($aliasName)
     {
-        $aliasName = config('search.index.elasticsearch.prefix') . $aliasName;
         $aliases = $this->getClient()->indices()->getAliases();
         $aliasWithPrefix = $this->getAliasWithPrefix($aliasName);
         foreach ($aliases as $index => $aliasMapping) {

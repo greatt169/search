@@ -6,17 +6,17 @@ use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\CatalogListRequest;
 use App\Search\Query\Interfaces\RequestEngineInterface;
-use SwaggerUnAuth\Model\Engine;
+use SwaggerSearch\Model\Engine;
 use App\Search\Query\Request\Engine as RequestEngine;
-use SwaggerUnAuth\Model\Filter;
-use SwaggerUnAuth\Model\SelectedFields;
-use SwaggerUnAuth\Model\Sorts;
+use SwaggerSearch\Model\Filter;
+use SwaggerSearch\Model\SelectedFields;
+use SwaggerSearch\Model\Sorts;
 
 class SearchController extends Controller
 {
     /**
      * @param CatalogListRequest $request
-     * @return \SwaggerUnAuth\Model\ListItems
+     * @return \SwaggerSearch\Model\ListItems
      * @throws ApiException
      */
     public function catalogList(CatalogListRequest $request)

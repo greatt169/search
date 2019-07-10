@@ -5,7 +5,7 @@ namespace App\Http\Requests\Api;
 use App\Exceptions\ApiException;
 use App\Helpers\Interfaces\SerializerInterface;
 use Illuminate\Foundation\Http\FormRequest;
-use SwaggerUnAuth\Model\ModelInterface;
+use SwaggerSearch\Model\ModelInterface;
 
 class Request extends FormRequest
 {

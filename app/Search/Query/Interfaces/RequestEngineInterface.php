@@ -1,10 +1,10 @@
 <?php
 namespace App\Search\Query\Interfaces;
 
-use SwaggerUnAuth\Model\Filter;
-use SwaggerUnAuth\Model\ListItems;
-use SwaggerUnAuth\Model\SelectedFields;
-use SwaggerUnAuth\Model\Sorts;
+use SwaggerSearch\Model\Filter;
+use SwaggerSearch\Model\ListItems;
+use SwaggerSearch\Model\SelectedFields;
+use SwaggerSearch\Model\Sorts;
 
 interface RequestEngineInterface
 {

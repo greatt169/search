@@ -2,7 +2,7 @@
 
 namespace App\Search\Entity\Interfaces;
 
-use SwaggerUnAuth\Model\ListItem;
+use SwaggerSearch\Model\ListItem;
 
 /**
  * Interface EntityInterface

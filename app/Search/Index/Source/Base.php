@@ -5,8 +5,8 @@ namespace App\Search\Index\Source;
 use App\Helpers\Interfaces\SerializerInterface;
 use App\Helpers\Serializer;
 use App\Search\Index\Interfaces\SourceInterface;
-use SwaggerUnAuth\Model\SourceIndex;
-use SwaggerUnAuth\ObjectSerializer;
+use SwaggerSearch\Model\SourceIndex;
+use SwaggerSearch\ObjectSerializer;
 
 abstract class Base implements SourceInterface
 {

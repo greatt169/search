@@ -6,17 +6,23 @@ use App\Exceptions\ApiException;
 use App\Search\Entity\Interfaces\EntityInterface;
 use Elasticsearch\Client;
 use Exception;
-use SwaggerUnAuth\Model\Filter;
-use SwaggerUnAuth\Model\FilterParam;
-use SwaggerUnAuth\Model\FilterRangeParam;
-use SwaggerUnAuth\Model\FilterValue;
-use SwaggerUnAuth\Model\ListItems;
-use SwaggerUnAuth\Model\SelectedFields;
-use SwaggerUnAuth\Model\Sorts;
+use SwaggerSearch\Model\Filter;
+use SwaggerSearch\Model\FilterParam;
+use SwaggerSearch\Model\FilterRangeParam;
+use SwaggerSearch\Model\FilterValue;
+use SwaggerSearch\Model\ListItems;
+use SwaggerSearch\Model\SelectedFields;
+use SwaggerSearch\Model\Sorts;
 
 class Elasticsearch extends Engine
 {
-
+    /**
+     * Elasticsearch constructor.
+     * @param $engine
+     * @param $index
+     * @param EntityInterface $entity
+     * @throws ApiException
+     */
     public function __construct($engine, $index, EntityInterface $entity)
     {
         parent::__construct($engine, $index, $entity);

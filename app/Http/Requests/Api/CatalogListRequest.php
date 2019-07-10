@@ -4,14 +4,14 @@ namespace App\Http\Requests\Api;
 
 use App\Exceptions\ApiException;
 use Illuminate\Validation\Validator as ValidatorAlias;
-use SwaggerUnAuth\Model\Engine;
-use SwaggerUnAuth\Model\Filter;
-use SwaggerUnAuth\Model\FilterParam;
-use SwaggerUnAuth\Model\ModelInterface;
-use SwaggerUnAuth\Model\SelectedFields;
-use SwaggerUnAuth\Model\Sort;
-use SwaggerUnAuth\Model\Sorts;
-use SwaggerUnAuth\ObjectSerializer;
+use SwaggerSearch\Model\Engine;
+use SwaggerSearch\Model\Filter;
+use SwaggerSearch\Model\FilterParam;
+use SwaggerSearch\Model\ModelInterface;
+use SwaggerSearch\Model\SelectedFields;
+use SwaggerSearch\Model\Sort;
+use SwaggerSearch\Model\Sorts;
+use SwaggerSearch\ObjectSerializer;
 
 class CatalogListRequest extends Request
 {

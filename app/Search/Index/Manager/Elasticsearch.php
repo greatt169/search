@@ -8,7 +8,6 @@ use App\Helpers\Interfaces\TimerInterface;
 use Elasticsearch\Client;
 use Exception;
 use Illuminate\Support\Facades\Log;
-use SwaggerUnAuth\Model\SourceIndexMapping;
 
 class Elasticsearch extends Base
 {
