@@ -146,7 +146,7 @@ definitions:
         items:
           type: string
         example:
-          - 'color'
+          - 'colors'
           - 'brand'
           - 'model'
 
@@ -203,7 +203,7 @@ definitions:
         type: string
         description: |
           Символьный код параметра
-        example: "color"
+        example: "colors"
       values:
         type: array
         description: |
