@@ -118,8 +118,21 @@ class Elasticsearch extends Engine
             $requestBody = [];
             if($filter !== null) {
                 $requestBody['query'] = [
-                    'constant_score' => [
-                        'filter' => $this->getEngineConvertedFilter($filter)
+
+                    'bool' => [
+                        'must' => [
+                            [
+                                'multi_match' => [
+                                    'query' => 'X5',
+                                    'fields' => ['model']
+                                ],
+                            ],
+                            [
+                                'constant_score' => [
+                                    'filter' => $this->getEngineConvertedFilter($filter)
+                                ]
+                            ]
+                        ]
                     ]
                 ];
             }
@@ -133,6 +146,8 @@ class Elasticsearch extends Engine
             $from = $page * $pageSize - $pageSize;
             $requestBody['size'] = $pageSize;
             $requestBody['from'] = $from;
+
+
 
             $params = [
                 'index' => $this->index,
