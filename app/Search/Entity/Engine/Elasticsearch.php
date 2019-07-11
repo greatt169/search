@@ -53,6 +53,14 @@ class Elasticsearch extends Base
     }
 
     /**
+     * @param $index
+     * @return string
+     */
+    public function getIndexWithPrefix($index) {
+        return config('search.index.elasticsearch.prefix') . $index;
+    }
+
+    /**
      * Elasticsearch constructor.
      * @param string $index|null
      */

@@ -89,19 +89,13 @@ class Elasticsearch extends Base
     public function __construct(SourceInterface $source, EntityInterface $entity, TimerInterface $timer = null)
     {
         parent::__construct($source, $entity, $timer);
-        $this->baseAliasName = $this->getSourceIndex();
+        $this->baseAliasName = $this->entity->getIndexWithPrefix($this->source->getIndexName());
         $indexByAlias = $this->entity->getIndexByAlias($this->baseAliasName);
         if($indexByAlias) {
             $this->index = $indexByAlias;
         } else {
             $this->index = $this->baseAliasName;
         }
-    }
-
-    private function getSourceIndex()
-    {
-        $sourceIndex = config('search.index.elasticsearch.prefix') . $this->source->getIndexName();
-        return $sourceIndex;
     }
 
     public function createIndex()

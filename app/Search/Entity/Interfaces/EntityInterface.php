@@ -27,6 +27,12 @@ interface EntityInterface
     public function getAliasWithPrefix($aliasName);
 
     /**
+     * @param $index
+     * @return string
+     */
+    public function getIndexWithPrefix($index);
+
+    /**
      * @param $data
      * @return mixed
      */
