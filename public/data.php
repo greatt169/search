@@ -2,7 +2,9 @@
 
 return [
     "mapping" => [
-        "name" => [
+        "type" => [
+            "type" => "keyword",
+        ], "name" => [
             "type" => "keyword",
         ],"model" => [
             "type" => "keyword",
@@ -21,8 +23,8 @@ return [
     "items" => [
         [
             "id" => 1,
-            "type" => "element",
             "singleAttributes" => [
+                "type" => "element",
                 "name" => "Внедорожник BMW-X5",
                 "brand" => "BMV",
                 "model" =>  "X5",
@@ -42,8 +44,8 @@ return [
         ],
         [
             "id" => 2,
-            "type" => "element",
             "singleAttributes" => [
+                "type" => "element",
                 "name" => "Старая Lada Granta",
                 "brand" => "Lada",
                 "model" =>  "Granta",
@@ -63,8 +65,8 @@ return [
         ],
         [
             "id" => 3,
-            "type" => "element",
             "singleAttributes" => [
+                "type" => "element",
                 "name" => "Крутой Volkswagen Polo",
                 "brand" => "Volkswagen",
                 "model" =>  "Polo",
@@ -82,8 +84,8 @@ return [
         ],
         [
             "id" => 4,
-            "type" => "element",
             "singleAttributes" => [
+                "type" => "element",
                 "name" => "Свежий Volkswagen Polo",
                 "brand" => "Volkswagen",
                 "model" =>  "Polo",
@@ -101,8 +103,8 @@ return [
         ],
         [
             "id" => 5,
-            "type" => "section",
             "singleAttributes" => [
+                "type" => "section",
                 "name" => "Раздел 1",
             ],
             "multipleAttributes" => []
