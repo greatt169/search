@@ -268,11 +268,6 @@ definitions:
         description: |
           Идентификатор элемента
         example: 5
-      type:
-        type: string
-        description: |
-          Тип элемента
-        example: "element"
       singleAttributes:
         type: object
         description: |

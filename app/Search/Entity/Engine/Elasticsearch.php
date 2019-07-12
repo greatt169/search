@@ -16,11 +16,6 @@ class Elasticsearch extends Base
 
     protected $aliasPrefix = 'alias_';
 
-    /**
-     * @var string
-     */
-    protected $sourceTypeKeyCode = 'source_type';
-
     protected function getHosts()
     {
         $hosts = explode(',', config('search.index.elasticsearch.hosts'));
@@ -108,11 +103,7 @@ class Elasticsearch extends Base
             if(is_array($value)) {
                 $multipleAttributes[$key] = $value;
             } else {
-                if($key == $this->sourceTypeKeyCode) {
-                    $type = $value;
-                } else {
-                    $singleAttributes[$key] = $value;
-                }
+                $singleAttributes[$key] = $value;
             }
         }
 
