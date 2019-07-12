@@ -11,6 +11,7 @@ use SwaggerSearch\Model\FilterParam;
 use SwaggerSearch\Model\FilterRangeParam;
 use SwaggerSearch\Model\FilterValue;
 use SwaggerSearch\Model\ListItems;
+use SwaggerSearch\Model\Search;
 use SwaggerSearch\Model\SelectedFields;
 use SwaggerSearch\Model\Sorts;
 
@@ -103,6 +104,55 @@ class Elasticsearch extends Engine
     }
 
     /**
+     * @param Search $search
+     * @return array
+     */
+    public function getEngineConvertedSearch(Search $search): array
+    {
+        $elasticSearch =  [
+            'multi_match' => [
+                'query' => $search->getQuery(),
+                'fields' => ['model']
+            ],
+        ];
+        return $elasticSearch;
+    }
+
+    /**
+     * @param Search|null $search
+     * @param Filter|null $filter
+     *
+     * @return array
+     */
+    public function getQuery(Search $search = null, Filter $filter = null) {
+        $query = [];
+        if($filter !== null && $search !== null) {
+            $query = [
+                'bool' => [
+                    'must' => [
+                        $this->getEngineConvertedSearch( $search),
+                        $this->getEngineConvertedFilter($filter)
+                    ]
+                ]
+            ];
+        }
+        if($filter === null && $search !== null) {
+            $query = [
+                $this->getEngineConvertedSearch( $search)
+            ];
+        }
+        if($filter !== null && $search === null) {
+            $query = [
+                'constant_score' => [
+                    'filter' => $this->getEngineConvertedFilter($filter)
+                ]
+            ];
+        }
+        return $query;
+    }
+
+    /**
+     * @param Search|null $search
      * @param Filter|null $filter
      * @param Sorts|null $sorts
      * @param SelectedFields|null $selectedFields
@@ -111,31 +161,12 @@ class Elasticsearch extends Engine
      * @return ListItems
      * @throws ApiException
      */
-    public function postCatalogList(Filter $filter = null, Sorts $sorts = null, SelectedFields $selectedFields = null, $page = 1, $pageSize = 20) : ListItems
+    public function postCatalogList(Search $search = null, Filter $filter = null, Sorts $sorts = null, SelectedFields $selectedFields = null, $page = 1, $pageSize = 20) : ListItems
     {
         try {
 
             $requestBody = [];
-            if($filter !== null) {
-                $requestBody['query'] = [
-
-                    'bool' => [
-                        'must' => [
-                            [
-                                'multi_match' => [
-                                    'query' => 'X5',
-                                    'fields' => ['model']
-                                ],
-                            ],
-                            [
-                                'constant_score' => [
-                                    'filter' => $this->getEngineConvertedFilter($filter)
-                                ]
-                            ]
-                        ]
-                    ]
-                ];
-            }
+            $requestBody['query'] = $this->getQuery($search, $filter);
             if($sorts !== null) {
                 $requestBody['sort'] = $this->getEngineConvertedSorts($sorts);
             }

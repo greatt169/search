@@ -71,6 +71,8 @@ paths:
                 $ref: '#/definitions/SelectedFields'
               engine:
                 $ref: '#/definitions/Engine'
+              search:
+                $ref: '#/definitions/Search'
 
       tags:
       - Catalog
@@ -114,6 +116,17 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Sort'
+
+  Search:
+    type: object
+    description: Объект для параметров поиска
+    required:
+      - query
+    properties:
+      query:
+        type: string
+        description: Строка поиска
+        example: 'Polo'
 
   Sort:
     type: object

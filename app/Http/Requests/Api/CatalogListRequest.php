@@ -8,6 +8,7 @@ use SwaggerSearch\Model\Engine;
 use SwaggerSearch\Model\Filter;
 use SwaggerSearch\Model\FilterParam;
 use SwaggerSearch\Model\ModelInterface;
+use SwaggerSearch\Model\Search;
 use SwaggerSearch\Model\SelectedFields;
 use SwaggerSearch\Model\Sort;
 use SwaggerSearch\Model\Sorts;
@@ -38,10 +39,28 @@ class CatalogListRequest extends Request
         return $engine;
     }
 
+    /**
+     * @return Search
+     */
+    protected function getSearch() {
+        $sourceData = $this->getDeserializeData();
+        if (property_exists($sourceData, 'search')) {
+            $data = $sourceData->search;
+        } else {
+            return null;
+        }
+        /**
+         * @var Search $search
+         */
+        $search = ObjectSerializer::deserialize($data, Search::class, null);
+        return $search;
+    }
+
     public function rules()
     {
         $allowableValues = implode(',', $this->getEngine(false)->getNameAllowableValues());
         return [
+            'search.query' => 'max:255|min:3',
             'engine.name' => 'in:' . $allowableValues
         ];
     }
@@ -155,6 +174,7 @@ class CatalogListRequest extends Request
                 throw new ApiException('BadRequest', $errors->first(), 400);
             } else {
                 $this->setValid('engine', $this->getEngine());
+                $this->setValid('search', $this->getSearch());
             }
         });
     }
