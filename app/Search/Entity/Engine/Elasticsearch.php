@@ -106,20 +106,10 @@ class Elasticsearch extends Base
                 $singleAttributes[$key] = $value;
             }
         }
-
         $listItem->setId($hit['_id']);
-        $listItem->setType($type);
         $listItem->setSingleAttributes($singleAttributes);
         $listItem->setMultipleAttributes($multipleAttributes);
 
         return $listItem;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSourceTypeKeyCode(): string
-    {
-        return $this->sourceTypeKeyCode;
     }
 }

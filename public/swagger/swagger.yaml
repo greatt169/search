@@ -133,7 +133,7 @@ definitions:
         items:
           type: string
           minItems: 1
-          example: ['name']
+          example: 'model'
 
   Sort:
     type: object

@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Api;
 
 use App\Exceptions\ApiException;
+use Exception;
 use Illuminate\Validation\Validator as ValidatorAlias;
 use SwaggerSearch\Model\Engine;
 use SwaggerSearch\Model\Filter;
@@ -42,7 +43,8 @@ class CatalogListRequest extends Request
     /**
      * @return Search
      */
-    protected function getSearch() {
+    protected function getSearch()
+    {
         $sourceData = $this->getDeserializeData();
         if (property_exists($sourceData, 'search')) {
             $data = $sourceData->search;
@@ -163,19 +165,24 @@ class CatalogListRequest extends Request
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            $this->validateFilter();
-            $this->validateSort();
-            $this->validateSelectedFields();
-            /**
-             * @var ValidatorAlias $validator
-             */
-            $errors = $validator->errors();
-            if ($errors->count() > 0) {
-                throw new ApiException('BadRequest', $errors->first(), 400);
-            } else {
-                $this->setValid('engine', $this->getEngine());
-                $this->setValid('search', $this->getSearch());
+            try {
+                $this->validateFilter();
+                $this->validateSort();
+                $this->validateSelectedFields();
+                /**
+                 * @var ValidatorAlias $validator
+                 */
+                $errors = $validator->errors();
+                if ($errors->count() > 0) {
+                    throw new ApiException('BadRequest', $errors->first(), 400);
+                } else {
+                    $this->setValid('engine', $this->getEngine());
+                    $this->setValid('search', $this->getSearch());
+                }
+            } catch (Exception $exception) {
+                throw new ApiException('Internal Server Error', $exception->getMessage() , 500);
             }
         });
+
     }
 }

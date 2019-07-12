@@ -7,7 +7,6 @@ use SwaggerSearch\Model\ListItem;
 /**
  * Interface EntityInterface
  * @package App\Search\Entity\Interfaces
- * @method getSourceTypeKeyCode
  *
  */
 interface EntityInterface
