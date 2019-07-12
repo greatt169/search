@@ -137,9 +137,7 @@ class Elasticsearch extends Engine
             ];
         }
         if($filter === null && $search !== null) {
-            $query = [
-                $this->getEngineConvertedSearch( $search)
-            ];
+            $query = $this->getEngineConvertedSearch( $search);
         }
         if($filter !== null && $search === null) {
             $query = [

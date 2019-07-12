@@ -5,7 +5,7 @@ return [
         "type" => [
             "type" => "keyword",
         ], "name" => [
-            "type" => "keyword",
+            "type" => "text",
         ],"model" => [
             "type" => "keyword",
         ],"color" => [
