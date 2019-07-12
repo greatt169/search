@@ -112,7 +112,7 @@ class Elasticsearch extends Engine
         $elasticSearch =  [
             'multi_match' => [
                 'query' => $search->getQuery(),
-                'fields' => ['model']
+                'fields' => $search->getFields()
             ],
         ];
         return $elasticSearch;
@@ -177,8 +177,6 @@ class Elasticsearch extends Engine
             $from = $page * $pageSize - $pageSize;
             $requestBody['size'] = $pageSize;
             $requestBody['from'] = $from;
-
-
 
             $params = [
                 'index' => $this->index,

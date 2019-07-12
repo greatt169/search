@@ -63,6 +63,8 @@ paths:
             type: object
             description: Параметры запроса
             properties:
+              search:
+                $ref: '#/definitions/Search'
               filter:
                 $ref: '#/definitions/Filter'
               sorts:
@@ -71,8 +73,6 @@ paths:
                 $ref: '#/definitions/SelectedFields'
               engine:
                 $ref: '#/definitions/Engine'
-              search:
-                $ref: '#/definitions/Search'
 
       tags:
       - Catalog
@@ -122,11 +122,18 @@ definitions:
     description: Объект для параметров поиска
     required:
       - query
+      - fields
     properties:
       query:
         type: string
         description: Строка поиска
         example: 'Polo'
+      fields:
+        type: array
+        items:
+          type: string
+          minItems: 1
+          example: ['name']
 
   Sort:
     type: object
