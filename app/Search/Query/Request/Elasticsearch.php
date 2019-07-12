@@ -166,7 +166,10 @@ class Elasticsearch extends Engine
         try {
 
             $requestBody = [];
-            $requestBody['query'] = $this->getQuery($search, $filter);
+            $query = $this->getQuery($search, $filter);
+            if(!empty($query)) {
+                $requestBody['query'] = $query;
+            }
             if($sorts !== null) {
                 $requestBody['sort'] = $this->getEngineConvertedSorts($sorts);
             }

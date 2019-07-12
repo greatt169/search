@@ -47,6 +47,7 @@ class Elasticsearch extends Base
                 }
                 $sourceAttributes[$attributeCode] = $sourceAttributeValues;
             }
+            $source['type'] = $dataItem->getType();
             $source['attributes'] = $sourceAttributes;
             $elementsForIndexing[] = $source;
         }

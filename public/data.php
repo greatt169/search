@@ -21,6 +21,7 @@ return [
     "items" => [
         [
             "id" => 1,
+            "type" => "element",
             "singleAttributes" => [
                 "name" => "Внедорожник BMW-X5",
                 "brand" => "BMV",
@@ -41,6 +42,7 @@ return [
         ],
         [
             "id" => 2,
+            "type" => "element",
             "singleAttributes" => [
                 "name" => "Старая Lada Granta",
                 "brand" => "Lada",
@@ -61,6 +63,7 @@ return [
         ],
         [
             "id" => 3,
+            "type" => "element",
             "singleAttributes" => [
                 "name" => "Крутой Volkswagen Polo",
                 "brand" => "Volkswagen",
@@ -79,6 +82,7 @@ return [
         ],
         [
             "id" => 4,
+            "type" => "element",
             "singleAttributes" => [
                 "name" => "Свежий Volkswagen Polo",
                 "brand" => "Volkswagen",
@@ -94,6 +98,14 @@ return [
                     "kasko"
                 ]
             ]
+        ],
+        [
+            "id" => 5,
+            "type" => "section",
+            "singleAttributes" => [
+                "name" => "Раздел 1",
+            ],
+            "multipleAttributes" => []
         ]
     ]
 ];

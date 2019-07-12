@@ -346,6 +346,7 @@ class Elasticsearch extends Base
             foreach ($document['attributes'] as $attributeCode => $attributeValue) {
                 $arDocAttributes[$attributeCode] = $attributeValue;
             }
+            $arDocAttributes[$this->entity->getSourceTypeKeyCode()] = $document['type'];
             $params['body'][] = [
                 'index' => [
                     '_index' => $this->index,
