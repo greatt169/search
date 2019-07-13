@@ -285,6 +285,146 @@ definitions:
             type: string
             example: 'red'
 
+  DisplayListItem:
+    type: object
+    description: |
+      Объект элемента списка
+    required:
+      - id
+      - attributes
+    properties:
+      id:
+        type: string
+        description: |
+          Идентификатор элемента
+        example: 5
+      attributes:
+        type: object
+        properties:
+          single:
+            type: array
+            description: |
+              Массив одиночных свойств элемента
+            items:
+              $ref: '#/definitions/DisplayListItemSingleAttribute'
+            additionalProperties:
+              $ref: '#/definitions/DisplayListItemAttributeValue'
+          multiple:
+            type: array
+            description: |
+              Массив множественных свойств элемента
+            items:
+            additionalProperties:
+              $ref: '#/definitions/DisplayListItemMultipleAttribute'
+
+  DisplayListItemSingleAttribute:
+    type: object
+    required:
+      - id
+      - value
+    properties:
+      id:
+        type: string
+        description: |
+          Идентификатор аттрибута элемента
+        example: 764
+      name:
+        type: string
+        description: |
+          Название аттрибута
+        example: 'Тип коробки передач'
+      description:
+        type: string
+        description: |
+          Описание аттрибута
+        example: 'Произвольное описание параметра'
+      img:
+        type: string
+        description: |
+          Картинка для аттрибута
+        example: 'https://cdn.fast.ru/files/1sdasd88dasdsad.jpg'
+      additionalInfo:
+        type: string
+        description: |
+          Дополнительная информация для значения аттрибута
+        example: 'string'
+      value:
+        $ref: '#/definitions/DisplayListItemAttributeValue'
+
+  DisplayListItemMultipleAttribute:
+    type: object
+    required:
+      - id
+      - values
+      - valueType
+    properties:
+      id:
+        type: string
+        description: |
+          Идентификатор аттрибута элемента
+        example: 764
+      name:
+        type: string
+        description: |
+          Название аттрибута
+        example: 'Тип коробки передач'
+      description:
+        type: string
+        description: |
+          Описание аттрибута
+        example: 'Произвольное описание параметра'
+      img:
+        type: string
+        description: |
+          Картинка для аттрибута
+        example: 'https://cdn.fast.ru/files/1sdasd88dasdsad.jpg'
+      additionalInfo:
+        type: string
+        description: |
+          Дополнительная информация для значения аттрибута
+        example: 'string'
+      valueType:
+        type: string
+        enum: [string, float, boolean]
+        example: 'string'
+      values:
+        type: array
+        description: |
+          Массив значений аттрибута
+        items:
+          $ref: '#/definitions/DisplayListItemAttributeValue'
+
+  DisplayListItemAttributeValue:
+    type: object
+    required:
+      - value
+    properties:
+      id:
+        type: string
+        description: |
+          Идентификатор значения аттрибута элемента
+        example: 44
+      description:
+        type: string
+        description: |
+          Описание значения аттрибута
+        example: 'Произвольное описание параметра'
+      img:
+        type: string
+        description: |
+          Картинка для значения аттрибута
+        example: 'https://cdn.fast.ru/files/1sdasd88dasdsad.jpg'
+      additionalInfo:
+        type: string
+        description: |
+          Дополнительная информация для значения аттрибута
+        example: 'string'
+      value:
+        type: string
+        description: |
+          Значение аттрибута
+        example: 'АКПП'
+
   SourceIndex:
     type: object
     description: |
