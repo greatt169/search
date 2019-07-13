@@ -49,6 +49,7 @@ abstract class Engine implements RequestEngineInterface
      * @param $index
      * @return mixed
      * @throws ApiException
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public static function getInstance($engine, $index)
     {
