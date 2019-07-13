@@ -338,7 +338,7 @@ definitions:
             description: |
               Массив одиночных свойств элемента
             items:
-              $ref: '#/definitions/DisplayListItemAttributeValue'
+              $ref: '#/definitions/DisplayListItemSingleAttribute'
           multiple:
             type: array
             description: |
@@ -385,7 +385,6 @@ definitions:
     required:
       - id
       - values
-      - valueType
     properties:
       id:
         type: string
@@ -411,10 +410,6 @@ definitions:
         type: string
         description: |
           Дополнительная информация для значения аттрибута
-        example: 'string'
-      valueType:
-        type: string
-        enum: [string, float, boolean]
         example: 'string'
       values:
         type: array
