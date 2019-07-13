@@ -93,6 +93,38 @@ paths:
         500:
           $ref: '#/responses/500Error'
 
+  "/reindex":
+    post:
+      summary: Индексирование данных
+      description: Обновление элементов в индексе
+      parameters:
+        - in: body
+          name: request
+          required: true
+          schema:
+            type: object
+            description: Параметры запроса
+            properties:
+              source:
+                $ref: '#/definitions/SourceIndex'
+
+      tags:
+        - Catalog
+      responses:
+        200:
+          description: Метод успешно отработал
+          schema:
+            type: string
+            example: 'ok'
+        400:
+          $ref: '#/responses/400Error'
+        403:
+          $ref: '#/responses/403Error'
+        404:
+          $ref: '#/responses/404Error'
+        500:
+          $ref: '#/responses/500Error'
+
 definitions:
   Engine:
     type: object
@@ -306,15 +338,12 @@ definitions:
             description: |
               Массив одиночных свойств элемента
             items:
-              $ref: '#/definitions/DisplayListItemSingleAttribute'
-            additionalProperties:
               $ref: '#/definitions/DisplayListItemAttributeValue'
           multiple:
             type: array
             description: |
               Массив множественных свойств элемента
             items:
-            additionalProperties:
               $ref: '#/definitions/DisplayListItemMultipleAttribute'
 
   DisplayListItemSingleAttribute:
@@ -438,7 +467,7 @@ definitions:
         description: |
             Массив элементов для индексации
         items:
-          $ref: '#/definitions/ListItem'
+          $ref: '#/definitions/DisplayListItem'
       mapping:
         type: object
         description: |
