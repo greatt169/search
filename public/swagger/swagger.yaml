@@ -349,14 +349,14 @@ definitions:
   DisplayListItemSingleAttribute:
     type: object
     required:
-      - id
+      - code
       - value
     properties:
-      id:
+      code:
         type: string
         description: |
-          Идентификатор аттрибута элемента
-        example: 764
+          Код аттрибута элемента
+        example: 'transmission'
       name:
         type: string
         description: |
@@ -383,14 +383,14 @@ definitions:
   DisplayListItemMultipleAttribute:
     type: object
     required:
-      - id
+      - code
       - values
     properties:
-      id:
+      code:
         type: string
         description: |
-          Идентификатор аттрибута элемента
-        example: 764
+          Код аттрибута элемента
+        example: 'transmission'
       name:
         type: string
         description: |
@@ -423,11 +423,11 @@ definitions:
     required:
       - value
     properties:
-      id:
+      code:
         type: string
         description: |
-          Идентификатор значения аттрибута элемента
-        example: 44
+          Код значения аттрибута элемента
+        example: 'auto'
       description:
         type: string
         description: |
