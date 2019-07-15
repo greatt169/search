@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <yml_config>
-
+    <mapping>
+        <rule code="name" name="Название" type="field" valuetype="text" />
+        <rule code="price" name="Цена" type="field" valuetype="text" />
+        <rule code="element" name="Тип элемента" type="param" valuetype="keyword" multiple="false" />
+        <rule code="brand" name="Марка" type="param" valuetype="keyword" multiple="false" />
+        <rule code="model" name="Модель" type="param" valuetype="keyword" multiple="false" />
+        <rule code="year" name="Год выпуска" type="param" valuetype="keyword" multiple="false" />
+        <rule code="color" name="Цвет" type="param" valuetype="keyword" multiple="true" />
+        <rule code="insurance" name="Страховка" type="param" valuetype="keyword" multiple="true" />
+    </mapping>
 </yml_config>
