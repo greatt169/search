@@ -16,36 +16,9 @@ class IndexController extends Controller
 {
     public function index()
     {
-
-        $indexer = new Elasticsearch(
-            new ElasticsearchSource(),
-            new ElasticsearchEntity()
-        );
-        //$indexer->reindex();
-
-        $indexer->getSource()->getElementsForIndexing();
-
-        $client = $indexer->getClient();
-        $params = [
-            'index' => $indexer->getIndex(),
-            'body' => [
-
-                'query' => [
-                    'bool' => [
-                        'should' => [
-                            [
-                                'match' => [
-                                    'insurance' => 'osago'
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
-            ]
-        ];
-
-        $results = $client->search($params);
-        dump($results);
+        $source = new ElasticsearchSource();
+        $data = $source->getElementsForIndexing();
+        dump($data);
     }
 
     /**

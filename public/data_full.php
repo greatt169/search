@@ -23,138 +23,136 @@ return [
     "items" => [
         [
             "id" => 1,
-            "attributes" => [
-                "single" => [
-                    [
-                        "code" => 'name',
-                        "name" => "Название",
+            "singleAttributes" => [
+                [
+                    "code" => 'name',
+                    "name" => "Название",
+                    "description" => null,
+                    "img" => null,
+                    "additionalInfo" => null,
+                    "value" => [
+                        "code" => null,
                         "description" => null,
                         "img" => null,
                         "additionalInfo" => null,
-                        "value" => [
-                            "code" => null,
-                            "description" => null,
-                            "img" => null,
-                            "additionalInfo" => null,
-                            "value" => "Внедорожник BMW-X5"
-                        ]
-                    ],
-                    [
-                        "code" => 'type',
-                        "name" => "Тип элемента",
+                        "value" => "Внедорожник BMW-X5"
+                    ]
+                ],
+                [
+                    "code" => 'type',
+                    "name" => "Тип элемента",
+                    "description" => null,
+                    "img" => null,
+                    "additionalInfo" => null,
+                    "value" => [
+                        "code" => null,
                         "description" => null,
                         "img" => null,
                         "additionalInfo" => null,
-                        "value" => [
-                            "code" => null,
-                            "description" => null,
-                            "img" => null,
-                            "additionalInfo" => null,
-                            "value" => "element"
-                        ]
-                    ],
-                    [
-                        "code" => 'brand',
-                        "name" => "Марка машины",
+                        "value" => "element"
+                    ]
+                ],
+                [
+                    "code" => 'brand',
+                    "name" => "Марка машины",
+                    "description" => null,
+                    "img" => null,
+                    "additionalInfo" => null,
+                    "value" => [
+                        "code" => 'bmw',
                         "description" => null,
                         "img" => null,
                         "additionalInfo" => null,
-                        "value" => [
-                            "code" => 'bmw',
-                            "description" => null,
-                            "img" => null,
-                            "additionalInfo" => null,
-                            "value" => "BMV"
-                        ]
-                    ],
-                    [
-                        "code" => 'model',
-                        "name" => "Модель машины",
+                        "value" => "BMV"
+                    ]
+                ],
+                [
+                    "code" => 'model',
+                    "name" => "Модель машины",
+                    "description" => null,
+                    "img" => null,
+                    "additionalInfo" => null,
+                    "value" => [
+                        "code" => 'x5',
                         "description" => null,
                         "img" => null,
                         "additionalInfo" => null,
-                        "value" => [
-                            "code" => 'x5',
-                            "description" => null,
-                            "img" => null,
-                            "additionalInfo" => null,
-                            "value" => "X5"
-                        ]
-                    ],
-                    [
-                        "code" => 'year',
-                        "name" => "Год выпуска",
+                        "value" => "X5"
+                    ]
+                ],
+                [
+                    "code" => 'year',
+                    "name" => "Год выпуска",
+                    "description" => null,
+                    "img" => null,
+                    "additionalInfo" => null,
+                    "value" => [
+                        "code" => null,
                         "description" => null,
                         "img" => null,
                         "additionalInfo" => null,
-                        "value" => [
-                            "code" => null,
-                            "description" => null,
-                            "img" => null,
-                            "additionalInfo" => null,
-                            "value" => "2018"
-                        ]
-                    ],
-                    [
-                        "code" => 'price',
-                        "name" => "Цена",
+                        "value" => "2018"
+                    ]
+                ],
+                [
+                    "code" => 'price',
+                    "name" => "Цена",
+                    "description" => null,
+                    "img" => null,
+                    "additionalInfo" => null,
+                    "value" => [
+                        "code" => null,
                         "description" => null,
                         "img" => null,
                         "additionalInfo" => null,
-                        "value" => [
-                            "code" => null,
+                        "value" => '5000000'
+                    ]
+                ]
+            ],
+            "multipleAttributes" => [
+                [
+                    "code" => 'color',
+                    "name" => "Цвет",
+                    "description" => null,
+                    "img" => null,
+                    "additionalInfo" => null,
+                    "values" => [
+                        [
+                            "code" => 'red',
                             "description" => null,
                             "img" => null,
                             "additionalInfo" => null,
-                            "value" => '5000000'
+                            "value" => "Красный"
+                        ],
+                        [
+                            "code" => 'blue',
+                            "description" => null,
+                            "img" => null,
+                            "additionalInfo" => null,
+                            "value" => "Голубой"
                         ]
                     ]
                 ],
-                "multiple" => [
-                    [
-                        "code" => 'color',
-                        "name" => "Цвет",
-                        "description" => null,
-                        "img" => null,
-                        "additionalInfo" => null,
-                        "values" => [
-                            [
-                                "code" => 'red',
-                                "description" => null,
-                                "img" => null,
-                                "additionalInfo" => null,
-                                "value" => "Красный"
-                            ],
-                            [
-                                "code" => 'blue',
-                                "description" => null,
-                                "img" => null,
-                                "additionalInfo" => null,
-                                "value" => "Голубой"
-                            ]
-                        ]
-                    ],
-                    [
-                        "code" => 'insurance',
-                        "name" => "Страховка",
-                        "description" => null,
-                        "img" => null,
-                        "additionalInfo" => null,
-                        "values" => [
-                            [
-                                "code" => 'kasko',
-                                "description" => null,
-                                "img" => null,
-                                "additionalInfo" => null,
-                                "value" => "КАСКО"
-                            ],
-                            [
-                                "code" => 'osago',
-                                "description" => null,
-                                "img" => null,
-                                "additionalInfo" => null,
-                                "value" => "ОСАГО"
-                            ]
+                [
+                    "code" => 'insurance',
+                    "name" => "Страховка",
+                    "description" => null,
+                    "img" => null,
+                    "additionalInfo" => null,
+                    "values" => [
+                        [
+                            "code" => 'kasko',
+                            "description" => null,
+                            "img" => null,
+                            "additionalInfo" => null,
+                            "value" => "КАСКО"
+                        ],
+                        [
+                            "code" => 'osago',
+                            "description" => null,
+                            "img" => null,
+                            "additionalInfo" => null,
+                            "value" => "ОСАГО"
                         ]
                     ]
                 ]
@@ -162,138 +160,136 @@ return [
         ],
         [
             "id" => 2,
-            "attributes" => [
-                "single" => [
-                    [
-                        "code" => 'name',
-                        "name" => "Название",
+            "singleAttributes" => [
+                [
+                    "code" => 'name',
+                    "name" => "Название",
+                    "description" => null,
+                    "img" => null,
+                    "additionalInfo" => null,
+                    "value" => [
+                        "code" => null,
                         "description" => null,
                         "img" => null,
                         "additionalInfo" => null,
-                        "value" => [
-                            "code" => null,
-                            "description" => null,
-                            "img" => null,
-                            "additionalInfo" => null,
-                            "value" => "Старая Lada Granta"
-                        ]
-                    ],
-                    [
-                        "code" => 'type',
-                        "name" => "Тип элемента",
+                        "value" => "Старая Lada Granta"
+                    ]
+                ],
+                [
+                    "code" => 'type',
+                    "name" => "Тип элемента",
+                    "description" => null,
+                    "img" => null,
+                    "additionalInfo" => null,
+                    "value" => [
+                        "code" => null,
                         "description" => null,
                         "img" => null,
                         "additionalInfo" => null,
-                        "value" => [
-                            "code" => null,
-                            "description" => null,
-                            "img" => null,
-                            "additionalInfo" => null,
-                            "value" => "element"
-                        ]
-                    ],
-                    [
-                        "code" => 'brand',
-                        "name" => "Марка машины",
+                        "value" => "element"
+                    ]
+                ],
+                [
+                    "code" => 'brand',
+                    "name" => "Марка машины",
+                    "description" => null,
+                    "img" => null,
+                    "additionalInfo" => null,
+                    "value" => [
+                        "code" => 'vaz',
                         "description" => null,
                         "img" => null,
                         "additionalInfo" => null,
-                        "value" => [
-                            "code" => 'vaz',
-                            "description" => null,
-                            "img" => null,
-                            "additionalInfo" => null,
-                            "value" => "Лада"
-                        ]
-                    ],
-                    [
-                        "code" => 'model',
-                        "name" => "Модель машины",
+                        "value" => "Лада"
+                    ]
+                ],
+                [
+                    "code" => 'model',
+                    "name" => "Модель машины",
+                    "description" => null,
+                    "img" => null,
+                    "additionalInfo" => null,
+                    "value" => [
+                        "code" => 'granta_new',
                         "description" => null,
                         "img" => null,
                         "additionalInfo" => null,
-                        "value" => [
-                            "code" => 'granta_new',
-                            "description" => null,
-                            "img" => null,
-                            "additionalInfo" => null,
-                            "value" => "Granta Новая"
-                        ]
-                    ],
-                    [
-                        "code" => 'year',
-                        "name" => "Год выпуска",
+                        "value" => "Granta Новая"
+                    ]
+                ],
+                [
+                    "code" => 'year',
+                    "name" => "Год выпуска",
+                    "description" => null,
+                    "img" => null,
+                    "additionalInfo" => null,
+                    "value" => [
+                        "code" => null,
                         "description" => null,
                         "img" => null,
                         "additionalInfo" => null,
-                        "value" => [
-                            "code" => null,
-                            "description" => null,
-                            "img" => null,
-                            "additionalInfo" => null,
-                            "value" => "1990"
-                        ]
-                    ],
-                    [
-                        "code" => 'price',
-                        "name" => "Цена",
+                        "value" => "1990"
+                    ]
+                ],
+                [
+                    "code" => 'price',
+                    "name" => "Цена",
+                    "description" => null,
+                    "img" => null,
+                    "additionalInfo" => null,
+                    "value" => [
+                        "code" => null,
                         "description" => null,
                         "img" => null,
                         "additionalInfo" => null,
-                        "value" => [
-                            "code" => null,
+                        "value" => '50000'
+                    ]
+                ]
+            ],
+            "multipleAttributes" => [
+                [
+                    "code" => 'color',
+                    "name" => "Цвет",
+                    "description" => null,
+                    "img" => null,
+                    "additionalInfo" => null,
+                    "values" => [
+                        [
+                            "code" => 'yellow',
                             "description" => null,
                             "img" => null,
                             "additionalInfo" => null,
-                            "value" => '50000'
+                            "value" => "Желтый"
+                        ],
+                        [
+                            "code" => 'blue',
+                            "description" => null,
+                            "img" => null,
+                            "additionalInfo" => null,
+                            "value" => "Голубой"
+                        ],
+                        [
+                            "code" => 'white',
+                            "description" => null,
+                            "img" => null,
+                            "additionalInfo" => null,
+                            "value" => "Белый"
                         ]
                     ]
                 ],
-                "multiple" => [
-                    [
-                        "code" => 'color',
-                        "name" => "Цвет",
-                        "description" => null,
-                        "img" => null,
-                        "additionalInfo" => null,
-                        "values" => [
-                            [
-                                "code" => 'yellow',
-                                "description" => null,
-                                "img" => null,
-                                "additionalInfo" => null,
-                                "value" => "Желтый"
-                            ],
-                            [
-                                "code" => 'blue',
-                                "description" => null,
-                                "img" => null,
-                                "additionalInfo" => null,
-                                "value" => "Голубой"
-                            ],
-                            [
-                                "code" => 'white',
-                                "description" => null,
-                                "img" => null,
-                                "additionalInfo" => null,
-                                "value" => "Белый"
-                            ]
-                        ]
-                    ],
-                    [
-                        "code" => 'insurance',
-                        "name" => "Страховка",
-                        "description" => null,
-                        "img" => null,
-                        "additionalInfo" => null,
-                        "values" => [
-                            [
-                                "code" => 'osago',
-                                "description" => null,
-                                "img" => null,
-                                "additionalInfo" => null,
-                                "value" => "ОСАГО"
-                            ]
+                [
+                    "code" => 'insurance',
+                    "name" => "Страховка",
+                    "description" => null,
+                    "img" => null,
+                    "additionalInfo" => null,
+                    "values" => [
+                        [
+                            "code" => 'osago',
+                            "description" => null,
+                            "img" => null,
+                            "additionalInfo" => null,
+                            "value" => "ОСАГО"
                         ]
                     ]
                 ]
@@ -301,124 +297,122 @@ return [
         ],
         [
             "id" => 3,
-            "attributes" => [
-                "single" => [
-                    [
-                        "code" => 'name',
-                        "name" => "Название",
+            "singleAttributes" => [
+                [
+                    "code" => 'name',
+                    "name" => "Название",
+                    "description" => null,
+                    "img" => null,
+                    "additionalInfo" => null,
+                    "value" => [
+                        "code" => null,
                         "description" => null,
                         "img" => null,
                         "additionalInfo" => null,
-                        "value" => [
-                            "code" => null,
-                            "description" => null,
-                            "img" => null,
-                            "additionalInfo" => null,
-                            "value" => "Шикарный Volkswagen Polo"
-                        ]
-                    ],
-                    [
-                        "code" => 'type',
-                        "name" => "Тип элемента",
+                        "value" => "Шикарный Volkswagen Polo"
+                    ]
+                ],
+                [
+                    "code" => 'type',
+                    "name" => "Тип элемента",
+                    "description" => null,
+                    "img" => null,
+                    "additionalInfo" => null,
+                    "value" => [
+                        "code" => null,
                         "description" => null,
                         "img" => null,
                         "additionalInfo" => null,
-                        "value" => [
-                            "code" => null,
-                            "description" => null,
-                            "img" => null,
-                            "additionalInfo" => null,
-                            "value" => "element"
-                        ]
-                    ],
-                    [
-                        "code" => 'brand',
-                        "name" => "Марка машины",
+                        "value" => "element"
+                    ]
+                ],
+                [
+                    "code" => 'brand',
+                    "name" => "Марка машины",
+                    "description" => null,
+                    "img" => null,
+                    "additionalInfo" => null,
+                    "value" => [
+                        "code" => 'volkswagen',
                         "description" => null,
                         "img" => null,
                         "additionalInfo" => null,
-                        "value" => [
-                            "code" => 'volkswagen',
-                            "description" => null,
-                            "img" => null,
-                            "additionalInfo" => null,
-                            "value" => "VW"
-                        ]
-                    ],
-                    [
-                        "code" => 'model',
-                        "name" => "Модель машины",
+                        "value" => "VW"
+                    ]
+                ],
+                [
+                    "code" => 'model',
+                    "name" => "Модель машины",
+                    "description" => null,
+                    "img" => null,
+                    "additionalInfo" => null,
+                    "value" => [
+                        "code" => 'polo',
                         "description" => null,
                         "img" => null,
                         "additionalInfo" => null,
-                        "value" => [
-                            "code" => 'polo',
-                            "description" => null,
-                            "img" => null,
-                            "additionalInfo" => null,
-                            "value" => "Polo"
-                        ]
-                    ],
-                    [
-                        "code" => 'year',
-                        "name" => "Год выпуска",
+                        "value" => "Polo"
+                    ]
+                ],
+                [
+                    "code" => 'year',
+                    "name" => "Год выпуска",
+                    "description" => null,
+                    "img" => null,
+                    "additionalInfo" => null,
+                    "value" => [
+                        "code" => null,
                         "description" => null,
                         "img" => null,
                         "additionalInfo" => null,
-                        "value" => [
-                            "code" => null,
-                            "description" => null,
-                            "img" => null,
-                            "additionalInfo" => null,
-                            "value" => "2015"
-                        ]
-                    ],
-                    [
-                        "code" => 'price',
-                        "name" => "Цена",
+                        "value" => "2015"
+                    ]
+                ],
+                [
+                    "code" => 'price',
+                    "name" => "Цена",
+                    "description" => null,
+                    "img" => null,
+                    "additionalInfo" => null,
+                    "value" => [
+                        "code" => null,
                         "description" => null,
                         "img" => null,
                         "additionalInfo" => null,
-                        "value" => [
-                            "code" => null,
+                        "value" => '500000'
+                    ]
+                ]
+            ],
+            "multipleAttributes" => [
+                [
+                    "code" => 'color',
+                    "name" => "Цвет",
+                    "description" => null,
+                    "img" => null,
+                    "additionalInfo" => null,
+                    "values" => [
+                        [
+                            "code" => 'white',
                             "description" => null,
                             "img" => null,
                             "additionalInfo" => null,
-                            "value" => '500000'
+                            "value" => "Белый"
                         ]
                     ]
                 ],
-                "multiple" => [
-                    [
-                        "code" => 'color',
-                        "name" => "Цвет",
-                        "description" => null,
-                        "img" => null,
-                        "additionalInfo" => null,
-                        "values" => [
-                            [
-                                "code" => 'white',
-                                "description" => null,
-                                "img" => null,
-                                "additionalInfo" => null,
-                                "value" => "Белый"
-                            ]
-                        ]
-                    ],
-                    [
-                        "code" => 'insurance',
-                        "name" => "Страховка",
-                        "description" => null,
-                        "img" => null,
-                        "additionalInfo" => null,
-                        "values" => [
-                            [
-                                "code" => 'kasko',
-                                "description" => null,
-                                "img" => null,
-                                "additionalInfo" => null,
-                                "value" => "КАСКО"
-                            ]
+                [
+                    "code" => 'insurance',
+                    "name" => "Страховка",
+                    "description" => null,
+                    "img" => null,
+                    "additionalInfo" => null,
+                    "values" => [
+                        [
+                            "code" => 'kasko',
+                            "description" => null,
+                            "img" => null,
+                            "additionalInfo" => null,
+                            "value" => "КАСКО"
                         ]
                     ]
                 ]

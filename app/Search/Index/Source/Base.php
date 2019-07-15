@@ -29,7 +29,7 @@ abstract class Base implements SourceInterface
 
     protected function __construct(SerializerInterface $serializer = null)
     {
-        $this->sourceData = include_once('/var/www/public/data.php');
+        $this->sourceData = include_once('/var/www/public/data_full.php');
         if($serializer !== null) {
             $this->serializer = $serializer;
         } else {

@@ -330,21 +330,19 @@ definitions:
         description: |
           Идентификатор элемента
         example: 5
-      attributes:
-        type: object
-        properties:
-          single:
-            type: array
-            description: |
-              Массив одиночных свойств элемента
-            items:
-              $ref: '#/definitions/DisplayListItemSingleAttribute'
-          multiple:
-            type: array
-            description: |
-              Массив множественных свойств элемента
-            items:
-              $ref: '#/definitions/DisplayListItemMultipleAttribute'
+      singleAttributes:
+        type: array
+        description: |
+          Массив одиночных свойств элемента
+        items:
+          $ref: '#/definitions/DisplayListItemSingleAttribute'
+
+      multipleAttributes:
+        type: array
+        description: |
+          Массив множественных свойств элемента
+        items:
+          $ref: '#/definitions/DisplayListItemMultipleAttribute'
 
   DisplayListItemSingleAttribute:
     type: object
