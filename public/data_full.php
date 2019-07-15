@@ -352,11 +352,11 @@ return [
                         "img" => null,
                         "additionalInfo" => null,
                         "value" => [
-                            "code" => 'granta_new',
+                            "code" => 'polo',
                             "description" => null,
                             "img" => null,
                             "additionalInfo" => null,
-                            "value" => "Granta Новая"
+                            "value" => "Polo"
                         ]
                     ],
                     [
