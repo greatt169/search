@@ -282,7 +282,7 @@ definitions:
       items:
         type: array
         items:
-          $ref: '#/definitions/ListItem'
+          $ref: '#/definitions/DisplayListItem'
     description: |
       Массив элементов
 

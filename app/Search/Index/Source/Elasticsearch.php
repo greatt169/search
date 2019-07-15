@@ -82,6 +82,8 @@ class Elasticsearch extends Base
                 $sourceAttributes[$attributeCode] = $sourceAttributeValues;
             }
             $source['attributes'] = $sourceAttributes;
+            $rawData = serialize($dataItem);
+            $source['raw_data'] = $rawData;
             $elementsForIndexing[] = $source;
         }
         return $elementsForIndexing;

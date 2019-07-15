@@ -346,6 +346,7 @@ class Elasticsearch extends Base
             foreach ($document['attributes'] as $attributeCode => $attributeValue) {
                 $arDocAttributes[$attributeCode] = $attributeValue;
             }
+            $arDocAttributes['raw_data'] = $document['raw_data'];
             $params['body'][] = [
                 'index' => [
                     '_index' => $this->index,
