@@ -69,8 +69,6 @@ paths:
                 $ref: '#/definitions/Filter'
               sorts:
                 $ref: '#/definitions/Sorts'
-              selectedFields:
-                $ref: '#/definitions/SelectedFields'
               engine:
                 $ref: '#/definitions/Engine'
 
@@ -185,22 +183,6 @@ definitions:
         default: 'asc'
         example: 'asc'
         enum: [asc, desc]
-
-  SelectedFields:
-    type: object
-    description: Объект полей для выборки на вход
-    required:
-      - fields
-    properties:
-      fields:
-        description: Поле для выборки | Доступно при engine = elasticsearch
-        type: array
-        items:
-          type: string
-        example:
-          - 'color'
-          - 'brand'
-          - 'model'
 
   Filter:
     type: object

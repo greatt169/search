@@ -10,7 +10,6 @@ use SwaggerSearch\Model\Filter;
 use SwaggerSearch\Model\FilterParam;
 use SwaggerSearch\Model\ModelInterface;
 use SwaggerSearch\Model\Search;
-use SwaggerSearch\Model\SelectedFields;
 use SwaggerSearch\Model\Sort;
 use SwaggerSearch\Model\Sorts;
 use SwaggerSearch\ObjectSerializer;
@@ -137,26 +136,6 @@ class CatalogListRequest extends Request
     }
 
     /**
-     * @throws ApiException
-     */
-    protected function validateSelectedFields()
-    {
-        $sourceData = $this->getDeserializeData();
-        if (property_exists($sourceData, 'selectedFields')) {
-            $selectedFieldsData = $sourceData->selectedFields;
-        } else {
-            $this->setValid('selectedFields', null);
-            return;
-        }
-        /**
-         * @var SelectedFields $selectedFields
-         */
-        $selectedFields = ObjectSerializer::deserialize($selectedFieldsData, SelectedFields::class, null);
-        $this->validateBySwaggerModel($selectedFields);
-        $this->setValid('selectedFields', $selectedFields);
-    }
-
-    /**
      * Configure the validator instance.
      *
      * @param ValidatorAlias $validator
@@ -168,7 +147,6 @@ class CatalogListRequest extends Request
             try {
                 $this->validateFilter();
                 $this->validateSort();
-                $this->validateSelectedFields();
                 /**
                  * @var ValidatorAlias $validator
                  */

@@ -10,7 +10,6 @@ use SwaggerSearch\Model\Engine;
 use App\Search\Query\Request\Engine as RequestEngine;
 use SwaggerSearch\Model\Filter;
 use SwaggerSearch\Model\Search;
-use SwaggerSearch\Model\SelectedFields;
 use SwaggerSearch\Model\Sorts;
 
 class SearchController extends Controller
@@ -19,6 +18,7 @@ class SearchController extends Controller
      * @param CatalogListRequest $request
      * @return \SwaggerSearch\Model\ListItems
      * @throws ApiException
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function catalogList(CatalogListRequest $request)
     {
@@ -38,11 +38,6 @@ class SearchController extends Controller
         $sorts = $request->getValid('sorts');
 
         /**
-         * @var SelectedFields $selectedFields
-         */
-        $selectedFields = $request->getValid('selectedFields');
-
-        /**
          * @var Engine $engine
          */
         $engine = $request->getValid('engine');
@@ -55,7 +50,7 @@ class SearchController extends Controller
          * @var RequestEngineInterface $engineRequest
          */
         $engineRequest = RequestEngine::getInstance($engine->getName(), $index);
-        $items = $engineRequest->postCatalogList($search, $filter, $sorts, $selectedFields, $page, $pageSize);
+        $items = $engineRequest->postCatalogList($search, $filter, $sorts, $page, $pageSize);
         return $items;
     }
 }

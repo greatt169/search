@@ -12,7 +12,6 @@ use SwaggerSearch\Model\FilterRangeParam;
 use SwaggerSearch\Model\FilterValue;
 use SwaggerSearch\Model\ListItems;
 use SwaggerSearch\Model\Search;
-use SwaggerSearch\Model\SelectedFields;
 use SwaggerSearch\Model\Sorts;
 
 class Elasticsearch extends Engine
@@ -41,15 +40,6 @@ class Elasticsearch extends Engine
             $elasticSort[] = [$sort->getField() => ['order' => $sort->getOrder()]];
         }
         return $elasticSort;
-    }
-
-    /**
-     * @param SelectedFields $selectedFields
-     * @return array
-     */
-    public function getEngineConvertedSelectedFields(SelectedFields $selectedFields): array
-    {
-        return $selectedFields->getFields();
     }
 
     /**
@@ -153,13 +143,12 @@ class Elasticsearch extends Engine
      * @param Search|null $search
      * @param Filter|null $filter
      * @param Sorts|null $sorts
-     * @param SelectedFields|null $selectedFields
      * @param int $page
      * @param int $pageSize
      * @return ListItems
      * @throws ApiException
      */
-    public function postCatalogList(Search $search = null, Filter $filter = null, Sorts $sorts = null, SelectedFields $selectedFields = null, $page = 1, $pageSize = 20) : ListItems
+    public function postCatalogList(Search $search = null, Filter $filter = null, Sorts $sorts = null, $page = 1, $pageSize = 20) : ListItems
     {
         try {
 
@@ -171,10 +160,7 @@ class Elasticsearch extends Engine
             if($sorts !== null) {
                 $requestBody['sort'] = $this->getEngineConvertedSorts($sorts);
             }
-            if($selectedFields !== null) {
-                $requestBody['_source'] = $this->getEngineConvertedSelectedFields($selectedFields);
-            }
-
+            $requestBody['_source'] = ['raw_data'];
             $from = $page * $pageSize - $pageSize;
             $requestBody['size'] = $pageSize;
             $requestBody['from'] = $from;
