@@ -44,7 +44,7 @@ class SearchReindex extends Command
     {
         try {
             $indexer = new Elasticsearch(
-                new ElasticsearchSource(),
+                new ElasticsearchSource('http://10.101.2.10/data.json'),
                 new ElasticsearchEntity()
             );
             $indexer->reindex();

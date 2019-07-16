@@ -13,9 +13,13 @@ class Elasticsearch extends Base
 {
     protected $indexName = 'auto';
 
-    public function __construct()
+    /**
+     * Elasticsearch constructor.
+     * @param $sourceLink
+     */
+    public function __construct($sourceLink)
     {
-        parent::__construct();
+        parent::__construct($sourceLink);
     }
 
     public function getIndexSettings()

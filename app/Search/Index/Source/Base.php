@@ -20,9 +20,13 @@ abstract class Base implements SourceInterface
      */
     protected $indexName;
 
-    protected function __construct()
+    /**
+     * Base constructor.
+     * @param $sourceLink
+     */
+    protected function __construct($sourceLink)
     {
-        $this->sourceData = file_get_contents('/var/www/public/data.json');
+        $this->sourceData = file_get_contents($sourceLink);
     }
 
     /**
