@@ -2,8 +2,6 @@
 
 namespace App\Search\Index\Source;
 
-use App\Helpers\Interfaces\SerializerInterface;
-use App\Helpers\Serializer;
 use App\Search\Index\Interfaces\SourceInterface;
 use SwaggerSearch\Model\SourceIndex;
 use SwaggerSearch\ObjectSerializer;
@@ -22,19 +20,9 @@ abstract class Base implements SourceInterface
      */
     protected $indexName;
 
-    /**
-     * @var SerializerInterface
-     */
-    protected $serializer;
-
-    protected function __construct(SerializerInterface $serializer = null)
+    protected function __construct()
     {
-        $this->sourceData = include_once('/var/www/public/data_full.php');
-        if($serializer !== null) {
-            $this->serializer = $serializer;
-        } else {
-            $this->serializer = new Serializer();
-        }
+        $this->sourceData = file_get_contents('/var/www/public/data.json');
     }
 
     /**
@@ -47,7 +35,7 @@ abstract class Base implements SourceInterface
          */
         if($this->sourceIndex == null) {
             $sourceIndex = ObjectSerializer::deserialize(
-                $this->serializer::__toArray($this->sourceData),
+                json_decode($this->sourceData),
                 SourceIndex::class, null
             );
             $this->sourceIndex = $sourceIndex;
