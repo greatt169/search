@@ -172,7 +172,7 @@ return [
                         "description" => null,
                         "img" => null,
                         "additionalInfo" => null,
-                        "value" => "Старая Lada Granta"
+                        "value" => "Старая Лада Гранта"
                     ]
                 ],
                 [
@@ -397,6 +397,129 @@ return [
                             "img" => null,
                             "additionalInfo" => null,
                             "value" => "Белый"
+                        ]
+                    ]
+                ],
+                [
+                    "code" => 'insurance',
+                    "name" => "Страховка",
+                    "description" => null,
+                    "img" => null,
+                    "additionalInfo" => null,
+                    "values" => [
+                        [
+                            "code" => 'kasko',
+                            "description" => null,
+                            "img" => null,
+                            "additionalInfo" => null,
+                            "value" => "КАСКО"
+                        ]
+                    ]
+                ]
+            ]
+        ],
+        [
+            "id" => 4,
+            "singleAttributes" => [
+                [
+                    "code" => 'name',
+                    "name" => "Название",
+                    "description" => null,
+                    "img" => null,
+                    "additionalInfo" => null,
+                    "value" => [
+                        "code" => null,
+                        "description" => null,
+                        "img" => null,
+                        "additionalInfo" => null,
+                        "value" => "Примиум Volkswagen Polo"
+                    ]
+                ],
+                [
+                    "code" => 'type',
+                    "name" => "Тип элемента",
+                    "description" => null,
+                    "img" => null,
+                    "additionalInfo" => null,
+                    "value" => [
+                        "code" => null,
+                        "description" => null,
+                        "img" => null,
+                        "additionalInfo" => null,
+                        "value" => "element"
+                    ]
+                ],
+                [
+                    "code" => 'brand',
+                    "name" => "Марка машины",
+                    "description" => null,
+                    "img" => null,
+                    "additionalInfo" => null,
+                    "value" => [
+                        "code" => 'volkswagen',
+                        "description" => null,
+                        "img" => null,
+                        "additionalInfo" => null,
+                        "value" => "volkswagen"
+                    ]
+                ],
+                [
+                    "code" => 'model',
+                    "name" => "Модель машины",
+                    "description" => null,
+                    "img" => null,
+                    "additionalInfo" => null,
+                    "value" => [
+                        "code" => 'polo',
+                        "description" => null,
+                        "img" => null,
+                        "additionalInfo" => null,
+                        "value" => "Polo"
+                    ]
+                ],
+                [
+                    "code" => 'year',
+                    "name" => "Год выпуска",
+                    "description" => null,
+                    "img" => null,
+                    "additionalInfo" => null,
+                    "value" => [
+                        "code" => null,
+                        "description" => null,
+                        "img" => null,
+                        "additionalInfo" => null,
+                        "value" => "2020"
+                    ]
+                ],
+                [
+                    "code" => 'price',
+                    "name" => "Цена",
+                    "description" => null,
+                    "img" => null,
+                    "additionalInfo" => null,
+                    "value" => [
+                        "code" => null,
+                        "description" => null,
+                        "img" => null,
+                        "additionalInfo" => null,
+                        "value" => '700000'
+                    ]
+                ]
+            ],
+            "multipleAttributes" => [
+                [
+                    "code" => 'color',
+                    "name" => "Цвет",
+                    "description" => null,
+                    "img" => null,
+                    "additionalInfo" => null,
+                    "values" => [
+                        [
+                            "code" => 'yellow',
+                            "description" => null,
+                            "img" => null,
+                            "additionalInfo" => null,
+                            "value" => "Желтый"
                         ]
                     ]
                 ],

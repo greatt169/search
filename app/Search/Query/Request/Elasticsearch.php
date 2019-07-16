@@ -99,10 +99,16 @@ class Elasticsearch extends Engine
      */
     public function getEngineConvertedSearch(Search $search): array
     {
+        $searchFields = $search->getFields();
+        $fields = [];
+        foreach ($searchFields as $searchField) {
+            $fields[] = 'search_data.' . $searchField . 'ru';
+        }
+
         $elasticSearch =  [
             'multi_match' => [
                 'query' => $search->getQuery(),
-                'fields' => $search->getFields()
+                'fields' => ['search_data']
             ],
         ];
         return $elasticSearch;

@@ -72,11 +72,59 @@ class Elasticsearch extends Base
     protected $indexBulkTimerLabel = 'index_bulk';
     private $indexMappingAppliedTemplate = 'Mapping has applied: %s';
 
-    protected function getIndexParams()
+    protected function getIndexParams($withSettings = false)
     {
         $params = [
-            'index' => $this->index,
+            'index' => $this->index
         ];
+        if($withSettings) {
+            $params['body'] = [
+                'settings' => [
+                    'analysis' => [
+                        'char_filter' => [
+                            'replace' => [
+                                'type' => 'mapping',
+                                'mappings' => [
+                                    '&=> and '
+                                ],
+                            ],
+                        ],
+                        'filter' => [
+                            'word_delimiter' => [
+                                'type' => 'word_delimiter',
+                                'split_on_numerics' => false,
+                                'split_on_case_change' => true,
+                                'generate_word_parts' => true,
+                                'generate_number_parts' => true,
+                                'catenate_all' => true,
+                                'preserve_original' => true,
+                                'catenate_numbers' => true,
+                            ],
+                            'trigrams' => [
+                                'type' => 'ngram',
+                                'min_gram' => 3,
+                                'max_gram' => 4,
+                            ],
+                        ],
+                        'analyzer' => [
+                            'default' => [
+                                'type' => 'custom',
+                                'char_filter' => [
+                                    'html_strip',
+                                    'replace',
+                                ],
+                                'tokenizer' => 'whitespace',
+                                'filter' => [
+                                    'lowercase',
+                                    'word_delimiter',
+                                    'trigrams',
+                                ],
+                            ],
+                        ],
+                    ],
+                ]
+            ];
+        }
         return $params;
     }
 
@@ -100,7 +148,8 @@ class Elasticsearch extends Base
 
     public function createIndex()
     {
-        $this->getClient()->indices()->create($this->getIndexParams());
+        $params = $this->getIndexParams(true);
+        $this->getClient()->indices()->create($params);
         $this->addAlias($this->baseAliasName);
     }
 
@@ -169,19 +218,24 @@ class Elasticsearch extends Base
         if($index === null) {
             $index = $this->index;
         }
+        $alias = $this->entity->getAliasWithPrefix($aliasName);
         $params['body'] = [
             'actions' => [
                 [
                     'remove' => [
                         'index' => $index,
-                        'alias' => $this->entity->getAliasWithPrefix($aliasName)
+                        'alias' => $alias
                     ],
                 ]
             ]
         ];
-
-        $this->getClient()->indices()->updateAliases($params);
-        return true;
+        $aliases = $this->getClient()->indices()->getAliases();
+        if(array_key_exists($alias, $aliases[$index])) {
+            $this->getClient()->indices()->updateAliases($params);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -347,6 +401,7 @@ class Elasticsearch extends Base
                 $arDocAttributes[$attributeCode] = $attributeValue;
             }
             $arDocAttributes['raw_data'] = $document['raw_data'];
+            $arDocAttributes['search_data'] = $document['search_data'];
             $params['body'][] = [
                 'index' => [
                     '_index' => $this->index,
