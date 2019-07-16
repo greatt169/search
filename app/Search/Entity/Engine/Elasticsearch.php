@@ -5,7 +5,7 @@ namespace App\Search\Entity\Engine;
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 use Illuminate\Support\Facades\Log;
-use SwaggerSearch\Model\DisplayListItem;
+use SwaggerSearch\Model\ListItem;
 
 class Elasticsearch extends Base
 {
@@ -88,12 +88,12 @@ class Elasticsearch extends Base
 
     /**
      * @param $hit
-     * @return DisplayListItem $listItem
+     * @return ListItem $listItem
      */
-    public function getConvertedEngineData($hit) : DisplayListItem
+    public function getConvertedEngineData($hit) : ListItem
     {
         $source = $hit['_source'];
-        $listItem = new DisplayListItem();
+        $listItem = new ListItem();
         if(array_key_exists('raw_data', $source)) {
             $listItem = unserialize($source['raw_data']);
         }

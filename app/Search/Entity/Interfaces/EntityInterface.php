@@ -2,7 +2,7 @@
 
 namespace App\Search\Entity\Interfaces;
 
-use SwaggerSearch\Model\DisplayListItem;
+use SwaggerSearch\Model\ListItem;
 
 /**
  * Interface EntityInterface
@@ -36,5 +36,5 @@ interface EntityInterface
      * @param $data
      * @return mixed
      */
-    public function getConvertedEngineData($data) : DisplayListItem;
+    public function getConvertedEngineData($data) : ListItem;
 }

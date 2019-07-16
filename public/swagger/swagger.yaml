@@ -264,11 +264,11 @@ definitions:
       items:
         type: array
         items:
-          $ref: '#/definitions/DisplayListItem'
+          $ref: '#/definitions/ListItem'
     description: |
       Массив элементов
 
-  DisplayListItem:
+  ListItem:
     type: object
     description: |
       Объект элемента списка
@@ -286,16 +286,16 @@ definitions:
         description: |
           Массив одиночных свойств элемента
         items:
-          $ref: '#/definitions/DisplayListItemSingleAttribute'
+          $ref: '#/definitions/ListItemSingleAttribute'
 
       multipleAttributes:
         type: array
         description: |
           Массив множественных свойств элемента
         items:
-          $ref: '#/definitions/DisplayListItemMultipleAttribute'
+          $ref: '#/definitions/ListItemMultipleAttribute'
 
-  DisplayListItemSingleAttribute:
+  ListItemSingleAttribute:
     type: object
     required:
       - code
@@ -327,9 +327,9 @@ definitions:
           Дополнительная информация для значения аттрибута
         example: 'string'
       value:
-        $ref: '#/definitions/DisplayListItemAttributeValue'
+        $ref: '#/definitions/ListItemAttributeValue'
 
-  DisplayListItemMultipleAttribute:
+  ListItemMultipleAttribute:
     type: object
     required:
       - code
@@ -365,9 +365,9 @@ definitions:
         description: |
           Массив значений аттрибута
         items:
-          $ref: '#/definitions/DisplayListItemAttributeValue'
+          $ref: '#/definitions/ListItemAttributeValue'
 
-  DisplayListItemAttributeValue:
+  ListItemAttributeValue:
     type: object
     required:
       - value
@@ -411,7 +411,7 @@ definitions:
         description: |
             Массив элементов для индексации
         items:
-          $ref: '#/definitions/DisplayListItem'
+          $ref: '#/definitions/ListItem'
       mapping:
         type: object
         description: |

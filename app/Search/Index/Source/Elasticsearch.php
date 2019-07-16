@@ -2,10 +2,10 @@
 
 namespace App\Search\Index\Source;
 
-use SwaggerSearch\Model\DisplayListItem;
-use SwaggerSearch\Model\DisplayListItemAttributeValue;
-use SwaggerSearch\Model\DisplayListItemMultipleAttribute;
-use SwaggerSearch\Model\DisplayListItemSingleAttribute;
+use SwaggerSearch\Model\ListItem;
+use SwaggerSearch\Model\ListItemAttributeValue;
+use SwaggerSearch\Model\ListItemMultipleAttribute;
+use SwaggerSearch\Model\ListItemSingleAttribute;
 use SwaggerSearch\Model\SourceIndex;
 use SwaggerSearch\Model\SourceIndexMapping;
 
@@ -33,7 +33,7 @@ class Elasticsearch extends Base
     }
 
     /**
-     * @param DisplayListItemAttributeValue $attributeValue
+     * @param ListItemAttributeValue $attributeValue
      * @return string
      */
     protected function getAttributeVal($attributeValue) {
@@ -54,7 +54,7 @@ class Elasticsearch extends Base
         $data = $sourceIndex->getItems();
 
         /**
-         * @var DisplayListItem $dataItem
+         * @var ListItem $dataItem
          */
         foreach ($data as $dataItem) {
             $source = [];
@@ -66,11 +66,11 @@ class Elasticsearch extends Base
             $multipleAttributes = $dataItem->getMultipleAttributes();
 
             /**
-             * @var DisplayListItemSingleAttribute $attribute
+             * @var ListItemSingleAttribute $attribute
              */
             foreach ($singleAttributes as $attribute) {
                 /**
-                 * @var DisplayListItemAttributeValue $attributeValue
+                 * @var ListItemAttributeValue $attributeValue
                  */
                 $attributeCode = $attribute->getCode();
                 $attributeValue = $attribute->getValue();
@@ -81,14 +81,14 @@ class Elasticsearch extends Base
             }
 
             /**
-             * @var DisplayListItemMultipleAttribute $attribute
+             * @var ListItemMultipleAttribute $attribute
              */
             foreach ($multipleAttributes as $attribute) {
                 $attributeCode = $attribute->getCode();
                 $multipleAttributeValues = $attribute->getValues();
                 $sourceAttributeValues = [];
                 /**
-                 * @var DisplayListItemAttributeValue $attributeValue
+                 * @var ListItemAttributeValue $attributeValue
                  */
                 foreach ($multipleAttributeValues as $attributeValue) {
                     if($attributeValue) {
