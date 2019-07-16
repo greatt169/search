@@ -103,8 +103,9 @@ paths:
             type: object
             description: Параметры запроса
             properties:
-              source:
-                $ref: '#/definitions/SourceIndex'
+              link:
+                type: string
+                example: http://10.101.2.10/data.json
 
       tags:
         - Catalog

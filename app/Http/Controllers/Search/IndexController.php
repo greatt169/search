@@ -16,7 +16,7 @@ class IndexController extends Controller
 {
     public function index()
     {
-        $source = new ElasticsearchSource();
+        $source = new ElasticsearchSource('http://10.101.2.10/data.json');
         $data = $source->getElementsForIndexing();
         dump($data);
     }
@@ -27,6 +27,6 @@ class IndexController extends Controller
      */
     public function reindex()
     {
-
+        echo 111;
     }
 }

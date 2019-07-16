@@ -14,4 +14,5 @@ Route::group([
     'namespace' => 'Search',
 ], function () {
     Route::post('/catalog-list/', 'SearchController@catalogList')->name('catalog_list');
+    Route::post('/reindex/', 'IndexController@reindex')->name('reindex');
 });
