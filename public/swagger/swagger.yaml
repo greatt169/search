@@ -454,6 +454,11 @@ definitions:
               type: string
               example: keyword
               enum: [keyword, text, float, integer, boolean]
+      indexSettings:
+        type: object
+        additionalProperties: true
+        description: |
+          Массив настроек для индекса поиска
 
   Error:
     description: Описание ошибки для всех методов

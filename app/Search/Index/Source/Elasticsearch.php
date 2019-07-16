@@ -20,68 +20,11 @@ class Elasticsearch extends Base
 
     public function getIndexSettings()
     {
-        $settings = [
-            'settings' => [
-                'analysis' => [
-                    'char_filter' => [
-                        'replace' => [
-                            'type' => 'mapping',
-                            'mappings' => [
-                                '&=> and '
-                            ],
-                        ],
-                    ],
-                    'filter' => [
-                        'word_delimiter' => [
-                            'type' => 'word_delimiter',
-                            'split_on_numerics' => false,
-                            'split_on_case_change' => true,
-                            'generate_word_parts' => true,
-                            'generate_number_parts' => true,
-                            'catenate_all' => true,
-                            'preserve_original' => true,
-                            'catenate_numbers' => true,
-                        ],
-                        'trigrams' => [
-                            'type' => 'ngram',
-                            'min_gram' => 3,
-                            'max_gram' => 4,
-                        ],
-                        "russian_stop" => [
-                            "type" => "stop",
-                            "stopwords" => "_russian_"
-                        ],
-                        "russian_keywords" => [
-                            "type" => "keyword_marker",
-                            "keywords" => []
-                        ],
-                        "russian_stemmer" => [
-                            "type" => "stemmer",
-                            "language" => "russian"
-                        ]
-                    ],
-                    'analyzer' => [
-                        'default' => [
-                            'type' => 'custom',
-                            'char_filter' => [
-                                'html_strip',
-                                'replace',
-                            ],
-                            'tokenizer' => 'whitespace',
-                            'filter' => [
-                                'lowercase',
-                                'word_delimiter',
-                                'trigrams',
-                                'russian_stop',
-                                'russian_keywords',
-                                'russian_stemmer',
-                            ],
-                        ],
-                    ],
-                ],
-            ]
-        ];
-
+        /**
+         * @var SourceIndex $sourceIndex
+         */
+        $sourceIndex = $this->getSourceIndex();
+        $settings = $sourceIndex->getIndexSettings();
         return $settings;
     }
 
