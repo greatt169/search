@@ -77,53 +77,8 @@ class Elasticsearch extends Base
         $params = [
             'index' => $this->index
         ];
-        if($withSettings) {
-            $params['body'] = [
-                'settings' => [
-                    'analysis' => [
-                        'char_filter' => [
-                            'replace' => [
-                                'type' => 'mapping',
-                                'mappings' => [
-                                    '&=> and '
-                                ],
-                            ],
-                        ],
-                        'filter' => [
-                            'word_delimiter' => [
-                                'type' => 'word_delimiter',
-                                'split_on_numerics' => false,
-                                'split_on_case_change' => true,
-                                'generate_word_parts' => true,
-                                'generate_number_parts' => true,
-                                'catenate_all' => true,
-                                'preserve_original' => true,
-                                'catenate_numbers' => true,
-                            ],
-                            'trigrams' => [
-                                'type' => 'ngram',
-                                'min_gram' => 3,
-                                'max_gram' => 4,
-                            ],
-                        ],
-                        'analyzer' => [
-                            'default' => [
-                                'type' => 'custom',
-                                'char_filter' => [
-                                    'html_strip',
-                                    'replace',
-                                ],
-                                'tokenizer' => 'whitespace',
-                                'filter' => [
-                                    'lowercase',
-                                    'word_delimiter',
-                                    'trigrams',
-                                ],
-                            ],
-                        ],
-                    ],
-                ]
-            ];
+        if ($withSettings) {
+            $params['body'] = $this->getSource()->getIndexSettings();
         }
         return $params;
     }
@@ -139,7 +94,7 @@ class Elasticsearch extends Base
         parent::__construct($source, $entity, $timer);
         $this->baseAliasName = $this->entity->getIndexWithPrefix($this->source->getIndexName());
         $indexByAlias = $this->entity->getIndexByAlias($this->baseAliasName);
-        if($indexByAlias) {
+        if ($indexByAlias) {
             $this->index = $indexByAlias;
         } else {
             $this->index = $this->baseAliasName;
@@ -190,7 +145,7 @@ class Elasticsearch extends Base
      */
     public function addAlias($aliasName, $index = null)
     {
-        if($index === null) {
+        if ($index === null) {
             $index = $this->index;
         }
         $params['body'] = [
@@ -215,7 +170,7 @@ class Elasticsearch extends Base
      */
     public function removeAlias($aliasName, $index = null)
     {
-        if($index === null) {
+        if ($index === null) {
             $index = $this->index;
         }
         $alias = $this->entity->getAliasWithPrefix($aliasName);
@@ -230,7 +185,7 @@ class Elasticsearch extends Base
             ]
         ];
         $aliases = $this->getClient()->indices()->getAliases();
-        if(array_key_exists($alias, $aliases[$index])) {
+        if (array_key_exists($alias, $aliases[$index])) {
             $this->getClient()->indices()->updateAliases($params);
             return true;
         } else {
@@ -282,7 +237,7 @@ class Elasticsearch extends Base
 
     public function deleteIndex()
     {
-        if($this->indexExists($this->index)) {
+        if ($this->indexExists($this->index)) {
             $this->removeAlias($this->baseAliasName, $this->index);
             $this->dropIndex();
         }
