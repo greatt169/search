@@ -268,37 +268,6 @@ definitions:
     description: |
       Массив элементов
 
-  ListItem:
-    type: object
-    description: |
-        Объект элемента списка
-    required:
-      - id
-      - type
-      - attributes
-    properties:
-      id:
-        type: string
-        description: |
-          Идентификатор элемента
-        example: 5
-      singleAttributes:
-        type: object
-        description: |
-          Массив одиночных свойств элемента
-        additionalProperties:
-          type: string
-          example: 'BMV'
-      multipleAttributes:
-        type: object
-        description: |
-          Массив множественных свойств элемента
-        additionalProperties:
-          type: array
-          items:
-            type: string
-            example: 'red'
-
   DisplayListItem:
     type: object
     description: |
