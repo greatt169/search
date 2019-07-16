@@ -129,9 +129,8 @@ class Elasticsearch extends Base
                 $attributeValue = $attribute->getValue();
                 if($attributeValue) {
                     $sourceAttributes[$attributeCode] = $this->getAttributeVal($attributeValue);
-                    $searchData[] = $attribute->getName() . ' ' . $attributeValue->getValue();
+                    $searchData[$attribute->getCode()] = $attribute->getName() . ' ' . $attributeValue->getValue();
                 }
-
             }
 
             /**
@@ -147,7 +146,7 @@ class Elasticsearch extends Base
                 foreach ($multipleAttributeValues as $attributeValue) {
                     if($attributeValue) {
                         $sourceAttributeValues[] = $this->getAttributeVal($attributeValue);
-                        $searchData[] = $attribute->getName() . ' ' . $attributeValue->getValue();
+                        $searchData[$attribute->getCode()] = $attribute->getName() . ' ' . $attributeValue->getValue();
                     }
                 }
                 $sourceAttributes[$attributeCode] = $sourceAttributeValues;
@@ -176,13 +175,11 @@ class Elasticsearch extends Base
             $mappingParams[$attributeCode] = [
                 'type' => $attributeMapping->getType()
             ];
-
-            $mappingParams['search_data'] = [
+            $mappingParams['search_data']['properties'][$attributeCode] = [
                 'type' => 'text',
                 "analyzer" => 'default'
             ];
         }
-
         return $mappingParams;
     }
 }
