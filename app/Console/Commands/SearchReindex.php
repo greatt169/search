@@ -15,7 +15,7 @@ class SearchReindex extends Command
      *
      * @var string
      */
-    protected $signature = 'search:reindex';
+    protected $signature = 'search:reindex {--link=}';
 
     /**
      * The console command description.
@@ -43,8 +43,9 @@ class SearchReindex extends Command
     public function handle()
     {
         try {
+            $sourceLink = $this->option('link');
             $indexer = new Elasticsearch(
-                new ElasticsearchSource('http://10.101.2.10/data.json'),
+                new ElasticsearchSource($sourceLink),
                 new ElasticsearchEntity()
             );
             $indexer->reindex();
