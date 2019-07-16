@@ -179,6 +179,9 @@ class Elasticsearch extends Base
                 'type' => 'text',
                 "analyzer" => 'default'
             ];
+            $mappingParams['ts'] = [
+                'type' => 'integer'
+            ];
         }
         return $mappingParams;
     }

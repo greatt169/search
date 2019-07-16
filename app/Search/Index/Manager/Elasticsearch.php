@@ -357,6 +357,7 @@ class Elasticsearch extends Base
             }
             $arDocAttributes['raw_data'] = $document['raw_data'];
             $arDocAttributes['search_data'] = $document['search_data'];
+            $arDocAttributes['ts'] = $this->startTime;
             $params['body'][] = [
                 'index' => [
                     '_index' => $this->index,

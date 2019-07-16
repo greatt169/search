@@ -27,6 +27,11 @@ abstract class Base implements ManagerInterface
     protected $timer;
 
     /**
+     * @var
+     */
+    protected $startTime;
+
+    /**
      * Base constructor.
      * @param SourceInterface $source
      * @param EntityInterface $entity
@@ -41,6 +46,7 @@ abstract class Base implements ManagerInterface
         }
         $this->source = $source;
         $this->entity = $entity;
+        $this->startTime = time();
     }
 
     /**
