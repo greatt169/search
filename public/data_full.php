@@ -398,7 +398,7 @@ return [
                         "description" => null,
                         "img" => null,
                         "additionalInfo" => null,
-                        "value" => "VW"
+                        "value" => "volkswagen"
                     ]
                 ],
                 [
