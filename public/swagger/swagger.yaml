@@ -100,12 +100,7 @@ paths:
           name: request
           required: true
           schema:
-            type: object
-            description: Параметры запроса
-            properties:
-              link:
-                type: string
-                example: http://10.101.2.10/data.json
+            $ref: '#/definitions/ReindexParams'
 
       tags:
         - Catalog
@@ -125,6 +120,16 @@ paths:
           $ref: '#/responses/500Error'
 
 definitions:
+  ReindexParams:
+    type: object
+    description: Параметры для переиндексации
+    required:
+      - name
+    properties:
+      link:
+        type: string
+        example: http://10.101.2.10/data.json
+
   Engine:
     type: object
     description: Вид поискового движка

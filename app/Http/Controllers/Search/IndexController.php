@@ -4,12 +4,10 @@ namespace App\Http\Controllers\Search;
 
 use App\Http\Controllers\Controller;
 
-use App\Search\Entity\Engine\Elasticsearch as ElasticsearchEntity;
+use App\Http\Requests\Api\ReindexRequest;
 use App\Search\Index\Manager\Elasticsearch;
 use App\Search\Index\Source\Elasticsearch as ElasticsearchSource;
-use SwaggerSearch\Model\ListItem;
-use SwaggerSearch\Model\ListItems;
-use SwaggerSearch\ObjectSerializer;
+use App\Search\Entity\Engine\Elasticsearch as ElasticsearchEntity;
 
 
 class IndexController extends Controller
@@ -22,11 +20,19 @@ class IndexController extends Controller
     }
 
     /**
-     * @return string
-     * @throws \Exception
+     * @param ReindexRequest $request
+     * @return array
+     * @throws \App\Exceptions\ApiException
      */
-    public function reindex()
+    public function reindex(ReindexRequest $request)
     {
-        echo 111;
+        $sourceLink = $request->getValid('link');
+        $indexer = new Elasticsearch(
+            new ElasticsearchSource($sourceLink),
+            new ElasticsearchEntity()
+        );
+        $indexer->reindex();
+        $displayResultMessages = $indexer->getDisplayResultMessages();
+        return $displayResultMessages;
     }
 }
