@@ -2,6 +2,7 @@
 
 namespace App\Search\Index\Manager;
 
+use App\Helpers\Interfaces\MemoryInterface;
 use App\Search\Entity\Interfaces\EntityInterface;
 use App\Search\Index\Interfaces\SourceInterface;
 use App\Helpers\Interfaces\TimerInterface;
@@ -29,7 +30,7 @@ class Elasticsearch extends Base
     /**
      * @var int
      */
-    private $bulkSize = 1000;
+    private $bulkSize = 100;
 
     /**
      * @var string
@@ -50,6 +51,11 @@ class Elasticsearch extends Base
      * @var string
      */
     protected $indexingFinishMessageTemplate = 'Indexing from %s to %s has finished. Quantity of documents: %s';
+
+    /**
+     * @var string
+     */
+    protected $indexingFinishMemoryTemplate = 'Used memory: %s';
 
     /**
      * @var array
@@ -88,8 +94,9 @@ class Elasticsearch extends Base
      * @param SourceInterface $source
      * @param EntityInterface $entity
      * @param TimerInterface|null $timer
+     * @param MemoryInterface|null $memory
      */
-    public function __construct(SourceInterface $source, EntityInterface $entity, TimerInterface $timer = null)
+    public function __construct(SourceInterface $source, EntityInterface $entity, TimerInterface $timer = null, MemoryInterface $memory = null)
     {
         parent::__construct($source, $entity, $timer);
         $this->baseAliasName = $this->entity->getIndexWithPrefix($this->source->getIndexName());
@@ -233,6 +240,7 @@ class Elasticsearch extends Base
         foreach ($arIntervalsSum as $field => $value) {
             $this->log($field . ': ' . $value);
         }
+        $this->log(sprintf($this->indexingFinishMemoryTemplate, $this->memory->calculateUsedMemory()));
     }
 
     public function deleteIndex()

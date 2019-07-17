@@ -4,3 +4,6 @@ swagger-search-generate:
 
 search-reindex:
 	docker-compose exec --user 1000 php-fpm php artisan search:reindex --link=http://10.101.2.10/data.json
+
+composer-update:
+	docker-compose exec --user 1000 php-fpm composer update
