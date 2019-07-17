@@ -6,11 +6,13 @@ use JsonStreamingParser\Listener\ListenerInterface;
 
 class SourceListener implements ListenerInterface
 {
-    protected $json;
     protected $stack;
     protected $key;
-    // Level is required so we know how nested we are.
     protected $level;
+    protected $counter;
+    protected $batchStack;
+    protected $batchSize = 500;
+
     /**
      * @var callable
      */
@@ -24,11 +26,6 @@ class SourceListener implements ListenerInterface
         $this->callback = $callback;
     }
 
-    public function getJson()
-    {
-        return $this->json;
-    }
-
     public function startDocument(): void
     {
         $this->stack = [];
@@ -40,15 +37,21 @@ class SourceListener implements ListenerInterface
 
     public function endDocument(): void
     {
-        // w00t!
+        if (\is_callable($this->callback)) {
+            \call_user_func($this->callback, $this->batchStack);
+            $this->counter = 0;
+            $this->batchStack = [];
+        }
     }
 
     public function startObject(): void
     {
         ++$this->level;
         $this->stack[] = [];
+
         // Reset the stack when entering the second level
-        if (2 === $this->level) {
+        if ($this->level === 1) {
+
             $this->stack = [];
             $this->key[$this->level] = null;
         }
@@ -59,14 +62,17 @@ class SourceListener implements ListenerInterface
         --$this->level;
         $obj = array_pop($this->stack);
         if (empty($this->stack)) {
-            // doc is DONE!
-            $this->json = $obj;
+            $this->counter++;
+            if($obj) {
+                $this->batchStack[] = $obj;
+            }
         } else {
             $this->value($obj);
         }
-        // Call the callback when returning to the second level
-        if (2 === $this->level && \is_callable($this->callback)) {
-            \call_user_func($this->callback, $this->json);
+        if ($this->level === 1 && \is_callable($this->callback) && $this->counter == $this->batchSize) {
+            \call_user_func($this->callback, $this->batchStack);
+            $this->counter = 0;
+            $this->batchStack = [];
         }
     }
 
@@ -102,5 +108,13 @@ class SourceListener implements ListenerInterface
 
     public function whitespace(string $whitespace): void
     {
+    }
+
+    /**
+     * @param int $batchSize
+     */
+    public function setBatchSize(int $batchSize): void
+    {
+        $this->batchSize = $batchSize;
     }
 }

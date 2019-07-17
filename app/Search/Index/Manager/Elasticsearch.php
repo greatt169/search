@@ -352,6 +352,9 @@ class Elasticsearch extends Base
      */
     protected function indexAllElements(): int
     {
+
+
+
         $arSource = $this->getSource()->getElementsForIndexing();
 
         $params = ['body' => []];
