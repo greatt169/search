@@ -10,10 +10,28 @@ use App\Search\Index\Manager\Elasticsearch;
 use App\Search\Index\Source\Elasticsearch as ElasticsearchSource;
 use App\Search\Entity\Engine\Elasticsearch as ElasticsearchEntity;
 use Exception;
+use SwaggerSearch\Model\ListItem;
+use SwaggerSearch\Model\ListItemAttributeValue;
+use SwaggerSearch\Model\ListItemMultipleAttribute;
+use SwaggerSearch\Model\ListItemSingleAttribute;
+use SwaggerSearch\ObjectSerializer;
 
 
 class IndexController extends Controller
 {
+
+    /**
+     * @param ListItemAttributeValue $attributeValue
+     * @return string
+     */
+    protected function getAttributeVal($attributeValue) {
+        $val = $attributeValue->getCode();
+        if($val === null) {
+            $val = $attributeValue->getValue();
+        }
+        return $val;
+    }
+
     /**
      * @throws \Exception
      */
@@ -22,10 +40,10 @@ class IndexController extends Controller
         //ini_set('max_execution_time', 900);
         //ini_set('memory_limit', '-1');
 
-        $sourceLink = '/var/www/public/data_test.json';
+       /* $sourceLink = '/var/www/public/data_test.json';
         $source = new ElasticsearchSource($sourceLink);
         $data = $source->getElementsForIndexing();
-        dump($data);
+        dump($data);*/
 
 
         /*$data = include  '/var/www/public/data_full.php';
@@ -40,11 +58,65 @@ class IndexController extends Controller
         $file = '/var/www/public/data_test.json';
         file_put_contents($file, $data);*/
 
-        /*$sourceLink = '/var/www/public/data_test.json';
+        $sourceLink = '/var/www/public/data_test.json';
 
         $listener = new SourceListener(function ($items): void {
-            dump('butch readed');
-            //
+            foreach($items as $item) {
+                /**
+                 * @var ListItem $dataItem
+                 */
+                $dataItem = ObjectSerializer::deserialize(json_decode(json_encode($item)), ListItem::class);
+
+                $source = [];
+                $searchData = [];
+                $sourceAttributes = [];
+                $source['id'] = $dataItem->getId();
+
+                $singleAttributes = $dataItem->getSingleAttributes();
+                $multipleAttributes = $dataItem->getMultipleAttributes();
+
+                /**
+                 * @var ListItemSingleAttribute $attribute
+                 */
+                foreach ($singleAttributes as $attribute) {
+                    /**
+                     * @var ListItemAttributeValue $attributeValue
+                     */
+                    $attributeCode = $attribute->getCode();
+                    $attributeValue = $attribute->getValue();
+                    if($attributeValue) {
+                        $sourceAttributes[$attributeCode] = $this->getAttributeVal($attributeValue);
+                        $searchData[$attribute->getCode()] = $attribute->getName() . ' ' . $attributeValue->getValue();
+                    }
+                }
+
+                /**
+                 * @var ListItemMultipleAttribute $attribute
+                 */
+                foreach ($multipleAttributes as $attribute) {
+                    $attributeCode = $attribute->getCode();
+                    $multipleAttributeValues = $attribute->getValues();
+                    $sourceAttributeValues = [];
+                    /**
+                     * @var ListItemAttributeValue $attributeValue
+                     */
+                    foreach ($multipleAttributeValues as $attributeValue) {
+                        if($attributeValue) {
+                            $sourceAttributeValues[] = $this->getAttributeVal($attributeValue);
+                            $searchData[$attribute->getCode()] = $attribute->getName() . ' ' . $attributeValue->getValue();
+                        }
+                    }
+                    $sourceAttributes[$attributeCode] = $sourceAttributeValues;
+                }
+                $source['attributes'] = $sourceAttributes;
+                $rawData = serialize($dataItem);
+                $source['raw_data'] = $rawData;
+                $source['search_data'] = $searchData;
+                $elementsForIndexing[] = $source;
+            }
+
+            dump($elementsForIndexing);
+
         });
 
         $stream = fopen($sourceLink, 'r');
@@ -69,7 +141,7 @@ class IndexController extends Controller
 
             return round($bytes, $precision) . " " . $units[$pow];
         };
-        print $formatBytes(memory_get_peak_usage()); echo '<br />';*/
+        print $formatBytes(memory_get_peak_usage()); echo '<br />';
 
 
 

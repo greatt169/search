@@ -352,11 +352,7 @@ class Elasticsearch extends Base
      */
     protected function indexAllElements(): int
     {
-
-
-
         $arSource = $this->getSource()->getElementsForIndexing();
-
         $params = ['body' => []];
         foreach ($arSource as $index => $document) {
             $this->timer->start($this->prepareBulkTimerLabel);

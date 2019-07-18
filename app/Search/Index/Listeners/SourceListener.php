@@ -11,7 +11,7 @@ class SourceListener implements ListenerInterface
     protected $level;
     protected $counter;
     protected $batchStack;
-    protected $batchSize = 500;
+    protected $batchSize = 3;
 
     /**
      * @var callable
