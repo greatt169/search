@@ -22,15 +22,15 @@ class IndexController extends Controller
         //ini_set('max_execution_time', 900);
         //ini_set('memory_limit', '-1');
 
-
-        /*$source = new ElasticsearchSource($sourceLink);
+        $sourceLink = '/var/www/public/data_test.json';
+        $source = new ElasticsearchSource($sourceLink);
         $data = $source->getElementsForIndexing();
-        dump($data);*/
+        dump($data);
 
 
         /*$data = include  '/var/www/public/data_full.php';
         $testItems = [];
-        for($i = 0; $i < 30000; $i++) {
+        for($i = 0; $i < 30; $i++) {
             $item = $data['items'][rand(0,3)];
             $item['id'] = $i+1;
             $testItems[] = $item;
@@ -40,7 +40,7 @@ class IndexController extends Controller
         $file = '/var/www/public/data_test.json';
         file_put_contents($file, $data);*/
 
-        $sourceLink = '/var/www/public/data_test.json';
+        /*$sourceLink = '/var/www/public/data_test.json';
 
         $listener = new SourceListener(function ($items): void {
             dump('butch readed');
@@ -69,7 +69,7 @@ class IndexController extends Controller
 
             return round($bytes, $precision) . " " . $units[$pow];
         };
-        print $formatBytes(memory_get_peak_usage()); echo '<br />';
+        print $formatBytes(memory_get_peak_usage()); echo '<br />';*/
 
 
 
