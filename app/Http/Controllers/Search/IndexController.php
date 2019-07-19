@@ -58,6 +58,13 @@ class IndexController extends Controller
         $file = '/var/www/public/data_test.json';
         file_put_contents($file, $data);*/
 
+        /*$data = include  '/var/www/public/data_full.php';
+        $dataSave['indexSettings'] = $data['indexSettings'];
+        $dataSave['mapping'] = $data['mapping'];
+        $dataSave = json_encode($dataSave);
+        $file = '/var/www/public/settings.json';
+        file_put_contents($file, $dataSave);*/
+
         $sourceLink = '/var/www/public/data_test.json';
 
         $listener = new SourceListener(function ($items): void {
