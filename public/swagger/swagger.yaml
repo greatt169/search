@@ -126,9 +126,14 @@ definitions:
     required:
       - name
     properties:
-      link:
+      itemsLink:
         type: string
         example: http://10.101.2.10/data.json
+        description: Ссылка на json-файл с данными
+      settingsLink:
+        type: string
+        example: http://10.101.2.10/settings.json
+        description: Ссылка на json-файл с настройками
 
   Engine:
     type: object
@@ -407,18 +412,12 @@ definitions:
   SourceIndex:
     type: object
     description: |
-        Объект, содержащий данные для индексации
+        Объект, содержащий данные для настроек индексации
     required:
-      - items
-      - mapping
+      - indexSettings
+      - indexMapping
     properties:
-      items:
-        type: array
-        description: |
-            Массив элементов для индексации
-        items:
-          $ref: '#/definitions/ListItem'
-      mapping:
+      indexMapping:
         type: object
         description: |
           Массив правил для индексации полей
@@ -434,6 +433,20 @@ definitions:
         additionalProperties: true
         description: |
           Массив настроек для индекса поиска
+
+  SourceItems:
+    type: object
+    description: |
+        Объект, содержащий данные для индексации
+    required:
+      - items
+    properties:
+      items:
+        type: array
+        description: |
+            Массив элементов для индексации
+        items:
+          $ref: '#/definitions/ListItem'
 
   Error:
     description: Описание ошибки для всех методов
