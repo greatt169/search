@@ -13,6 +13,7 @@ class SourceListener implements ListenerInterface
     protected $counter;
     protected $batchStack;
     protected $batchSize = 3;
+    protected $total = 0;
 
     /**
      * @var callable
@@ -38,7 +39,7 @@ class SourceListener implements ListenerInterface
 
     public function endDocument(): void
     {
-        if (\is_callable($this->callback)) {
+        if (\is_callable($this->callback) && !empty($this->batchStack)) {
             \call_user_func($this->callback, $this->batchStack);
             $this->counter = 0;
             $this->batchStack = [];
@@ -66,11 +67,12 @@ class SourceListener implements ListenerInterface
             $this->counter++;
             if($obj) {
                 $this->batchStack[] = $obj;
+                $this->total++;
             }
         } else {
             $this->value($obj);
         }
-        if ($this->level === 1 && \is_callable($this->callback) && $this->counter == $this->batchSize) {
+        if ($this->level === 1 && \is_callable($this->callback) && $this->counter == $this->batchSize && !empty($this->batchStack)) {
             \call_user_func($this->callback, $this->batchStack);
             $this->counter = 0;
             $this->batchStack = [];
@@ -117,5 +119,13 @@ class SourceListener implements ListenerInterface
     public function setBatchSize(int $batchSize): void
     {
         $this->batchSize = $batchSize;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotal(): int
+    {
+        return $this->total;
     }
 }

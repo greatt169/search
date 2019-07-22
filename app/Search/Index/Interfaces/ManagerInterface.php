@@ -20,5 +20,5 @@ interface ManagerInterface
 
     public function indexElement($id);
 
-    public function __construct(SourceInterface $source, EntityInterface $entity, TimerInterface $timer = null, MemoryInterface $memory = null);
+    public function __construct(SourceInterface $source, EntityInterface $entity, MemoryInterface $memory = null);
 }

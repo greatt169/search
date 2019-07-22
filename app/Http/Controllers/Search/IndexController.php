@@ -38,18 +38,18 @@ class IndexController extends Controller
      */
     public function index()
     {
-        //ini_set('max_execution_time', 900);
-        //ini_set('memory_limit', '-1');
+
 
        /* $sourceLink = '/var/www/public/data_test.json';
         $source = new ElasticsearchSource($sourceLink);
         $data = $source->getElementsForIndexing();
         dump($data);*/
 
-
-        /*$data = include  '/var/www/public/data_full.php';
+        ini_set('max_execution_time', 900);
+        ini_set('memory_limit', '-1');
+        $data = include  '/var/www/public/data_full.php';
         $testItems = [];
-        for($i = 0; $i < 30; $i++) {
+        for($i = 0; $i < 2500; $i++) {
             $item = $data['items'][rand(0,3)];
             $item['id'] = $i+1;
             $testItems[] = $item;
@@ -57,18 +57,19 @@ class IndexController extends Controller
         $data = $testItems;
         $data = json_encode($data);
         $file = '/var/www/public/data_test.json';
-        file_put_contents($file, $data);*/
+        file_put_contents($file, $data);
+        die();
 
         /*$data = include  '/var/www/public/data_full.php';
         $dataSave['indexSettings'] = $data['indexSettings'];
         $dataSave['mapping'] = $data['mapping'];
         $dataSave = json_encode($dataSave);
         $file = '/var/www/public/settings.json';
-        file_put_contents($file, $dataSave);*/
+        file_put_contents($file, $dataSave);
 
 
 
-        $source = new ElasticsearchSource();
+        /*$source = new ElasticsearchSource();
         $listener = new SourceListener(function ($items) {
             dump($items);
         });
@@ -81,7 +82,7 @@ class IndexController extends Controller
         } catch (Exception $e) {
             fclose($stream);
             throw $e;
-        }
+        }*/
 
 
         $formatBytes = function($bytes, $precision = 2) {

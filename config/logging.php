@@ -1,4 +1,7 @@
 <?php
+
+use Bramus\Monolog\Formatter\ColoredLineFormatter;
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -41,7 +44,7 @@ return [
         ],
         'elasticsearch_dev' => [
             'driver' => 'stack',
-            'channels' => ['elasticsearch_dev_slack', 'elasticsearch_dev_file'],
+            'channels' => ['elasticsearch_dev_file', 'elasticsearch_dev_stdout'],
         ],
         'elasticsearch_dev_slack' => [
             'driver' => 'slack',
@@ -53,6 +56,15 @@ return [
             'driver' => 'single',
             'path' => storage_path('logs/es_dev.log'),
             'level' => 'debug',
+        ],
+        'elasticsearch_dev_stdout' => [
+            'driver' => 'single',
+            'formatter' => ColoredLineFormatter::class,
+            'formatter_with' => [
+                'format' => "[%datetime%] %level_name%: %message%\n",
+            ],
+            'path' => 'php://stdout',
+
         ],
         'daily' => [
             'driver' => 'daily',

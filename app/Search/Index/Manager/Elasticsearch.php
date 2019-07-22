@@ -6,7 +6,6 @@ use App\Exceptions\ApiException;
 use App\Helpers\Interfaces\MemoryInterface;
 use App\Search\Entity\Interfaces\EntityInterface;
 use App\Search\Index\Interfaces\SourceInterface;
-use App\Helpers\Interfaces\TimerInterface;
 use App\Search\Index\Listeners\SourceListener;
 use Elasticsearch\Client;
 use Exception;
@@ -33,7 +32,7 @@ class Elasticsearch extends Base
     /**
      * @var int
      */
-    private $bulkSize = 100;
+    private $bulkSize = 500;
 
     /**
      * @var string
@@ -60,25 +59,6 @@ class Elasticsearch extends Base
      */
     protected $indexingFinishMemoryTemplate = 'Used memory: %s';
 
-    /**
-     * @var array
-     */
-    protected $displayResultMessages = [];
-
-    /**
-     * @var string
-     */
-    protected $indexAllTimerLabel = 'full_index';
-
-    /**
-     * @var string
-     */
-    protected $prepareBulkTimerLabel = 'prepare_bulk';
-
-    /**
-     * @var string
-     */
-    protected $indexBulkTimerLabel = 'index_bulk';
     private $indexMappingAppliedTemplate = 'Mapping has applied: %s';
 
     protected function getIndexParams($withSettings = false)
@@ -96,12 +76,11 @@ class Elasticsearch extends Base
      * Elasticsearch constructor.
      * @param SourceInterface $source
      * @param EntityInterface $entity
-     * @param TimerInterface|null $timer
      * @param MemoryInterface|null $memory
      */
-    public function __construct(SourceInterface $source, EntityInterface $entity, TimerInterface $timer = null, MemoryInterface $memory = null)
+    public function __construct(SourceInterface $source, EntityInterface $entity, MemoryInterface $memory = null)
     {
-        parent::__construct($source, $entity, $timer, $memory);
+        parent::__construct($source, $entity, $memory);
         $this->baseAliasName = $this->entity->getIndexWithPrefix($this->source->getIndexName());
         $indexByAlias = $this->entity->getIndexByAlias($this->baseAliasName);
         if ($indexByAlias) {
@@ -129,10 +108,8 @@ class Elasticsearch extends Base
      */
     public function indexAll()
     {
-        $this->timer->start($this->indexAllTimerLabel);
         $this->setMapping();
         $total = $this->indexAllElements();
-        $this->timer->end($this->indexAllTimerLabel);
         return $total;
     }
 
@@ -246,10 +223,6 @@ class Elasticsearch extends Base
         $total = $this->indexAll();
         $this->deleteCurrentIndex($currentIndex);
         $this->log(sprintf($this->indexingFinishMessageTemplate, $currentIndex, $newIndex, $total));
-        $arIntervalsSum = $this->timer->getIntervalsSum();
-        foreach ($arIntervalsSum as $field => $value) {
-            $this->log($field . ': ' . $value);
-        }
         $this->log(sprintf($this->indexingFinishMemoryTemplate, $this->memory->calculateUsedMemory()));
     }
 
@@ -337,7 +310,6 @@ class Elasticsearch extends Base
     protected function log($message, $level = 'info')
     {
         $this->getLogger('devLogChannel')->$level($message);
-        $this->displayResultMessages[] = $message;
     }
 
     /**
@@ -350,24 +322,16 @@ class Elasticsearch extends Base
     }
 
     /**
-     * @return array
-     */
-    public function getDisplayResultMessages()
-    {
-        return $this->displayResultMessages;
-    }
-
-    /**
      * @return int
      * @throws ApiException
      */
     protected function indexAllElements(): int
     {
         $listener = new SourceListener(function ($rawItems) {
+            $this->log('batch [' . $this->bulkSize .'] has parsed');
             $items = $this->source->getElementsForIndexing($rawItems);
             $params = ['body' => []];
             foreach ($items as $index => $document) {
-                $this->timer->start($this->prepareBulkTimerLabel);
                 $i = $index + 1;
                 $arDocAttributes = [];
                 foreach ($document['attributes'] as $attributeCode => $attributeValue) {
@@ -383,13 +347,11 @@ class Elasticsearch extends Base
                     ]
                 ];
                 $params['body'][] = $arDocAttributes;
-                $this->timer->end($this->prepareBulkTimerLabel);
 
                 // Every 1000 documents stop and send the bulk request
                 if ($i % $this->bulkSize == 0) {
-                    $this->timer->start($this->indexBulkTimerLabel);
                     $responses = $this->getClient()->bulk($params);
-                    $this->timer->end($this->indexBulkTimerLabel);
+                    $this->log('batch [' . $this->bulkSize .'] has indexed');
                     // erase the old bulk request
                     $params = ['body' => []];
                     // unset the bulk response when you are done to save memory
@@ -398,9 +360,8 @@ class Elasticsearch extends Base
             }
             // Send the last batch if it exists
             if (!empty($params['body'])) {
-                $this->timer->start($this->indexBulkTimerLabel);
                 $responses = $this->getClient()->bulk($params);
-                $this->timer->end($this->indexBulkTimerLabel);
+                $this->log('batch [' . count($params) .'] has indexed');
                 // unset the bulk response when you are done to save memory
                 unset($responses);
             }
@@ -410,14 +371,13 @@ class Elasticsearch extends Base
         try {
             $parser = new Parser($stream, $listener);
             $parser->parse();
+            $total = $listener->getTotal();
             fclose($stream);
         } catch (Exception $e) {
             fclose($stream);
             throw new ApiException($e->getMessage(), $e->getTraceAsString(), 500);
         }
 
-        //$total = count($arSource);
-        $total = 11;
         return $total;
     }
 

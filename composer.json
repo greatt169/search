@@ -12,7 +12,8 @@
         "laravel/framework": "^5.8.0",
         "elasticsearch/elasticsearch": "7.0",
         "ext-json": "*",
-        "salsify/json-streaming-parser" : "v8.0.1"
+        "salsify/json-streaming-parser" : "v8.0.1",
+        "bramus/monolog-colored-line-formatter" : "~3.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

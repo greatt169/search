@@ -50,10 +50,6 @@ class SearchReindex extends Command
                 new ElasticsearchEntity()
             );
             $indexer->reindex();
-            $displayResultMessages = $indexer->getDisplayResultMessages();
-            foreach ($displayResultMessages as $message) {
-                $this->info($message);
-            }
         } catch (Exception $e) {
             $this->error($e->getMessage());
         }
