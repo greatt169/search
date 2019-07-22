@@ -2,12 +2,13 @@
 
 namespace App\Search\Index\Source;
 
+use SwaggerSearch\Model\IndexMappingRules;
 use SwaggerSearch\Model\ListItem;
 use SwaggerSearch\Model\ListItemAttributeValue;
 use SwaggerSearch\Model\ListItemMultipleAttribute;
 use SwaggerSearch\Model\ListItemSingleAttribute;
 use SwaggerSearch\Model\SourceIndex;
-use SwaggerSearch\Model\SourceIndexMapping;
+use SwaggerSearch\ObjectSerializer;
 
 class Elasticsearch extends Base
 {
@@ -44,19 +45,16 @@ class Elasticsearch extends Base
         return $val;
     }
 
-    public function getElementsForIndexing()
+    public function getElementsForIndexing($rawItems)
     {
-        /**
-         * @var SourceIndex $sourceIndex
-         */
-        $sourceIndex = $this->getSourceIndex();
-        $elementsForIndexing = [];
-        $data = $sourceIndex->getItems();
-
         /**
          * @var ListItem $dataItem
          */
-        foreach ($data as $dataItem) {
+        foreach ($rawItems as $rawItem) {
+            /**
+             * @var ListItem $dataItem
+             */
+            $dataItem = ObjectSerializer::deserialize(json_decode(json_encode($rawItem)), ListItem::class);
             $source = [];
             $searchData = [];
             $sourceAttributes = [];
@@ -114,9 +112,9 @@ class Elasticsearch extends Base
          */
         $sourceIndex = $this->getSourceIndex();
         $mappingParams = [];
-        $mapping = $sourceIndex->getIndexMapping();
+        $mapping = $sourceIndex->getIndexMapping()->getRules();
         /**
-         * @var SourceIndexMapping $attributeMapping
+         * @var IndexMappingRules $attributeMapping
          */
         foreach ($mapping as $attributeCode => $attributeMapping) {
             $mappingParams[$attributeCode] = [

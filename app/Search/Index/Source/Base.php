@@ -75,21 +75,6 @@ abstract class Base implements SourceInterface
     }
 
     /**
-     * @return null | SourceItems
-     */
-    public function getSourceItems()
-    {
-        /**
-         * @var SourceItems $sourceItems
-         */
-        if($this->sourceIndex == null) {
-            $sourceItems = $this->getSwaggerModelByFile($this->sourceItemsLink, SourceItems::class);
-            $this->sourceItems = $sourceItems;
-        }
-        return $this->sourceItems;
-    }
-
-    /**
      * @return string
      */
     public function getIndexName()

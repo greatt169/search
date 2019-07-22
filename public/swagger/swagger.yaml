@@ -417,24 +417,31 @@ definitions:
       - indexSettings
       - indexMapping
     properties:
-      $ref: '#/definitions/IndexMapping'
+      IndexMapping:
+        $ref: '#/definitions/IndexMapping'
+      indexSettings:
+        $ref: '#/definitions/IndexSettings'
 
   IndexMapping:
     type: object
     description: |
       Массив правил для индексации полей
-    additionalProperties:
-      type: object
-      properties:
-        type:
-          type: string
-          example: keyword
-          enum: [keyword, text, float, integer, boolean]
-    indexSettings:
-      type: object
-      additionalProperties: true
-      description: |
-        Массив настроек для индекса поиска
+    properties:
+      rules:
+        type: object
+        additionalProperties:
+          type: object
+          properties:
+            type:
+              type: string
+              example: keyword
+              enum: [keyword, text, float, integer, boolean]
+
+  IndexSettings:
+    type: object
+    additionalProperties: true
+    description: |
+      Массив настроек для индекса поиска
 
   SourceItems:
     type: object
