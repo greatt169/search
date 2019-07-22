@@ -65,69 +65,14 @@ class IndexController extends Controller
         $file = '/var/www/public/settings.json';
         file_put_contents($file, $dataSave);*/
 
-        $sourceLink = '/var/www/public/data.json';
 
-        $listener = new SourceListener(function ($items): void {
-            $elementsForIndexing = [];
 
-            foreach($items as $item) {
-                /**
-                 * @var ListItem $dataItem
-                 */
-                $dataItem = ObjectSerializer::deserialize(json_decode(json_encode($item)), ListItem::class);
-
-                $source = [];
-                $searchData = [];
-                $sourceAttributes = [];
-                $source['id'] = $dataItem->getId();
-
-                $singleAttributes = $dataItem->getSingleAttributes();
-                $multipleAttributes = $dataItem->getMultipleAttributes();
-
-                /**
-                 * @var ListItemSingleAttribute $attribute
-                 */
-                foreach ($singleAttributes as $attribute) {
-                    /**
-                     * @var ListItemAttributeValue $attributeValue
-                     */
-                    $attributeCode = $attribute->getCode();
-                    $attributeValue = $attribute->getValue();
-                    if($attributeValue) {
-                        $sourceAttributes[$attributeCode] = $this->getAttributeVal($attributeValue);
-                        $searchData[$attribute->getCode()] = $attribute->getName() . ' ' . $attributeValue->getValue();
-                    }
-                }
-
-                /**
-                 * @var ListItemMultipleAttribute $attribute
-                 */
-                foreach ($multipleAttributes as $attribute) {
-                    $attributeCode = $attribute->getCode();
-                    $multipleAttributeValues = $attribute->getValues();
-                    $sourceAttributeValues = [];
-                    /**
-                     * @var ListItemAttributeValue $attributeValue
-                     */
-                    foreach ($multipleAttributeValues as $attributeValue) {
-                        if($attributeValue) {
-                            $sourceAttributeValues[] = $this->getAttributeVal($attributeValue);
-                            $searchData[$attribute->getCode()] = $attribute->getName() . ' ' . $attributeValue->getValue();
-                        }
-                    }
-                    $sourceAttributes[$attributeCode] = $sourceAttributeValues;
-                }
-                $source['attributes'] = $sourceAttributes;
-                $rawData = serialize($dataItem);
-                $source['raw_data'] = $rawData;
-                $source['search_data'] = $searchData;
-                $elementsForIndexing[] = $source;
-            }
-            dump('dump: ');
-            dump($elementsForIndexing);
+        $source = new ElasticsearchSource();
+        $listener = new SourceListener($source, function ($items) {
+            dump($items);
 
         });
-
+        $sourceLink = '/var/www/public/data.json';
         $stream = fopen($sourceLink, 'r');
         try {
             $parser = new \JsonStreamingParser\Parser($stream, $listener);
@@ -168,7 +113,7 @@ class IndexController extends Controller
     {
         $sourceLink = $request->getValid('link');
         $indexer = new Elasticsearch(
-            new ElasticsearchSource($sourceLink),
+            new ElasticsearchSource(),
             new ElasticsearchEntity()
         );
         $indexer->reindex();

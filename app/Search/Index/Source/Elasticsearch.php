@@ -16,11 +16,10 @@ class Elasticsearch extends Base
 
     /**
      * Elasticsearch constructor.
-     * @param $sourceLink
      */
-    public function __construct($sourceLink)
+    public function __construct()
     {
-        parent::__construct($sourceLink);
+        parent::__construct();
     }
 
     public function getIndexSettings()

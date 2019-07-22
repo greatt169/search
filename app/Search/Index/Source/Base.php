@@ -15,19 +15,9 @@ abstract class Base implements SourceInterface
     protected $sourceIndex = null;
 
     /**
-     * @var null | SourceItems
-     */
-    protected $sourceItems = null;
-
-    /**
      * @var null | string
      */
     protected $sourceIndexLink = null;
-
-    /**
-     * @var string
-     */
-    protected $sourceItemsLink = '';
 
     /**
      * @var string
@@ -36,12 +26,10 @@ abstract class Base implements SourceInterface
 
     /**
      * Base constructor.
-     * @param $sourceItemsLink
      * @param null $sourceIndexLink
      */
-    protected function __construct($sourceItemsLink, $sourceIndexLink = null)
+    protected function __construct($sourceIndexLink = null)
     {
-        $this->sourceItemsLink = $sourceItemsLink;
         $this->sourceIndexLink = $sourceIndexLink;
     }
 

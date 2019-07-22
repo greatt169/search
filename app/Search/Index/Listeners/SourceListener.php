@@ -2,6 +2,7 @@
 
 namespace App\Search\Index\Listeners;
 
+use App\Search\Index\Interfaces\SourceInterface;
 use JsonStreamingParser\Listener\ListenerInterface;
 
 class SourceListener implements ListenerInterface
@@ -19,11 +20,18 @@ class SourceListener implements ListenerInterface
     protected $callback;
 
     /**
+     * @var SourceInterface
+     */
+    protected $source;
+
+    /**
+     * @param SourceInterface $source
      * @param callable $callback
      */
-    public function __construct($callback = null)
+    public function __construct(SourceInterface $source, $callback = null)
     {
         $this->callback = $callback;
+        $this->source = $source;
     }
 
     public function startDocument(): void
@@ -70,7 +78,7 @@ class SourceListener implements ListenerInterface
             $this->value($obj);
         }
         if ($this->level === 1 && \is_callable($this->callback) && $this->counter == $this->batchSize) {
-            \call_user_func($this->callback, $this->batchStack);
+            \call_user_func($this->callback, $this->getPreparedItems());
             $this->counter = 0;
             $this->batchStack = [];
         }
@@ -92,7 +100,7 @@ class SourceListener implements ListenerInterface
     }
 
     /**
-     * Value may be a string, integer, boolean, null.
+     * @param mixed $value Value may be a string, integer, boolean, null.
      */
     public function value($value): void
     {
@@ -116,5 +124,10 @@ class SourceListener implements ListenerInterface
     public function setBatchSize(int $batchSize): void
     {
         $this->batchSize = $batchSize;
+    }
+
+    protected function getPreparedItems()
+    {
+        return $this->source->getElementsForIndexing($this->batchStack);
     }
 }

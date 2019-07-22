@@ -6,6 +6,7 @@ use App\Helpers\Interfaces\MemoryInterface;
 use App\Search\Entity\Interfaces\EntityInterface;
 use App\Search\Index\Interfaces\SourceInterface;
 use App\Helpers\Interfaces\TimerInterface;
+use App\Search\Index\Listeners\SourceListener;
 use Elasticsearch\Client;
 use Exception;
 use Illuminate\Support\Facades\Log;
@@ -352,7 +353,27 @@ class Elasticsearch extends Base
      */
     protected function indexAllElements(): int
     {
-        $arSource = $this->getSource()->getElementsForIndexing();
+        $sourceLink = '/var/www/public/data.json';
+
+        $listener = new SourceListener($this->source, function ($items) {
+            dump($items);
+
+        });
+        $stream = fopen($sourceLink, 'r');
+        try {
+            $parser = new \JsonStreamingParser\Parser($stream, $listener);
+            $parser->parse();
+            fclose($stream);
+        } catch (Exception $e) {
+            fclose($stream);
+            throw $e;
+        }
+
+
+
+
+
+
         $params = ['body' => []];
         foreach ($arSource as $index => $document) {
             $this->timer->start($this->prepareBulkTimerLabel);
