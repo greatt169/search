@@ -68,6 +68,8 @@ class IndexController extends Controller
         $sourceLink = '/var/www/public/data.json';
 
         $listener = new SourceListener(function ($items): void {
+            $elementsForIndexing = [];
+
             foreach($items as $item) {
                 /**
                  * @var ListItem $dataItem
@@ -121,7 +123,7 @@ class IndexController extends Controller
                 $source['search_data'] = $searchData;
                 $elementsForIndexing[] = $source;
             }
-
+            dump('dump: ');
             dump($elementsForIndexing);
 
         });

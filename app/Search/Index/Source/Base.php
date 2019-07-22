@@ -4,6 +4,7 @@ namespace App\Search\Index\Source;
 
 use App\Search\Index\Interfaces\SourceInterface;
 use SwaggerSearch\Model\SourceIndex;
+use SwaggerSearch\Model\SourceItems;
 use SwaggerSearch\ObjectSerializer;
 
 abstract class Base implements SourceInterface
@@ -13,7 +14,20 @@ abstract class Base implements SourceInterface
      */
     protected $sourceIndex = null;
 
-    protected $sourceData;
+    /**
+     * @var null | SourceItems
+     */
+    protected $sourceItems = null;
+
+    /**
+     * @var null | string
+     */
+    protected $sourceIndexLink = null;
+
+    /**
+     * @var string
+     */
+    protected $sourceItemsLink = '';
 
     /**
      * @var string
@@ -22,11 +36,27 @@ abstract class Base implements SourceInterface
 
     /**
      * Base constructor.
-     * @param $sourceLink
+     * @param $sourceItemsLink
+     * @param null $sourceIndexLink
      */
-    protected function __construct($sourceLink)
+    protected function __construct($sourceItemsLink, $sourceIndexLink = null)
     {
-        $this->sourceData = file_get_contents($sourceLink);
+        $this->sourceItemsLink = $sourceItemsLink;
+        $this->sourceIndexLink = $sourceIndexLink;
+    }
+
+    /**
+     * @param $fileLink
+     * @param $swaggerModelName
+     * @return array|object|null
+     */
+    protected function getSwaggerModelByFile($fileLink, $swaggerModelName)
+    {
+        $swaggerObject = ObjectSerializer::deserialize(
+            json_decode(file_get_contents($fileLink)),
+            $swaggerModelName, null
+        );
+        return $swaggerObject;
     }
 
     /**
@@ -38,13 +68,25 @@ abstract class Base implements SourceInterface
          * @var SourceIndex $sourceIndex
          */
         if($this->sourceIndex == null) {
-            $sourceIndex = ObjectSerializer::deserialize(
-                json_decode($this->sourceData),
-                SourceIndex::class, null
-            );
+            $sourceIndex = $this->getSwaggerModelByFile($this->sourceIndexLink, SourceIndex::class);
             $this->sourceIndex = $sourceIndex;
         }
         return $this->sourceIndex;
+    }
+
+    /**
+     * @return null | SourceItems
+     */
+    public function getSourceItems()
+    {
+        /**
+         * @var SourceItems $sourceItems
+         */
+        if($this->sourceIndex == null) {
+            $sourceItems = $this->getSwaggerModelByFile($this->sourceItemsLink, SourceItems::class);
+            $this->sourceItems = $sourceItems;
+        }
+        return $this->sourceItems;
     }
 
     /**
