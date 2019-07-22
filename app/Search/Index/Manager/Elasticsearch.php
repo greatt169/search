@@ -76,11 +76,10 @@ class Elasticsearch extends Base
      * Elasticsearch constructor.
      * @param SourceInterface $source
      * @param EntityInterface $entity
-     * @param MemoryInterface|null $memory
      */
-    public function __construct(SourceInterface $source, EntityInterface $entity, MemoryInterface $memory = null)
+    public function __construct(SourceInterface $source, EntityInterface $entity)
     {
-        parent::__construct($source, $entity, $memory);
+        parent::__construct($source, $entity);
         $this->baseAliasName = $this->entity->getIndexWithPrefix($this->source->getIndexName());
         $indexByAlias = $this->entity->getIndexByAlias($this->baseAliasName);
         if ($indexByAlias) {

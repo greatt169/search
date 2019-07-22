@@ -35,16 +35,10 @@ abstract class Base implements ManagerInterface
      * Base constructor.
      * @param SourceInterface $source
      * @param EntityInterface $entity
-     * @param MemoryInterface|null $memory
      */
-    public function __construct(SourceInterface $source, EntityInterface $entity, MemoryInterface $memory = null)
+    public function __construct(SourceInterface $source, EntityInterface $entity)
     {
-        if($memory === null) {
-            $this->memory = new Memory();
-        } else {
-            $this->memory = $memory;
-        }
-
+        $this->memory = new Memory();
         $this->source = $source;
         $this->entity = $entity;
         $this->startTime = time();
@@ -56,5 +50,13 @@ abstract class Base implements ManagerInterface
     public function getSource()
     {
         return $this->source;
+    }
+
+    /**
+     * @param MemoryInterface|null $memory
+     */
+    public function setMemory(?MemoryInterface $memory): void
+    {
+        $this->memory = $memory;
     }
 }
