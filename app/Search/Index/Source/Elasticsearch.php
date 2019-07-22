@@ -14,12 +14,9 @@ class Elasticsearch extends Base
 {
     protected $indexName = 'auto';
 
-    /**
-     * Elasticsearch constructor.
-     */
-    public function __construct()
+    public function __construct($dataLink, $sourceIndexLink = null)
     {
-        parent::__construct();
+        parent::__construct($dataLink, $sourceIndexLink);
     }
 
     public function getIndexSettings()
@@ -46,6 +43,7 @@ class Elasticsearch extends Base
 
     public function getElementsForIndexing($rawItems)
     {
+        $elementsForIndexing = [];
         /**
          * @var ListItem $dataItem
          */

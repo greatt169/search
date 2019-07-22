@@ -2,6 +2,7 @@
 
 namespace App\Search\Index\Manager;
 
+use App\Exceptions\ApiException;
 use App\Helpers\Interfaces\MemoryInterface;
 use App\Search\Entity\Interfaces\EntityInterface;
 use App\Search\Index\Interfaces\SourceInterface;
@@ -10,6 +11,7 @@ use App\Search\Index\Listeners\SourceListener;
 use Elasticsearch\Client;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use JsonStreamingParser\Parser;
 
 class Elasticsearch extends Base
 {
@@ -99,7 +101,7 @@ class Elasticsearch extends Base
      */
     public function __construct(SourceInterface $source, EntityInterface $entity, TimerInterface $timer = null, MemoryInterface $memory = null)
     {
-        parent::__construct($source, $entity, $timer);
+        parent::__construct($source, $entity, $timer, $memory);
         $this->baseAliasName = $this->entity->getIndexWithPrefix($this->source->getIndexName());
         $indexByAlias = $this->entity->getIndexByAlias($this->baseAliasName);
         if ($indexByAlias) {
@@ -121,6 +123,10 @@ class Elasticsearch extends Base
         $this->getClient()->indices()->delete($this->getIndexParams());
     }
 
+    /**
+     * @return int
+     * @throws ApiException
+     */
     public function indexAll()
     {
         $this->timer->start($this->indexAllTimerLabel);
@@ -228,6 +234,9 @@ class Elasticsearch extends Base
         }
     }
 
+    /**
+     * @throws ApiException
+     */
     public function reindex()
     {
         $currentIndex = $this->getIndex();
@@ -350,73 +359,65 @@ class Elasticsearch extends Base
 
     /**
      * @return int
+     * @throws ApiException
      */
     protected function indexAllElements(): int
     {
-        $sourceLink = '/var/www/public/data.json';
+        $listener = new SourceListener(function ($rawItems) {
+            $items = $this->source->getElementsForIndexing($rawItems);
+            $params = ['body' => []];
+            foreach ($items as $index => $document) {
+                $this->timer->start($this->prepareBulkTimerLabel);
+                $i = $index + 1;
+                $arDocAttributes = [];
+                foreach ($document['attributes'] as $attributeCode => $attributeValue) {
+                    $arDocAttributes[$attributeCode] = $attributeValue;
+                }
+                $arDocAttributes['raw_data'] = $document['raw_data'];
+                $arDocAttributes['search_data'] = $document['search_data'];
+                $arDocAttributes['ts'] = $this->startTime;
+                $params['body'][] = [
+                    'index' => [
+                        '_index' => $this->index,
+                        '_id' => $document['id']
+                    ]
+                ];
+                $params['body'][] = $arDocAttributes;
+                $this->timer->end($this->prepareBulkTimerLabel);
 
-        $listener = new SourceListener($this->source, function ($items) {
-            dump($items);
-
+                // Every 1000 documents stop and send the bulk request
+                if ($i % $this->bulkSize == 0) {
+                    $this->timer->start($this->indexBulkTimerLabel);
+                    $responses = $this->getClient()->bulk($params);
+                    $this->timer->end($this->indexBulkTimerLabel);
+                    // erase the old bulk request
+                    $params = ['body' => []];
+                    // unset the bulk response when you are done to save memory
+                    unset($responses);
+                }
+            }
+            // Send the last batch if it exists
+            if (!empty($params['body'])) {
+                $this->timer->start($this->indexBulkTimerLabel);
+                $responses = $this->getClient()->bulk($params);
+                $this->timer->end($this->indexBulkTimerLabel);
+                // unset the bulk response when you are done to save memory
+                unset($responses);
+            }
         });
-        $stream = fopen($sourceLink, 'r');
+        $listener->setBatchSize($this->bulkSize);
+        $stream = fopen($this->source->getDataLink(), 'r');
         try {
-            $parser = new \JsonStreamingParser\Parser($stream, $listener);
+            $parser = new Parser($stream, $listener);
             $parser->parse();
             fclose($stream);
         } catch (Exception $e) {
             fclose($stream);
-            throw $e;
+            throw new ApiException($e->getMessage(), $e->getTraceAsString(), 500);
         }
 
-
-
-
-
-
-        $params = ['body' => []];
-        foreach ($arSource as $index => $document) {
-            $this->timer->start($this->prepareBulkTimerLabel);
-            $i = $index + 1;
-            $arDocAttributes = [];
-
-            foreach ($document['attributes'] as $attributeCode => $attributeValue) {
-                $arDocAttributes[$attributeCode] = $attributeValue;
-            }
-            $arDocAttributes['raw_data'] = $document['raw_data'];
-            $arDocAttributes['search_data'] = $document['search_data'];
-            $arDocAttributes['ts'] = $this->startTime;
-            $params['body'][] = [
-                'index' => [
-                    '_index' => $this->index,
-                    '_id' => $document['id']
-                ]
-            ];
-            $params['body'][] = $arDocAttributes;
-            $this->timer->end($this->prepareBulkTimerLabel);
-
-            // Every 1000 documents stop and send the bulk request
-            if ($i % $this->bulkSize == 0) {
-                $this->timer->start($this->indexBulkTimerLabel);
-                $responses = $this->getClient()->bulk($params);
-                $this->timer->end($this->indexBulkTimerLabel);
-                // erase the old bulk request
-                $params = ['body' => []];
-                // unset the bulk response when you are done to save memory
-                unset($responses);
-            }
-        }
-        // Send the last batch if it exists
-        if (!empty($params['body'])) {
-            $this->timer->start($this->indexBulkTimerLabel);
-            $responses = $this->getClient()->bulk($params);
-            $this->timer->end($this->indexBulkTimerLabel);
-
-            // unset the bulk response when you are done to save memory
-            unset($responses);
-        }
-
-        $total = count($arSource);
+        //$total = count($arSource);
+        $total = 11;
         return $total;
     }
 

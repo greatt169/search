@@ -12,4 +12,8 @@ interface SourceInterface
     public function getMappingForIndexing();
     public function getIndexName();
     public function getIndexSettings();
+    /**
+     * @return string|null
+     */
+    public function getDataLink();
 }

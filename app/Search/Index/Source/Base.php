@@ -4,7 +4,6 @@ namespace App\Search\Index\Source;
 
 use App\Search\Index\Interfaces\SourceInterface;
 use SwaggerSearch\Model\SourceIndex;
-use SwaggerSearch\Model\SourceItems;
 use SwaggerSearch\ObjectSerializer;
 
 abstract class Base implements SourceInterface
@@ -20,16 +19,23 @@ abstract class Base implements SourceInterface
     protected $sourceIndexLink = null;
 
     /**
+     * @var null | string
+     */
+    protected $dataLink = null;
+
+    /**
      * @var string
      */
     protected $indexName;
 
     /**
      * Base constructor.
+     * @param $dataLink
      * @param null $sourceIndexLink
      */
-    protected function __construct($sourceIndexLink = null)
+    protected function __construct($dataLink, $sourceIndexLink = null)
     {
+        $this->dataLink = $dataLink;
         $this->sourceIndexLink = $sourceIndexLink;
     }
 
@@ -68,5 +74,13 @@ abstract class Base implements SourceInterface
     public function getIndexName()
     {
         return $this->indexName;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDataLink(): ?string
+    {
+        return $this->dataLink;
     }
 }

@@ -10,6 +10,7 @@ use App\Search\Index\Manager\Elasticsearch;
 use App\Search\Index\Source\Elasticsearch as ElasticsearchSource;
 use App\Search\Entity\Engine\Elasticsearch as ElasticsearchEntity;
 use Exception;
+use App\Exceptions\ApiException;
 use SwaggerSearch\Model\ListItem;
 use SwaggerSearch\Model\ListItemAttributeValue;
 use SwaggerSearch\Model\ListItemMultipleAttribute;
@@ -68,9 +69,8 @@ class IndexController extends Controller
 
 
         $source = new ElasticsearchSource();
-        $listener = new SourceListener($source, function ($items) {
+        $listener = new SourceListener(function ($items) {
             dump($items);
-
         });
         $sourceLink = '/var/www/public/data.json';
         $stream = fopen($sourceLink, 'r');
@@ -107,13 +107,13 @@ class IndexController extends Controller
     /**
      * @param ReindexRequest $request
      * @return array
-     * @throws \App\Exceptions\ApiException
+     * @throws ApiException
      */
     public function reindex(ReindexRequest $request)
     {
-        $sourceLink = $request->getValid('link');
+        $sourceLink = $request->getValid('data');
         $indexer = new Elasticsearch(
-            new ElasticsearchSource(),
+            new ElasticsearchSource($sourceLink),
             new ElasticsearchEntity()
         );
         $indexer->reindex();
