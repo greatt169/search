@@ -46,23 +46,23 @@ class Elasticsearch extends Base
     /**
      * @var string
      */
-    protected $indexingStartMessageTemplate = 'Indexing from %s to %s has started';
+    protected $indexingStartMessageTemplate = 'Indexing has started. Index from [%s], Index to [%s]';
 
     /**
      * @var string
      */
-    protected $indexingFinishMessageTemplate = 'Indexing from %s to %s has finished. Quantity of documents: %s';
+    protected $indexingFinishMessageTemplate = 'Indexing from %s to %s has finished. Quantity total [%s]';
 
-    protected $indexingBatchParsedMessageTemplate = 'batch [%s] has parsed';
+    protected $indexingBatchParsedMessageTemplate = 'batch has parsed. Quantity [%s] ';
 
-    protected $indexingBatchIndexedMessageTemplate = 'batch [%s] has indexed';
+    protected $indexingBatchIndexedMessageTemplate = 'batch has indexed. Quantity [%s] ';
 
     /**
      * @var string
      */
-    protected $indexingFinishMemoryTemplate = 'Used memory: %s';
+    protected $indexingFinishMemoryTemplate = 'Used memory has calculated. Quantity: [%s]';
 
-    private $indexMappingAppliedTemplate = 'Mapping has applied: %s';
+    private $indexMappingAppliedTemplate = 'Mapping has applied. Answer [%s]';
 
     protected function getIndexParams($withSettings = false)
     {
@@ -70,7 +70,7 @@ class Elasticsearch extends Base
             'index' => $this->index
         ];
         if ($withSettings) {
-            $params['body'] = $this->getSource()->getIndexSettings();
+            $params['body']['settings'] = $this->getSource()->getIndexSettings();
         }
         return $params;
     }

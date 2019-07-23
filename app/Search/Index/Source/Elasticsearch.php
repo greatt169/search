@@ -8,6 +8,7 @@ use SwaggerSearch\Model\ListItemAttributeValue;
 use SwaggerSearch\Model\ListItemMultipleAttribute;
 use SwaggerSearch\Model\ListItemSingleAttribute;
 use SwaggerSearch\Model\SourceIndex;
+use SwaggerSearch\Model\SourceIndexMapping;
 use SwaggerSearch\ObjectSerializer;
 
 class Elasticsearch extends Base
@@ -25,7 +26,7 @@ class Elasticsearch extends Base
          * @var SourceIndex $sourceIndex
          */
         $sourceIndex = $this->getSourceIndex();
-        $settings = $sourceIndex->getIndexSettings();
+        $settings = $sourceIndex->getSettings();
         return $settings;
     }
 
@@ -109,9 +110,9 @@ class Elasticsearch extends Base
          */
         $sourceIndex = $this->getSourceIndex();
         $mappingParams = [];
-        $mapping = $sourceIndex->getIndexMapping()->getRules();
+        $mapping = $sourceIndex->getMapping();
         /**
-         * @var IndexMappingRules $attributeMapping
+         * @var SourceIndexMapping $attributeMapping
          */
         foreach ($mapping as $attributeCode => $attributeMapping) {
             $mappingParams[$attributeCode] = [
