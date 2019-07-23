@@ -58,6 +58,10 @@ abstract class Base implements SourceInterface
      */
     public function getSourceIndex()
     {
+        if(!$this->sourceIndexLink) {
+            return new SourceIndex();
+        }
+
         /**
          * @var SourceIndex $sourceIndex
          */

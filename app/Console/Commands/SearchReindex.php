@@ -51,7 +51,9 @@ class SearchReindex extends Command
             );
             $indexer->reindex();
         } catch (Exception $e) {
-            $this->error($e->getMessage());
+            if(isset($indexer)) {
+                $indexer->log($e->getMessage(), 'error');
+            }
         }
     }
 }

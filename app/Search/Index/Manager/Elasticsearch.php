@@ -70,7 +70,16 @@ class Elasticsearch extends Base
             'index' => $this->index
         ];
         if ($withSettings) {
-            $params['body']['settings'] = $this->getSource()->getIndexSettings();
+            $settings = $this->getSource()->getIndexSettings();
+
+            if(!$settings) {
+                $index = $this->entity->getIndexByAlias($this->baseAliasName);
+                $settingsParams = ['index' => $index];
+                $response = $this->getClient()->indices()->getSettings($settingsParams);
+                $responseSettings = $response[$index]['settings']['index'];
+                $settings['analysis'] = $responseSettings['analysis'];
+            }
+            $params['body']['settings'] = $settings;
         }
         return $params;
     }
@@ -95,6 +104,7 @@ class Elasticsearch extends Base
     public function createIndex()
     {
         $params = $this->getIndexParams(true);
+
         $this->getClient()->indices()->create($params);
         $this->addAlias($this->baseAliasName);
     }
@@ -309,7 +319,7 @@ class Elasticsearch extends Base
      * @param string $message
      * @param string $level
      */
-    protected function log($message, $level = 'info')
+    public function log($message, $level = 'info')
     {
         $this->getLogger('devLogChannel')->$level($message);
     }
