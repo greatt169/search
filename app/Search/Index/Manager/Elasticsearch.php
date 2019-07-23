@@ -330,7 +330,7 @@ class Elasticsearch extends Base
     protected function indexAllElements(): int
     {
         $listener = new SourceListener(function ($rawItems) {
-            $this->log(sprintf($this->indexingBatchParsedMessageTemplate, $this->bulkSize));
+            $this->log(sprintf($this->indexingBatchParsedMessageTemplate, count($rawItems)));
             $items = $this->source->getElementsForIndexing($rawItems);
             $params = ['body' => []];
             foreach ($items as $index => $document) {
@@ -353,7 +353,7 @@ class Elasticsearch extends Base
                 // Every 1000 documents stop and send the bulk request
                 if ($i % $this->bulkSize == 0) {
                     $responses = $this->getClient()->bulk($params);
-                    $this->log(sprintf($this->indexingBatchIndexedMessageTemplate, $this->bulkSize));
+                    $this->log(sprintf($this->indexingBatchIndexedMessageTemplate, count($items)));
                     // erase the old bulk request
                     $params = ['body' => []];
                     // unset the bulk response when you are done to save memory
@@ -363,7 +363,7 @@ class Elasticsearch extends Base
             // Send the last batch if it exists
             if (!empty($params['body'])) {
                 $responses = $this->getClient()->bulk($params);
-                $this->log(sprintf($this->indexingBatchIndexedMessageTemplate, count($params)));
+                $this->log(sprintf($this->indexingBatchIndexedMessageTemplate, count($items)));
                 // unset the bulk response when you are done to save memory
                 unset($responses);
             }
