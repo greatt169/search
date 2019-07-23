@@ -23,6 +23,11 @@ class Elasticsearch extends Base
     protected $index;
 
     /**
+     * @var
+     */
+    protected $indexFrom;
+
+    /**
      * @var string
      */
     protected $auxiliaryPrefix = 'auxiliary_';
@@ -250,13 +255,13 @@ class Elasticsearch extends Base
      */
     public function reindex()
     {
-        $currentIndex = $this->getIndex();
+        $this->indexFrom = $this->getIndex();
         $newIndex = $this->getNewIndex();
-        $this->log(sprintf($this->indexingStartMessageTemplate, $currentIndex, $newIndex));
+        $this->log(sprintf($this->indexingStartMessageTemplate, $this->indexFrom, $newIndex));
         $this->createAuxIndexForReindex($newIndex);
         $total = $this->indexAll();
-        $this->deleteCurrentIndex($currentIndex);
-        $this->log(sprintf($this->indexingFinishMessageTemplate, $currentIndex, $newIndex, $total));
+        $this->deleteCurrentIndex($this->indexFrom);
+        $this->log(sprintf($this->indexingFinishMessageTemplate, $this->indexFrom, $newIndex, $total));
         $this->log(sprintf($this->indexingFinishMemoryTemplate, $this->memory->calculateUsedMemory()));
     }
 
@@ -445,7 +450,7 @@ class Elasticsearch extends Base
      */
     protected function getMappingFromCurrentIndex()
     {
-        $index = $this->getCurrentIndex();
+        $index = $this->indexFrom;
         $mappingParams = ['index' => $index];
         $responseMapping = $this->getClient()->indices()->getMapping($mappingParams);
         $mapping = $responseMapping[$index]['mappings']['properties'];
