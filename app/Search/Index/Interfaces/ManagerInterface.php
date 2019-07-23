@@ -16,9 +16,5 @@ interface ManagerInterface
 
     public function indexAll();
 
-    public function removeAll();
-
-    public function indexElement($id);
-
     public function __construct(SourceInterface $source, EntityInterface $entity);
 }

@@ -329,16 +329,6 @@ class Elasticsearch extends Base
         $this->deleteIndex();
     }
 
-    public function removeAll()
-    {
-        // TODO: Implement removeAll() method.
-    }
-
-    public function indexElement($id)
-    {
-        // TODO: Implement indexElement() method.
-    }
-
     /**
      * @param string $message
      * @param string $level
