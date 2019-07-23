@@ -111,6 +111,11 @@ class Elasticsearch extends Base
         $sourceIndex = $this->getSourceIndex();
         $mappingParams = [];
         $mapping = $sourceIndex->getMapping();
+
+        if(!$mapping) {
+            return null;
+        }
+
         /**
          * @var SourceIndexMapping $attributeMapping
          */

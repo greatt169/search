@@ -52,7 +52,7 @@ class SearchReindex extends Command
             $indexer->reindex();
         } catch (Exception $e) {
             if(isset($indexer)) {
-                $indexer->log($e->getMessage(), 'error');
+                $indexer->log($e->getMessage() . '; Filed: ' . $e->getFile() . '; Line: ' . $e->getLine(), 'error');
             }
         }
     }

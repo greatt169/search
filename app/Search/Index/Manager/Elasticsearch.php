@@ -64,6 +64,12 @@ class Elasticsearch extends Base
 
     private $indexMappingAppliedTemplate = 'Mapping has applied. Answer [%s]';
 
+    protected function getCurrentIndex()
+    {
+        $index = $this->entity->getIndexByAlias($this->baseAliasName);
+        return $index;
+    }
+
     protected function getIndexParams($withSettings = false)
     {
         $params = [
@@ -71,13 +77,8 @@ class Elasticsearch extends Base
         ];
         if ($withSettings) {
             $settings = $this->getSource()->getIndexSettings();
-
             if(!$settings) {
-                $index = $this->entity->getIndexByAlias($this->baseAliasName);
-                $settingsParams = ['index' => $index];
-                $response = $this->getClient()->indices()->getSettings($settingsParams);
-                $responseSettings = $response[$index]['settings']['index'];
-                $settings['analysis'] = $responseSettings['analysis'];
+                $settings = $this->getSettingsFromCurrentIndex();
             }
             $params['body']['settings'] = $settings;
         }
@@ -93,7 +94,7 @@ class Elasticsearch extends Base
     {
         parent::__construct($source, $entity);
         $this->baseAliasName = $this->entity->getIndexWithPrefix($this->source->getIndexName());
-        $indexByAlias = $this->entity->getIndexByAlias($this->baseAliasName);
+        $indexByAlias = $this->getCurrentIndex();
         if ($indexByAlias) {
             $this->index = $indexByAlias;
         } else {
@@ -277,7 +278,7 @@ class Elasticsearch extends Base
      */
     public function getNewIndex()
     {
-        $indexByAlias = $this->entity->getIndexByAlias($this->baseAliasName);
+        $indexByAlias = $this->getCurrentIndex();
         if ($indexByAlias === null) {
             $indexByAlias = $this->baseAliasName;
         }
@@ -395,16 +396,46 @@ class Elasticsearch extends Base
 
     public function setMapping()
     {
+        $mapping = $this->getSource()->getMappingForIndexing();
+        if(!$mapping) {
+            $mapping = $this->getMappingFromCurrentIndex();
+        }
         $params = [
             'index' => $this->index,
             'body' => [
                 '_source' => [
                     'enabled' => true
                 ],
-                'properties' => $this->getSource()->getMappingForIndexing()
+                'properties' => $mapping
             ]
         ];
         $response = $this->getClient()->indices()->putMapping($params);
         $this->log(sprintf($this->indexMappingAppliedTemplate, json_encode($response)));
+    }
+
+    /**
+     * @return array
+     */
+    protected function getSettingsFromCurrentIndex(): array
+    {
+        $settings = [];
+        $index = $this->getCurrentIndex();
+        $settingsParams = ['index' => $index];
+        $response = $this->getClient()->indices()->getSettings($settingsParams);
+        $responseSettings = $response[$index]['settings']['index'];
+        $settings['analysis'] = $responseSettings['analysis'];
+        return $settings;
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function getMappingFromCurrentIndex()
+    {
+        $index = $this->getCurrentIndex();
+        $mappingParams = ['index' => $index];
+        $responseMapping = $this->getClient()->indices()->getMapping($mappingParams);
+        $mapping = $responseMapping[$index]['mappings']['properties'];
+        return $mapping;
     }
 }
