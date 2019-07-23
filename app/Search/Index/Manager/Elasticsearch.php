@@ -13,6 +13,10 @@ use JsonStreamingParser\Parser;
 
 class Elasticsearch extends Base
 {
+    protected $indexCreatedMessageTemplate = 'Index created. Index name [%s]';
+    protected $aliasCreatedMessageTemplate = 'Alias created. Alias name [%s]';
+    protected $aliasRemovedMessageTemplate = 'Alias to current index removed. Alias name [%s]';
+    protected $indexRemovedMessageTemplate = 'Current index removed. Index name [%s]';
     /**
      * @var string
      */
@@ -46,30 +50,46 @@ class Elasticsearch extends Base
     /**
      * @var string
      */
-    protected $indexingStartMessageTemplate = 'Indexing has started. Index from [%s], Index to [%s]';
+    protected $indexingStartMessageTemplate = 'Indexing started. Index from [%s], Index to [%s]';
 
     /**
      * @var string
      */
-    protected $indexingFinishMessageTemplate = 'Indexing from %s to %s has finished. Quantity total [%s]';
-
-    protected $indexingBatchParsedMessageTemplate = 'batch has parsed. Quantity [%s] ';
-
-    protected $indexingBatchIndexedMessageTemplate = 'batch has indexed. Quantity [%s] ';
+    protected $indexingFinishMessageTemplate = 'Indexing from %s to %s finished. Quantity total [%s]';
 
     /**
      * @var string
      */
-    protected $indexingFinishMemoryTemplate = 'Used memory has calculated. Quantity: [%s]';
+    protected $indexingBatchParsedMessageTemplate = 'batch parsed. Quantity [%s] ';
 
-    private $indexMappingAppliedTemplate = 'Mapping has applied. Answer [%s]';
+    /**
+     * @var string
+     */
+    protected $indexingBatchIndexedMessageTemplate = 'batch indexed. Quantity [%s] ';
 
+    /**
+     * @var string
+     */
+    protected $indexingFinishMemoryTemplate = 'Used memory calculated. Quantity: [%s]';
+
+    /**
+     * @var string
+     */
+    protected $indexMappingAppliedTemplate = 'Mapping applied. Answer [%s]. Rules applied [%s]';
+
+    /**
+     * @return null|string
+     */
     protected function getCurrentIndex()
     {
         $index = $this->entity->getIndexByAlias($this->baseAliasName);
         return $index;
     }
 
+    /**
+     * @param bool $withSettings
+     * @return array
+     */
     protected function getIndexParams($withSettings = false)
     {
         $params = [
@@ -105,9 +125,10 @@ class Elasticsearch extends Base
     public function createIndex()
     {
         $params = $this->getIndexParams(true);
-
         $this->getClient()->indices()->create($params);
+        $this->log(sprintf($this->indexCreatedMessageTemplate, $params['index']));
         $this->addAlias($this->baseAliasName);
+        $this->log(sprintf($this->aliasCreatedMessageTemplate, $this->baseAliasName));
     }
 
     function dropIndex()
@@ -243,7 +264,9 @@ class Elasticsearch extends Base
     {
         if ($this->indexExists($this->index)) {
             $this->removeAlias($this->baseAliasName, $this->index);
+            $this->log(sprintf($this->aliasRemovedMessageTemplate, $this->baseAliasName));
             $this->dropIndex();
+            $this->log(sprintf($this->indexRemovedMessageTemplate, $this->index));
         }
     }
 
@@ -410,7 +433,7 @@ class Elasticsearch extends Base
             ]
         ];
         $response = $this->getClient()->indices()->putMapping($params);
-        $this->log(sprintf($this->indexMappingAppliedTemplate, json_encode($response)));
+        $this->log(sprintf($this->indexMappingAppliedTemplate, json_encode($response), count($mapping)));
     }
 
     /**
