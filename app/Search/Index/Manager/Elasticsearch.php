@@ -3,7 +3,6 @@
 namespace App\Search\Index\Manager;
 
 use App\Exceptions\ApiException;
-use App\Helpers\Interfaces\MemoryInterface;
 use App\Search\Entity\Interfaces\EntityInterface;
 use App\Search\Index\Interfaces\SourceInterface;
 use App\Search\Index\Listeners\SourceListener;
@@ -53,6 +52,10 @@ class Elasticsearch extends Base
      * @var string
      */
     protected $indexingFinishMessageTemplate = 'Indexing from %s to %s has finished. Quantity of documents: %s';
+
+    protected $indexingBatchParsedMessageTemplate = 'batch [%s] has parsed';
+
+    protected $indexingBatchIndexedMessageTemplate = 'batch [%s] has indexed';
 
     /**
      * @var string
@@ -327,7 +330,7 @@ class Elasticsearch extends Base
     protected function indexAllElements(): int
     {
         $listener = new SourceListener(function ($rawItems) {
-            $this->log('batch [' . $this->bulkSize .'] has parsed');
+            $this->log(sprintf($this->indexingBatchParsedMessageTemplate, $this->bulkSize));
             $items = $this->source->getElementsForIndexing($rawItems);
             $params = ['body' => []];
             foreach ($items as $index => $document) {
@@ -350,7 +353,7 @@ class Elasticsearch extends Base
                 // Every 1000 documents stop and send the bulk request
                 if ($i % $this->bulkSize == 0) {
                     $responses = $this->getClient()->bulk($params);
-                    $this->log('batch [' . $this->bulkSize .'] has indexed');
+                    $this->log(sprintf($this->indexingBatchIndexedMessageTemplate, $this->bulkSize));
                     // erase the old bulk request
                     $params = ['body' => []];
                     // unset the bulk response when you are done to save memory
@@ -360,7 +363,7 @@ class Elasticsearch extends Base
             // Send the last batch if it exists
             if (!empty($params['body'])) {
                 $responses = $this->getClient()->bulk($params);
-                $this->log('batch [' . count($params) .'] has indexed');
+                $this->log(sprintf($this->indexingBatchIndexedMessageTemplate, count($params)));
                 // unset the bulk response when you are done to save memory
                 unset($responses);
             }
@@ -376,7 +379,6 @@ class Elasticsearch extends Base
             fclose($stream);
             throw new ApiException($e->getMessage(), $e->getTraceAsString(), 500);
         }
-
         return $total;
     }
 
