@@ -110,6 +110,17 @@ class Elasticsearch extends Base
         return $params;
     }
 
+    protected function init()
+    {
+        $this->baseAliasName = $this->entity->getIndexWithPrefix($this->source->getIndexName());
+        $indexByAlias = $this->getCurrentIndex();
+        if ($indexByAlias) {
+            $this->index = $indexByAlias;
+        } else {
+            $this->index = $this->baseAliasName;
+        }
+    }
+
     /**
      * Elasticsearch constructor.
      * @param SourceInterface $source
@@ -118,13 +129,6 @@ class Elasticsearch extends Base
     public function __construct(SourceInterface $source, EntityInterface $entity)
     {
         parent::__construct($source, $entity);
-        $this->baseAliasName = $this->entity->getIndexWithPrefix($this->source->getIndexName());
-        $indexByAlias = $this->getCurrentIndex();
-        if ($indexByAlias) {
-            $this->index = $indexByAlias;
-        } else {
-            $this->index = $this->baseAliasName;
-        }
     }
 
     public function createIndex()
@@ -255,6 +259,7 @@ class Elasticsearch extends Base
      */
     public function reindex()
     {
+        $this->init();
         $this->indexFrom = $this->getIndex();
         $newIndex = $this->getNewIndex();
         $this->log(sprintf($this->indexingStartMessageTemplate, $this->indexFrom, $newIndex));

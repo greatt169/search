@@ -42,17 +42,17 @@ class SearchReindex extends Command
      */
     public function handle()
     {
+        $dataLink = $this->option('data');
+        $settingsLink = $this->option('settings');
+        $indexer = new Elasticsearch(
+            new ElasticsearchSource($dataLink, $settingsLink),
+            new ElasticsearchEntity()
+        );
         try {
-            $dataLink = $this->option('data');
-            $settingsLink = $this->option('settings');
-            $indexer = new Elasticsearch(
-                new ElasticsearchSource($dataLink, $settingsLink),
-                new ElasticsearchEntity()
-            );
             $indexer->reindex();
         } catch (Exception $e) {
             if(isset($indexer)) {
-                $indexer->log($e->getMessage() . '; Filed: ' . $e->getFile() . '; Line: ' . $e->getLine(), 'error');
+                $indexer->log($e->getMessage(), 'error');
             }
         }
     }

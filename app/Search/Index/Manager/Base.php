@@ -38,9 +38,9 @@ abstract class Base implements ManagerInterface
      */
     public function __construct(SourceInterface $source, EntityInterface $entity)
     {
-        $this->memory = new Memory();
         $this->source = $source;
         $this->entity = $entity;
+        $this->memory = new Memory();
         $this->startTime = time();
     }
 
