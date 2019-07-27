@@ -83,6 +83,26 @@ class Elasticsearch extends Base
     protected $indexMappingAppliedTemplate = 'Mapping applied. Answer [%s]. Rules applied [%s]';
 
     /**
+     * @var string
+     */
+    protected $settingsPassedMessageTemplate = 'Settings are passed';
+
+    /**
+     * @var string
+     */
+    protected $mappingPassedMessageTemplate = 'Mapping are not passed';
+
+    /**
+     * @var string
+     */
+    protected $settingsNotPassedMessageTemplate = 'Settings are not passed. Trying to get from current index';
+
+    /**
+     * @var string
+     */
+    protected $mappingNotPassedMessageTemplate = 'Mapping are not passed. Trying to get from current index';
+
+    /**
      * @return null|string
      */
     protected function getCurrentIndex()
@@ -102,7 +122,9 @@ class Elasticsearch extends Base
         ];
         if ($withSettings) {
             $settings = $this->getSource()->getIndexSettings();
-            if(!$settings) {
+            if($settings) {
+                $this->log($this->settingsPassedMessageTemplate);
+            } else {
                 $settings = $this->getSettingsFromCurrentIndex();
             }
             $params['body']['settings'] = $settings;
@@ -420,7 +442,9 @@ class Elasticsearch extends Base
     public function setMapping()
     {
         $mapping = $this->getSource()->getMappingForIndexing();
-        if(!$mapping) {
+        if($mapping) {
+            $this->log($this->mappingPassedMessageTemplate);
+        } else {
             $mapping = $this->getMappingFromCurrentIndex();
         }
         $params = [
@@ -441,6 +465,7 @@ class Elasticsearch extends Base
      */
     protected function getSettingsFromCurrentIndex(): array
     {
+        $this->log($this->settingsNotPassedMessageTemplate);
         $settings = [];
         $index = $this->getCurrentIndex();
         $settingsParams = ['index' => $index];
@@ -455,6 +480,7 @@ class Elasticsearch extends Base
      */
     protected function getMappingFromCurrentIndex()
     {
+        $this->log($this->mappingNotPassedMessageTemplate);
         $index = $this->indexFrom;
         $mappingParams = ['index' => $index];
         $responseMapping = $this->getClient()->indices()->getMapping($mappingParams);

@@ -15,7 +15,7 @@ class SearchReindex extends Command
      *
      * @var string
      */
-    protected $signature = 'search:reindex {--settings=} {--data=}';
+    protected $signature = 'search:reindex {data} {--settings=}';
 
     /**
      * The console command description.
@@ -42,7 +42,7 @@ class SearchReindex extends Command
      */
     public function handle()
     {
-        $dataLink = $this->option('data');
+        $dataLink = $this->argument('data');
         $settingsLink = $this->option('settings');
         $indexer = new Elasticsearch(
             new ElasticsearchSource($dataLink, $settingsLink),
