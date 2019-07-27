@@ -126,13 +126,13 @@ definitions:
     required:
       - name
     properties:
-      itemsLink:
+      dataLink:
         type: string
-        example: http://10.101.2.10/data.json
+        example: /var/www/public/data.json
         description: Ссылка на json-файл с данными
       settingsLink:
         type: string
-        example: http://10.101.2.10/settings.json
+        example: /var/www/public/settings.json
         description: Ссылка на json-файл с настройками
 
   Engine:

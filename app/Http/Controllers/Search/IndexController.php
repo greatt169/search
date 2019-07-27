@@ -6,17 +6,8 @@ use App\Events\Search\NewFeedEvent;
 use App\Http\Controllers\Controller;
 
 use App\Http\Requests\Api\ReindexRequest;
-use App\Search\Index\Listeners\SourceListener;
-use App\Search\Index\Manager\Elasticsearch;
-use App\Search\Index\Source\Elasticsearch as ElasticsearchSource;
-use App\Search\Entity\Engine\Elasticsearch as ElasticsearchEntity;
-use Exception;
 use App\Exceptions\ApiException;
-use SwaggerSearch\Model\ListItem;
 use SwaggerSearch\Model\ListItemAttributeValue;
-use SwaggerSearch\Model\ListItemMultipleAttribute;
-use SwaggerSearch\Model\ListItemSingleAttribute;
-use SwaggerSearch\ObjectSerializer;
 
 
 class IndexController extends Controller
@@ -39,23 +30,19 @@ class IndexController extends Controller
      */
     public function index()
     {
-        event(new NewFeedEvent('/var/www/public/data.json', null));
+        //event(new NewFeedEvent('/var/www/public/data.json', null));
     }
 
     /**
      * @param ReindexRequest $request
-     * @return array
+     * @return string
      * @throws ApiException
      */
     public function reindex(ReindexRequest $request)
     {
-        $sourceLink = $request->getValid('data');
-        $indexer = new Elasticsearch(
-            new ElasticsearchSource($sourceLink),
-            new ElasticsearchEntity()
-        );
-        $indexer->reindex();
-        $displayResultMessages = $indexer->getDisplayResultMessages();
-        return $displayResultMessages;
+        $dataLink = $request->getValid('dataLink');
+        $settingsLink = $request->get('settingsLink');
+        event(new NewFeedEvent($dataLink, $settingsLink));
+        return 'Job in queue';
     }
 }

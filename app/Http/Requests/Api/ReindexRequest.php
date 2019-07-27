@@ -15,7 +15,7 @@ class ReindexRequest extends Request
     public function rules()
     {
         return [
-            'link' => 'required|min:5',
+            'dataLink' => 'required|min:5',
         ];
     }
 
@@ -46,7 +46,8 @@ class ReindexRequest extends Request
         $params = $this->getParams();
         if($params !== null) {
             $getters = $params::getters();
-            $getter = $getters[$code];
+            $attribute = array_search($code,$params::attributeMap());
+            $getter = $getters[$attribute];
             $param = $params->$getter();
             return $param;
         }
@@ -70,7 +71,7 @@ class ReindexRequest extends Request
                 if ($errors->count() > 0) {
                     throw new ApiException('BadRequest', $errors->first(), 400);
                 } else {
-                    $this->setValid('link', $this->getParam('link'));
+                    $this->setValid('dataLink', $this->getParam('dataLink'));
                 }
             } catch (Exception $exception) {
                 throw new ApiException('Internal Server Error', $exception->getMessage() , 500);
