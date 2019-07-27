@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Search;
 
 use App\Search\Index\Manager\Elasticsearch;
 use Exception;
@@ -46,6 +46,7 @@ class SearchReindex extends Command
     public function handle()
     {
         try {
+            // todo make DI for engine
             $dataLink = $this->argument('data');
             $settingsLink = $this->option('settings');
             $indexer = new Elasticsearch(

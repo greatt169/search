@@ -2,7 +2,7 @@
 
 namespace App\Console;
 
-use App\Console\Commands\SearchReindex;
+use App\Console\Commands\Search\SearchReindex;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 

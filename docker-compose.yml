@@ -8,6 +8,7 @@ services:
       - ~/.ssh:/root/.ssh:rw
       - ~/.ssh:/var/www/.ssh:rw
     links:
+      - redis
       - mysql
       - mail
       - elasticsearch
@@ -31,6 +32,11 @@ services:
             appbrige:
                ipv4_address: ${DOCKER_NETWORK_IP}
         restart: always
+  redis:
+        image: redis:3.0
+        container_name: ${DOCKER_PROJECT_PREFIX}redis
+        ports:
+          - "${REDIS_PORT}:6379"
   mysql:
         build: ./.docker/mysql
         container_name: ${DOCKER_PROJECT_PREFIX}mysql
