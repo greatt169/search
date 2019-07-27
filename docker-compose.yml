@@ -85,6 +85,7 @@ services:
         volumes:
             - ./.docker/logs/nginx:/var/log/nginx
             - ./.docker/logs/php:/var/log/php
+            - ./.docker/logs/supervisor:/var/log/supervisor
             - ./.docker/logs/mysql:/var/log/mysql
             - ./.docker/data/mysql:/var/lib/mysql
             - .:/var/www:rw
