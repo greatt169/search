@@ -15,9 +15,9 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        NewFeedEvent::class => [
+       /* NewFeedEvent::class => [
             NewFeedEventListener::class,
-        ],
+        ],*/
     ];
 
     /**

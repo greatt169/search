@@ -35,8 +35,10 @@ services:
   redis:
         image: redis:3.0
         container_name: ${DOCKER_PROJECT_PREFIX}redis
+        networks:
+          - appbrige
         ports:
-          - "${REDIS_PORT}:6379"
+          - "${INTERFACE}:${DOCKER_REDIS_PORT}:6379"
   mysql:
         build: ./.docker/mysql
         container_name: ${DOCKER_PROJECT_PREFIX}mysql

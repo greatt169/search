@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Search;
 
+use App\Events\Search\NewFeedEvent;
 use App\Http\Controllers\Controller;
 
 use App\Http\Requests\Api\ReindexRequest;
@@ -38,71 +39,7 @@ class IndexController extends Controller
      */
     public function index()
     {
-
-
-       /* $sourceLink = '/var/www/public/data_test.json';
-        $source = new ElasticsearchSource($sourceLink);
-        $data = $source->getElementsForIndexing();
-        dump($data);*/
-
-        ini_set('max_execution_time', 900);
-        ini_set('memory_limit', '-1');
-        $data = include  '/var/www/public/data_full.php';
-        $testItems = [];
-        for($i = 0; $i < 2500; $i++) {
-            $item = $data['items'][rand(0,3)];
-            $item['id'] = $i+1;
-            $testItems[] = $item;
-        }
-        $data = $testItems;
-        $data = json_encode($data);
-        $file = '/var/www/public/data_test.json';
-        file_put_contents($file, $data);
-        die();
-
-        /*$data = include  '/var/www/public/data_full.php';
-        $dataSave['indexSettings'] = $data['indexSettings'];
-        $dataSave['mapping'] = $data['mapping'];
-        $dataSave = json_encode($dataSave);
-        $file = '/var/www/public/settings.json';
-        file_put_contents($file, $dataSave);
-
-
-
-        /*$source = new ElasticsearchSource();
-        $listener = new SourceListener(function ($items) {
-            dump($items);
-        });
-        $sourceLink = '/var/www/public/data.json';
-        $stream = fopen($sourceLink, 'r');
-        try {
-            $parser = new \JsonStreamingParser\Parser($stream, $listener);
-            $parser->parse();
-            fclose($stream);
-        } catch (Exception $e) {
-            fclose($stream);
-            throw $e;
-        }*/
-
-
-        $formatBytes = function($bytes, $precision = 2) {
-            $units = array("b", "kb", "mb", "gb", "tb");
-
-            $bytes = max($bytes, 0);
-            $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
-            $pow = min($pow, count($units) - 1);
-
-            $bytes /= (1 << (10 * $pow));
-
-            return round($bytes, $precision) . " " . $units[$pow];
-        };
-        print $formatBytes(memory_get_peak_usage()); echo '<br />';
-
-
-
-
-        /*$data = $source->getElementsForIndexing();
-        dump($data);*/
+        event(new NewFeedEvent('/var/www/public/data.json', null));
     }
 
     /**

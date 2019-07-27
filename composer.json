@@ -13,7 +13,8 @@
         "elasticsearch/elasticsearch": "7.0",
         "ext-json": "*",
         "salsify/json-streaming-parser" : "v8.0.1",
-        "bramus/monolog-colored-line-formatter" : "~3.0"
+        "bramus/monolog-colored-line-formatter" : "~3.0",
+        "predis/predis": "^1.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

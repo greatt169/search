@@ -24,7 +24,6 @@ class IndexFeed implements ShouldQueue
     {
         $dataLink = $event->getDataLink();
         $settingsLink = $event->getSettingsLink();
-
         Artisan::call('search:reindex', [
             'data' => $dataLink, '--settings' => $settingsLink
         ]);

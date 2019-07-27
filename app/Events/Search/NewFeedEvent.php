@@ -22,7 +22,7 @@ class NewFeedEvent
      * @param $dataLink
      * @param null $settingsLink
      */
-    public function __construct($dataLink, $settingsLink = null)
+    public function __construct(string $dataLink, $settingsLink = null)
     {
         //
         $this->dataLink = $dataLink;
