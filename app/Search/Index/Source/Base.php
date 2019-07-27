@@ -2,6 +2,7 @@
 
 namespace App\Search\Index\Source;
 
+use App\Exceptions\ApiException;
 use App\Search\Index\Interfaces\SourceInterface;
 use SwaggerSearch\Model\SourceIndex;
 use SwaggerSearch\ObjectSerializer;
@@ -32,11 +33,23 @@ abstract class Base implements SourceInterface
      * Base constructor.
      * @param $dataLink
      * @param null $sourceIndexLink
+     * @throws ApiException
      */
     protected function __construct($dataLink, $sourceIndexLink = null)
     {
         $this->dataLink = $dataLink;
         $this->sourceIndexLink = $sourceIndexLink;
+        $this->checkFiles();
+    }
+
+    /**
+     * @throws ApiException
+     */
+    public function checkFiles()
+    {
+        if(!file_exists($this->dataLink)) {
+            throw new ApiException(sprintf('Could not open file %s', $this->dataLink), 'Internal Server Error');
+        }
     }
 
     /**

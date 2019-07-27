@@ -50,7 +50,7 @@ class Elasticsearch extends Base
     /**
      * @var string
      */
-    protected $devLogChannel = 'elasticsearch_dev';
+    protected $devLogChannel;
 
     /**
      * @var string
@@ -90,7 +90,7 @@ class Elasticsearch extends Base
     /**
      * @var string
      */
-    protected $mappingPassedMessageTemplate = 'Mapping are not passed';
+    protected $mappingPassedMessageTemplate = 'Mapping are passed';
 
     /**
      * @var string
@@ -141,6 +141,7 @@ class Elasticsearch extends Base
         } else {
             $this->index = $this->baseAliasName;
         }
+        $this->devLogChannel = config('search.index.elasticsearch.dev_log_channel');
     }
 
     /**
