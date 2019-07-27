@@ -49,6 +49,7 @@ class SearchReindex extends Command
             // todo make DI for engine
             $dataLink = $this->argument('data');
             $settingsLink = $this->option('settings');
+
             $indexer = new Elasticsearch(
                 new ElasticsearchSource($dataLink, $settingsLink),
                 new ElasticsearchEntity()
@@ -56,7 +57,7 @@ class SearchReindex extends Command
             $indexer->reindex();
         } catch (Exception $e) {
             $channel = config('search.index.elasticsearch.dev_log_channel');
-            Log::channel($channel)->error('%s In %s line %s', $e->getMessage(), $e->getFile(), $e->getLine());
+            Log::channel($channel)->error(sprintf('%s In %s line %s', $e->getMessage(), $e->getFile(), $e->getLine()));
         }
     }
 }

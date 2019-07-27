@@ -14,16 +14,22 @@ class IndexFeed implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    private $event;
+    public function __construct(NewFeedEvent $event)
+    {
+        $this->event = $event;
+    }
+
+
     /**
      * Execute the job.
      *
-     * @param NewFeedEvent $event
      * @return void
      */
-    public function handle(NewFeedEvent $event)
+    public function handle()
     {
-        $dataLink = $event->getDataLink();
-        $settingsLink = $event->getSettingsLink();
+        $dataLink = $this->event->getDataLink();
+        $settingsLink = $this->event->getSettingsLink();
         Artisan::call('search:reindex', [
             'data' => $dataLink, '--settings' => $settingsLink
         ]);

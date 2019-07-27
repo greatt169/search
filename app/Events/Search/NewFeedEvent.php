@@ -10,19 +10,19 @@ class NewFeedEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    private $dataLink;
+    protected $dataLink;
     /**
      * @var null
      */
-    private $settingsLink;
+    protected $settingsLink;
 
     /**
      * Create a new event instance.
      *
-     * @param $dataLink
-     * @param null $settingsLink
+     * @param string$dataLink
+     * @param null | string $settingsLink
      */
-    public function __construct(string $dataLink, $settingsLink = null)
+    public function __construct(string $dataLink, string $settingsLink = null)
     {
         //
         $this->dataLink = $dataLink;

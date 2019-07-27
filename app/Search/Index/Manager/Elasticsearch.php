@@ -134,6 +134,7 @@ class Elasticsearch extends Base
 
     protected function init()
     {
+        $this->devLogChannel = config('search.index.elasticsearch.dev_log_channel');
         $this->baseAliasName = $this->entity->getIndexWithPrefix($this->source->getIndexName());
         $indexByAlias = $this->getCurrentIndex();
         if ($indexByAlias) {
@@ -141,7 +142,7 @@ class Elasticsearch extends Base
         } else {
             $this->index = $this->baseAliasName;
         }
-        $this->devLogChannel = config('search.index.elasticsearch.dev_log_channel');
+
     }
 
     /**
