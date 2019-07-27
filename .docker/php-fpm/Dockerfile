@@ -27,8 +27,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         zip \
         soap
 
-COPY ./docker/php-fpm/supervisord.conf /etc/supervisor
-COPY ./docker/php-fpm/supervisorhorizon.conf /etc/supervisor/conf.d
+COPY ./supervisord.conf /etc/supervisor
+COPY ./supervisorhorizon.conf /etc/supervisor/conf.d
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
 
