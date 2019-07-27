@@ -17,13 +17,20 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         default-jdk-headless \
+        supervisor \
     && docker-php-ext-install \
+        pcntl \
         iconv \
         mbstring \
         mysqli \
         pdo_mysql \
         zip \
         soap
+
+COPY ./docker/php-fpm/supervisord.conf /etc/supervisor
+COPY ./docker/php-fpm/supervisorhorizon.conf /etc/supervisor/conf.d
+
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
 
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd
