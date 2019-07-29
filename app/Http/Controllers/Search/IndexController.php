@@ -30,6 +30,7 @@ class IndexController extends Controller
      */
     public function index()
     {
+        echo date('d.m.Y H:i:S');
         //event(new NewFeedEvent('/var/www/public/data.json', null));
     }
 
