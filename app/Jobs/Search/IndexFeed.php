@@ -15,6 +15,23 @@ class IndexFeed implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     private $event;
+
+    /**
+     * Get the tags that should be assigned to the job.
+     *
+     * @return array
+     */
+    public function tags()
+    {
+        $tags = ['full-reindex', 'id: ' . $this->event->getId(), 'dataLink: ' . $this->event->getDataLink()];
+        $settingsLink = $this->event->getSettingsLink();
+        if($settingsLink) {
+            $tags[] = '--settingsLink: ' . $settingsLink;
+        }
+        return $tags;
+    }
+
+
     public function __construct(NewFeedEvent $event)
     {
         $this->event = $event;

@@ -42,7 +42,8 @@ class IndexController extends Controller
     {
         $dataLink = $request->getValid('dataLink');
         $settingsLink = $request->get('settingsLink');
-        event(new NewFeedEvent($dataLink, $settingsLink));
-        return 'Job in queue';
+        $jobId = uniqid();
+        event(new NewFeedEvent($jobId, $dataLink, $settingsLink));
+        return 'Job #' . $jobId .' in queue';
     }
 }
