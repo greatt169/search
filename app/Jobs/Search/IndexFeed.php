@@ -26,8 +26,9 @@ class IndexFeed implements ShouldQueue
     {
         $tags = [
             'full-reindex',
+            'engine: ' . $this->event->getEngine(),
             'id: ' . $this->event->getId(),
-            'index' => $this->event->getIndex(),
+            'index ' . $this->event->getIndex(),
             'dataLink: ' . $this->event->getDataLink()
         ];
         $settingsLink = $this->event->getSettingsLink();
@@ -55,13 +56,6 @@ class IndexFeed implements ShouldQueue
         $dataLink = $this->event->getDataLink();
         $settingsLink = $this->event->getSettingsLink();
         $commandSignature = sprintf('search:%s:reindex', $this->event->getEngine());
-
-        $channel = config('search.index.elasticsearch.dev_log_channel');
-        Log::channel($channel)->error($commandSignature);
-        Log::channel($channel)->error($index);
-        Log::channel($channel)->error($dataLink);
-        Log::channel($channel)->error($settingsLink);
-
 
         Artisan::call($commandSignature, [
             'index' => $index,
