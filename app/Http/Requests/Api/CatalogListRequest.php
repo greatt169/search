@@ -5,7 +5,6 @@ namespace App\Http\Requests\Api;
 use App\Exceptions\ApiException;
 use Exception;
 use Illuminate\Validation\Validator as ValidatorAlias;
-use SwaggerSearch\Model\Engine;
 use SwaggerSearch\Model\Filter;
 use SwaggerSearch\Model\FilterParam;
 use SwaggerSearch\Model\ModelInterface;
@@ -16,29 +15,6 @@ use SwaggerSearch\ObjectSerializer;
 
 class CatalogListRequest extends Request
 {
-    protected $engine = null;
-
-    /**
-     * @param bool $withData
-     * @return Engine
-     */
-    protected function getEngine($withData = true)
-    {
-        $data = '';
-        if ($withData) {
-            $sourceData = $this->getDeserializeData();
-            if (property_exists($sourceData, 'engine')) {
-                $data = $sourceData->engine;
-            }
-        }
-        /**
-         * @var Engine $engine
-         */
-        $engine = ObjectSerializer::deserialize($data, Engine::class, null);
-        $this->engine = $engine;
-        return $engine;
-    }
-
     /**
      * @return Search
      */

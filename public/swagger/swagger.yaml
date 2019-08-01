@@ -96,6 +96,13 @@ paths:
       summary: Индексирование данных
       description: Обновление элементов в индексе
       parameters:
+        - in: query
+          name: index
+          required: true
+          description: Код индекса
+          schema:
+            type: string
+            example: auto
         - in: body
           name: request
           required: true
@@ -126,6 +133,8 @@ definitions:
     required:
       - name
     properties:
+      engine:
+        $ref: '#/definitions/Engine'
       dataLink:
         type: string
         example: /var/www/public/data.json

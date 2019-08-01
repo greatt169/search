@@ -2,7 +2,6 @@
 
 namespace App\Search\Index\Source;
 
-use SwaggerSearch\Model\IndexMappingRules;
 use SwaggerSearch\Model\ListItem;
 use SwaggerSearch\Model\ListItemAttributeValue;
 use SwaggerSearch\Model\ListItemMultipleAttribute;
@@ -13,11 +12,9 @@ use SwaggerSearch\ObjectSerializer;
 
 class Elasticsearch extends Base
 {
-    protected $indexName = 'auto';
-
-    public function __construct($dataLink, $sourceIndexLink = null)
+    public function __construct($indexName, $dataLink, $sourceIndexLink = null)
     {
-        parent::__construct($dataLink, $sourceIndexLink);
+        parent::__construct($indexName, $dataLink, $sourceIndexLink);
     }
 
     public function getIndexSettings()

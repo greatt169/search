@@ -23,7 +23,12 @@ class IndexFeed implements ShouldQueue
      */
     public function tags()
     {
-        $tags = ['full-reindex', 'id: ' . $this->event->getId(), 'dataLink: ' . $this->event->getDataLink()];
+        $tags = [
+            'full-reindex',
+            'id: ' . $this->event->getId(),
+            'index' => $this->event->getIndex(),
+            'dataLink: ' . $this->event->getDataLink()
+        ];
         $settingsLink = $this->event->getSettingsLink();
         if($settingsLink) {
             $tags[] = '--settingsLink: ' . $settingsLink;
@@ -45,10 +50,13 @@ class IndexFeed implements ShouldQueue
      */
     public function handle()
     {
+        $index = $this->event->getIndex();
         $dataLink = $this->event->getDataLink();
         $settingsLink = $this->event->getSettingsLink();
-        Artisan::call('search:reindex', [
-            'data' => $dataLink, '--settings' => $settingsLink
+        Artisan::call('search:elasticsearch:reindex', [
+            'index' => $index,
+            'data' => $dataLink,
+            '--settings' => $settingsLink
         ]);
     }
 }

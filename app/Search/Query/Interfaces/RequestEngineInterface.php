@@ -35,4 +35,12 @@ interface RequestEngineInterface
      * @return array
      */
     public function getEngineConvertedSearch(Search $search): array;
+
+    /**
+     * @param $index
+     * @param $dataLink
+     * @param $settingsLink
+     * @return mixed
+     */
+    public function reindex(string $index, string $dataLink, $settingsLink);
 }

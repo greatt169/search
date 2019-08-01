@@ -2,6 +2,7 @@
 
 namespace App\Search\Query\Request;
 
+use App\Events\Search\NewFeedEvent;
 use App\Exceptions\ApiException;
 use App\Search\Entity\Interfaces\EntityInterface;
 use Elasticsearch\Client;
@@ -190,7 +191,19 @@ class Elasticsearch extends Engine
         } catch (Exception $exception) {
             throw new ApiException(class_basename($exception), $exception->getMessage(), $exception->getCode());
         }
-
         return $response;
+    }
+
+    /**
+     * @param $index
+     * @param $dataLink
+     * @param $settingsLink
+     * @return mixed
+     */
+    public function reindex(string $index, string $dataLink, $settingsLink)
+    {
+        $jobId = uniqid();
+        event(new NewFeedEvent($jobId, $index, $dataLink, $settingsLink));
+        return 'Job #' . $jobId .' in queue';
     }
 }

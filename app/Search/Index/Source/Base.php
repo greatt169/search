@@ -31,14 +31,16 @@ abstract class Base implements SourceInterface
 
     /**
      * Base constructor.
+     * @param $indexName
      * @param $dataLink
      * @param null $sourceIndexLink
      * @throws ApiException
      */
-    protected function __construct($dataLink, $sourceIndexLink = null)
+    protected function __construct($indexName, $dataLink, $sourceIndexLink = null)
     {
         $this->dataLink = $dataLink;
         $this->sourceIndexLink = $sourceIndexLink;
+        $this->indexName = $indexName;
         $this->checkFiles();
     }
 

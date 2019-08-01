@@ -14,8 +14,10 @@ class ReindexRequest extends Request
 
     public function rules()
     {
+        $allowableValues = implode(',', $this->getEngine(false)->getNameAllowableValues());
         return [
             'dataLink' => 'required|min:5',
+            'engine.name' => 'in:' . $allowableValues
         ];
     }
 
@@ -72,6 +74,7 @@ class ReindexRequest extends Request
                     throw new ApiException('BadRequest', $errors->first(), 400);
                 } else {
                     $this->setValid('dataLink', $this->getParam('dataLink'));
+                    $this->setValid('engine', $this->getEngine());
                 }
             } catch (Exception $exception) {
                 throw new ApiException('Internal Server Error', $exception->getMessage() , 500);

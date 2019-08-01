@@ -17,17 +17,24 @@ class NewFeedEvent
     protected $settingsLink;
 
     /**
+     * @var string
+     */
+    private $index;
+
+    /**
      * Create a new event instance.
      *
      * @param $id
+     * @param string $index
      * @param string $dataLink
      * @param null | string $settingsLink
      */
-    public function __construct($id, string $dataLink, string $settingsLink = null)
+    public function __construct($id, string $index, string $dataLink, string $settingsLink = null)
     {
         $this->id = $id;
         $this->dataLink = $dataLink;
         $this->settingsLink = $settingsLink;
+        $this->index = $index;
     }
 
     /**
@@ -52,5 +59,13 @@ class NewFeedEvent
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIndex(): string
+    {
+        return $this->index;
     }
 }
