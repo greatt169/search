@@ -9,6 +9,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Log;
 
 class IndexFeed implements ShouldQueue
 {
@@ -54,6 +55,14 @@ class IndexFeed implements ShouldQueue
         $dataLink = $this->event->getDataLink();
         $settingsLink = $this->event->getSettingsLink();
         $commandSignature = sprintf('search:%s:reindex', $this->event->getEngine());
+
+        $channel = config('search.index.elasticsearch.dev_log_channel');
+        Log::channel($channel)->error($commandSignature);
+        Log::channel($channel)->error($index);
+        Log::channel($channel)->error($dataLink);
+        Log::channel($channel)->error($settingsLink);
+
+
         Artisan::call($commandSignature, [
             'index' => $index,
             'data' => $dataLink,
