@@ -53,7 +53,8 @@ class IndexFeed implements ShouldQueue
         $index = $this->event->getIndex();
         $dataLink = $this->event->getDataLink();
         $settingsLink = $this->event->getSettingsLink();
-        Artisan::call('search:elasticsearch:reindex', [
+        $commandSignature = sprintf('search:%s:reindex', $this->event->getEngine());
+        Artisan::call($commandSignature, [
             'index' => $index,
             'data' => $dataLink,
             '--settings' => $settingsLink

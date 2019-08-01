@@ -16,6 +16,8 @@ class NewFeedEvent
 
     protected $settingsLink;
 
+    protected $engine;
+
     /**
      * @var string
      */
@@ -26,15 +28,17 @@ class NewFeedEvent
      *
      * @param $id
      * @param string $index
+     * @param string $engine
      * @param string $dataLink
      * @param null | string $settingsLink
      */
-    public function __construct($id, string $index, string $dataLink, string $settingsLink = null)
+    public function __construct($id, string $index, string $engine, $dataLink, string $settingsLink = null)
     {
         $this->id = $id;
         $this->dataLink = $dataLink;
         $this->settingsLink = $settingsLink;
         $this->index = $index;
+        $this->engine = $engine;
     }
 
     /**
@@ -67,5 +71,13 @@ class NewFeedEvent
     public function getIndex(): string
     {
         return $this->index;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEngine(): string
+    {
+        return $this->engine;
     }
 }

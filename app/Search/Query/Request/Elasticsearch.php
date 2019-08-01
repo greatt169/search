@@ -203,7 +203,7 @@ class Elasticsearch extends Engine
     public function reindex(string $index, string $dataLink, $settingsLink)
     {
         $jobId = uniqid();
-        event(new NewFeedEvent($jobId, $index, $dataLink, $settingsLink));
+        event(new NewFeedEvent($jobId, $index, $this->engine, $dataLink, $settingsLink));
         return 'Job #' . $jobId .' in queue';
     }
 }
