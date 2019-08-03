@@ -38,9 +38,6 @@ abstract class Engine implements RequestEngineInterface
         $this->engine = $engine;
         $indexWithPrefix = $this->entity->getIndexWithPrefix($index);
         $aliasIndex = $this->entity->getIndexByAlias($indexWithPrefix);
-        if($aliasIndex === null) {
-            throw new ApiException('Bad Request', sprintf('Alias for index %s not founded', $index), 500);
-        }
         $this->index = $aliasIndex;
     }
 

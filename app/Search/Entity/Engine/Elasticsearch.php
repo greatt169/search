@@ -2,10 +2,12 @@
 
 namespace App\Search\Entity\Engine;
 
+use App\Exceptions\ApiException;
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 use Illuminate\Support\Facades\Log;
 use SwaggerSearch\Model\ListItem;
+use \Throwable;
 
 class Elasticsearch extends Base
 {
@@ -31,15 +33,24 @@ class Elasticsearch extends Base
      * @param string $aliasName код alias
      *
      * @return null | string
+     * @throws ApiException
      */
     public function getIndexByAlias($aliasName)
     {
-        $aliases = $this->getClient()->indices()->getAliases();
-        $aliasWithPrefix = $this->getAliasWithPrefix($aliasName);
-        foreach ($aliases as $index => $aliasMapping) {
-            if (array_key_exists($aliasWithPrefix, $aliasMapping['aliases'])) {
-                return $index;
+        try {
+            $aliases = $this->getClient()->indices()->getAliases();
+            $aliasWithPrefix = $this->getAliasWithPrefix($aliasName);
+            foreach ($aliases as $index => $aliasMapping) {
+                if (array_key_exists($aliasWithPrefix, $aliasMapping['aliases'])) {
+                    return $index;
+                }
             }
+        } catch (Throwable $e) {
+            throw new ApiException(
+                'Connect error. Try later',
+                $e->getMessage(),
+                500
+            );
         }
         return null;
     }
@@ -48,7 +59,8 @@ class Elasticsearch extends Base
      * @param $aliasName
      * @return string
      */
-    public function getAliasWithPrefix($aliasName) {
+    public function getAliasWithPrefix($aliasName)
+    {
         return $this->aliasPrefix . $aliasName;
     }
 
@@ -56,13 +68,14 @@ class Elasticsearch extends Base
      * @param $index
      * @return string
      */
-    public function getIndexWithPrefix($index) {
+    public function getIndexWithPrefix($index)
+    {
         return config('search.index.elasticsearch.prefix') . $index;
     }
 
     /**
      * Elasticsearch constructor.
-     * @param string $index|null
+     * @param string $index |null
      */
     public function __construct(string $index = null)
     {
@@ -75,14 +88,17 @@ class Elasticsearch extends Base
      */
     public function getClient(): Client
     {
-        if($this->client !== null) {
+
+        if ($this->client !== null) {
             return $this->client;
         }
         $clientBuild = ClientBuilder::create()->setHosts($this->getHosts());
-        if($this->isLogsEnable()) {
+        if ($this->isLogsEnable()) {
             $clientBuild->setLogger(Log::channel('fullLogChannel'));
         }
         $this->client = $clientBuild->build();
+
+
         return $this->client;
     }
 
@@ -90,11 +106,11 @@ class Elasticsearch extends Base
      * @param $hit
      * @return ListItem $listItem
      */
-    public function getConvertedEngineData($hit) : ListItem
+    public function getConvertedEngineData($hit): ListItem
     {
         $source = $hit['_source'];
         $listItem = new ListItem();
-        if(array_key_exists('raw_data', $source)) {
+        if (array_key_exists('raw_data', $source)) {
             $listItem = unserialize($source['raw_data']);
         }
         return $listItem;
