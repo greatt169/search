@@ -7,22 +7,11 @@ use App\Exceptions\ApiException;
 use App\Search\Query\Interfaces\RequestEngineInterface;
 use App\Search\Query\Request\Engine as RequestEngine;
 use SwaggerSearch\Model\Engine;
-use SwaggerSearch\Model\ListItemAttributeValue;
+use \Illuminate\Contracts\Container\BindingResolutionException;
+use SwaggerSearch\Model\ReindexResponse;
 
 class IndexController extends Controller
 {
-    /**
-     * @param ListItemAttributeValue $attributeValue
-     * @return string
-     */
-    protected function getAttributeVal($attributeValue) {
-        $val = $attributeValue->getCode();
-        if($val === null) {
-            $val = $attributeValue->getValue();
-        }
-        return $val;
-    }
-
     /**
      * @throws \Exception
      */
@@ -33,9 +22,9 @@ class IndexController extends Controller
 
     /**
      * @param ReindexRequest $request
-     * @return string
+     * @return ReindexResponse
      * @throws ApiException
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws BindingResolutionException
      */
     public function reindex(ReindexRequest $request)
     {

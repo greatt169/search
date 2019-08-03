@@ -115,8 +115,7 @@ paths:
         200:
           description: Метод успешно отработал
           schema:
-            type: string
-            example: 'ok'
+            $ref: '#/definitions/ReindexResponse'
         400:
           $ref: '#/responses/400Error'
         403:
@@ -143,6 +142,17 @@ definitions:
         type: string
         example: /var/www/public/settings.json
         description: Ссылка на json-файл с настройками
+
+  ReindexResponse:
+    type: object
+    description: Объект успешного ответа при установки индексации в очередь
+    properties:
+      message:
+        type: string
+        example: 'Job has added in reindexing queue'
+      jobId:
+        type: string
+        example: '5d452f74de76c'
 
   Engine:
     type: object

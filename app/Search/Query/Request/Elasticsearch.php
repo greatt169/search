@@ -14,11 +14,14 @@ use SwaggerSearch\Model\FilterParam;
 use SwaggerSearch\Model\FilterRangeParam;
 use SwaggerSearch\Model\FilterValue;
 use SwaggerSearch\Model\ListItems;
+use SwaggerSearch\Model\ReindexResponse;
 use SwaggerSearch\Model\Search;
 use SwaggerSearch\Model\Sorts;
 
 class Elasticsearch extends Engine
 {
+    private $jobAddedInQueueMessage = 'Job has added in reindexing queue';
+
     /**
      * Elasticsearch constructor.
      * @param $engine
@@ -211,6 +214,12 @@ class Elasticsearch extends Engine
             new ElasticsearchEntity()
         );
         event(new NewFeedEvent($jobId, $this->engine, $indexer));
-        return 'Job #' . $jobId .' in queue';
+        $reindexResponse = new ReindexResponse(
+            [
+                'job_id' => $jobId,
+                'message' => $this->jobAddedInQueueMessage
+            ]
+        );
+        return $reindexResponse;
     }
 }
