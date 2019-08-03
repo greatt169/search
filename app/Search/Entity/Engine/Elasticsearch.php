@@ -94,7 +94,7 @@ class Elasticsearch extends Base
         }
         $clientBuild = ClientBuilder::create()->setHosts($this->getHosts());
         if ($this->isLogsEnable()) {
-            $clientBuild->setLogger(Log::channel('fullLogChannel'));
+            $clientBuild->setLogger(Log::channel('elasticsearch_full'));
         }
         $this->client = $clientBuild->build();
 
