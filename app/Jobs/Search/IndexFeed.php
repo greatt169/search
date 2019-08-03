@@ -8,8 +8,6 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Log;
 
 class IndexFeed implements ShouldQueue
 {
@@ -28,10 +26,10 @@ class IndexFeed implements ShouldQueue
             'full-reindex',
             'engine: ' . $this->event->getEngine(),
             'id: ' . $this->event->getId(),
-            'index ' . $this->event->getIndex(),
-            'dataLink: ' . $this->event->getDataLink()
+            'index ' . $this->event->getIndexer()->getSource()->getIndexName(),
+            'dataLink: ' . $this->event->getIndexer()->getSource()->getDataLink()
         ];
-        $settingsLink = $this->event->getSettingsLink();
+        $settingsLink = $this->event->getIndexer()->getSource()->getSettingsLink();
         if($settingsLink) {
             $tags[] = '--settingsLink: ' . $settingsLink;
         }
@@ -49,18 +47,11 @@ class IndexFeed implements ShouldQueue
      * Execute the job.
      *
      * @return void
+     * @throws \App\Exceptions\ApiException
      */
     public function handle()
     {
-        $index = $this->event->getIndex();
-        $dataLink = $this->event->getDataLink();
-        $settingsLink = $this->event->getSettingsLink();
-        $commandSignature = sprintf('search:%s:reindex', $this->event->getEngine());
-
-        Artisan::call($commandSignature, [
-            'index' => $index,
-            'data' => $dataLink,
-            '--settings' => $settingsLink
-        ]);
+        $indexer = $this->event->getIndexer();
+        $indexer->reindex();
     }
 }

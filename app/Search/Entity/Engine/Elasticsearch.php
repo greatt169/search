@@ -97,8 +97,6 @@ class Elasticsearch extends Base
             $clientBuild->setLogger(Log::channel('elasticsearch_full'));
         }
         $this->client = $clientBuild->build();
-
-
         return $this->client;
     }
 

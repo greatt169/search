@@ -16,4 +16,11 @@ interface SourceInterface
      * @return string|null
      */
     public function getDataLink();
+
+    /**
+     * @return string|null
+     */
+    public function getSettingsLink();
+
+
 }

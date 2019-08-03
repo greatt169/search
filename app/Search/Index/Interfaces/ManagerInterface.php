@@ -2,9 +2,8 @@
 
 namespace App\Search\Index\Interfaces;
 
-use App\Helpers\Interfaces\MemoryInterface;
+use App\Exceptions\ApiException;
 use App\Search\Entity\Interfaces\EntityInterface;
-use App\Helpers\Interfaces\TimerInterface;
 
 interface ManagerInterface
 {
@@ -17,4 +16,14 @@ interface ManagerInterface
     public function indexAll();
 
     public function __construct(SourceInterface $source, EntityInterface $entity);
+
+    /**
+     * @throws ApiException
+     */
+    public function reindex();
+
+    /**
+     * @return SourceInterface
+     */
+    public function getSource();
 }

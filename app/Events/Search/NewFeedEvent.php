@@ -2,6 +2,7 @@
 
 namespace App\Events\Search;
 
+use App\Search\Index\Interfaces\ManagerInterface;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
@@ -22,23 +23,23 @@ class NewFeedEvent
      * @var string
      */
     private $index;
+    /**
+     * @var ManagerInterface
+     */
+    private $indexer;
 
     /**
      * Create a new event instance.
      *
      * @param $id
-     * @param string $index
      * @param string $engine
-     * @param string $dataLink
-     * @param null | string $settingsLink
+     * @param ManagerInterface $indexer
      */
-    public function __construct($id, string $index, string $engine, $dataLink, string $settingsLink = null)
+    public function __construct($id, string $engine, ManagerInterface $indexer)
     {
         $this->id = $id;
-        $this->dataLink = $dataLink;
-        $this->settingsLink = $settingsLink;
-        $this->index = $index;
         $this->engine = $engine;
+        $this->indexer = $indexer;
     }
 
     /**
@@ -79,5 +80,13 @@ class NewFeedEvent
     public function getEngine(): string
     {
         return $this->engine;
+    }
+
+    /**
+     * @return ManagerInterface
+     */
+    public function getIndexer(): ManagerInterface
+    {
+        return $this->indexer;
     }
 }

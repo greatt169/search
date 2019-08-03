@@ -17,7 +17,7 @@ abstract class Base implements SourceInterface
     /**
      * @var null | string
      */
-    protected $sourceIndexLink = null;
+    protected $settingsLink = null;
 
     /**
      * @var null | string
@@ -39,7 +39,7 @@ abstract class Base implements SourceInterface
     protected function __construct($indexName, $dataLink, $sourceIndexLink = null)
     {
         $this->dataLink = $dataLink;
-        $this->sourceIndexLink = $sourceIndexLink;
+        $this->settingsLink = $sourceIndexLink;
         $this->indexName = $indexName;
         $this->checkFiles();
     }
@@ -73,7 +73,7 @@ abstract class Base implements SourceInterface
      */
     public function getSourceIndex()
     {
-        if(!$this->sourceIndexLink) {
+        if(!$this->settingsLink) {
             return new SourceIndex();
         }
 
@@ -81,7 +81,7 @@ abstract class Base implements SourceInterface
          * @var SourceIndex $sourceIndex
          */
         if($this->sourceIndex == null) {
-            $sourceIndex = $this->getSwaggerModelByFile($this->sourceIndexLink, SourceIndex::class);
+            $sourceIndex = $this->getSwaggerModelByFile($this->settingsLink, SourceIndex::class);
             $this->sourceIndex = $sourceIndex;
         }
         return $this->sourceIndex;
@@ -101,5 +101,13 @@ abstract class Base implements SourceInterface
     public function getDataLink(): ?string
     {
         return $this->dataLink;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSettingsLink(): ?string
+    {
+        return $this->settingsLink;
     }
 }

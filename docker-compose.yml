@@ -88,8 +88,8 @@ services:
             - ./.docker/logs/supervisor:/var/log/supervisor
             - ./.docker/logs/mysql:/var/log/mysql
             - ./.docker/data/mysql:/var/lib/mysql
-            - .:/var/www:rw
             - ./.docker/logs/elasticsearch:/var/log/elasticsearch
+            - .:/var/www:rw
         networks:
             - appbrige
 networks:

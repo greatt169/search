@@ -4,7 +4,9 @@ namespace App\Search\Query\Request;
 
 use App\Events\Search\NewFeedEvent;
 use App\Exceptions\ApiException;
+use App\Search\Entity\Engine\Elasticsearch as ElasticsearchEntity;
 use App\Search\Entity\Interfaces\EntityInterface;
+use App\Search\Index\Source\Elasticsearch as ElasticsearchSource;
 use Elasticsearch\Client;
 use Exception;
 use SwaggerSearch\Model\Filter;
@@ -195,15 +197,20 @@ class Elasticsearch extends Engine
     }
 
     /**
-     * @param $index
-     * @param $dataLink
+     * @param string $index
+     * @param string $dataLink
      * @param $settingsLink
      * @return mixed
+     * @throws ApiException
      */
     public function reindex(string $index, string $dataLink, $settingsLink)
     {
         $jobId = uniqid();
-        event(new NewFeedEvent($jobId, $index, $this->engine, $dataLink, $settingsLink));
+        $indexer = new \App\Search\Index\Manager\Elasticsearch(
+            new ElasticsearchSource($index, $dataLink, $settingsLink),
+            new ElasticsearchEntity()
+        );
+        event(new NewFeedEvent($jobId, $this->engine, $indexer));
         return 'Job #' . $jobId .' in queue';
     }
 }

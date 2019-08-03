@@ -58,7 +58,8 @@ class SearchReindex extends Command
             $indexer->reindex();
         } catch (Exception $e) {
             $channel = config('search.index.elasticsearch.dev_log_channel');
-            Log::channel($channel)->error(sprintf('%s In %s line %s', $e->getMessage(), $e->getFile(), $e->getLine()));
+            $error = sprintf('%s In %s line %s', $e->getMessage(), $e->getFile(), $e->getLine());
+            Log::channel($channel)->error($error);
         }
     }
 }
