@@ -93,8 +93,8 @@ paths:
 
   "/reindex":
     post:
-      summary: Индексирование данных
-      description: Обновление элементов в индексе
+      summary: Обновление индекса
+      description: Полное обновление элементов в индексе
       parameters:
         - in: query
           name: index
@@ -108,6 +108,40 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/ReindexParams'
+
+      tags:
+        - Catalog
+      responses:
+        200:
+          description: Метод успешно отработал
+          schema:
+            $ref: '#/definitions/ReindexResponse'
+        400:
+          $ref: '#/responses/400Error'
+        403:
+          $ref: '#/responses/403Error'
+        404:
+          $ref: '#/responses/404Error'
+        500:
+          $ref: '#/responses/500Error'
+
+  "/index/":
+    post:
+      summary: Обновление части элементов в индексе
+      description: Частичное обновление элементов в индексе
+      parameters:
+        - in: query
+          name: index
+          required: true
+          description: Код индекса
+          schema:
+            type: string
+            example: auto
+        - in: body
+          name: request
+          required: true
+          schema:
+            $ref: '#/definitions/IndexParams'
 
       tags:
         - Catalog
@@ -142,6 +176,19 @@ definitions:
         type: string
         example: /var/www/public/settings.json
         description: Ссылка на json-файл с настройками
+
+  IndexParams:
+    type: object
+    description: Параметры для обновления пачки элементов
+    required:
+      - name
+    properties:
+      engine:
+        $ref: '#/definitions/Engine'
+      dataLink:
+        type: string
+        example: /var/www/public/data.json
+        description: Ссылка на json-файл с данными
 
   ReindexResponse:
     type: object
