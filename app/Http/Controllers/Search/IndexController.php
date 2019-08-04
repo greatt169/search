@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Search;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\IndexRequest;
 use App\Http\Requests\Api\ReindexRequest;
 use App\Exceptions\ApiException;
 use App\Search\Query\Interfaces\RequestEngineInterface;
@@ -43,8 +44,25 @@ class IndexController extends Controller
         return $engineRequest->reindex($index, $dataLink, $settingsLink);
     }
 
+    /**
+     * @param IndexRequest $request
+     * @return
+     * @throws ApiException
+     * @throws BindingResolutionException
+     */
     public function index(IndexRequest $request)
     {
+        /**
+         * @var Engine $engine
+         */
+        $engine = $request->getValid('engine');
+        $index = $request->get('index');
+        $dataLink = $request->getValid('dataLink');
 
+        /**
+         * @var RequestEngineInterface $engineRequest
+         */
+        $engineRequest = RequestEngine::getInstance($engine->getName(), $index);
+        return $engineRequest->index($index, $dataLink);
     }
 }

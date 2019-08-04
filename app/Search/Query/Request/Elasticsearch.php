@@ -222,4 +222,15 @@ class Elasticsearch extends Engine
         );
         return $reindexResponse;
     }
+
+    /**
+     * @param string $index
+     * @param string $dataLink
+     * @return mixed
+     * @throws ApiException
+     */
+    public function index(string $index, string $dataLink)
+    {
+
+    }
 }
