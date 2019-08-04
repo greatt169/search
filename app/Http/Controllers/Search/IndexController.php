@@ -15,7 +15,7 @@ class IndexController extends Controller
     /**
      * @throws \Exception
      */
-    public function index()
+    public function demo()
     {
         echo date('d.m.Y H:i:S');
     }
@@ -41,5 +41,10 @@ class IndexController extends Controller
         $dataLink = $request->getValid('dataLink');
         $settingsLink = $request->get('settingsLink');
         return $engineRequest->reindex($index, $dataLink, $settingsLink);
+    }
+
+    public function index(IndexRequest $request)
+    {
+
     }
 }
