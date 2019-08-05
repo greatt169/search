@@ -2,18 +2,18 @@
 
 namespace App\Listeners\Search;
 
-use App\Events\Search\NewFeedReindexEvent;
+use App\Events\Search\NewFeedUpdateEvent;
 use App\Jobs\Search\FeedReindex;
 
-class NewFeedReindexEventListener
+class NewFeedUpdateEventListener
 {
     /**
      * Handle the event.
      *
-     * @param  NewFeedReindexEvent  $event
+     * @param  NewFeedUpdateEvent $event
      * @return void
      */
-    public function handle(NewFeedReindexEvent $event)
+    public function handle(NewFeedUpdateEvent $event)
     {
         FeedReindex::dispatch($event);
     }
