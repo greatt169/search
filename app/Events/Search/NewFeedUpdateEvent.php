@@ -7,15 +7,11 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 
-class NewFeedEvent
+class NewFeedUpdateEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     protected $id;
-
-    protected $dataLink;
-
-    protected $settingsLink;
 
     protected $engine;
 
@@ -45,33 +41,9 @@ class NewFeedEvent
     /**
      * @return mixed
      */
-    public function getDataLink()
-    {
-        return $this->dataLink;
-    }
-
-    /**
-     * @return null
-     */
-    public function getSettingsLink()
-    {
-        return $this->settingsLink;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getIndex(): string
-    {
-        return $this->index;
     }
 
     /**

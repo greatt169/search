@@ -3,6 +3,7 @@ namespace App\Search\Query\Interfaces;
 
 use SwaggerSearch\Model\Filter;
 use SwaggerSearch\Model\ListItems;
+use SwaggerSearch\Model\ReindexResponse;
 use SwaggerSearch\Model\Search;
 use SwaggerSearch\Model\Sorts;
 
@@ -42,5 +43,12 @@ interface RequestEngineInterface
      * @param $settingsLink
      * @return mixed
      */
-    public function reindex(string $index, string $dataLink, $settingsLink);
+    public function reindex(string $index, string $dataLink, $settingsLink): ReindexResponse;
+
+    /**
+     * @param $index
+     * @param $dataLink
+     * @return mixed
+     */
+    public function update(string $index, string $dataLink) : ReindexResponse;
 }

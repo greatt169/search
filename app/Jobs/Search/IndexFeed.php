@@ -2,7 +2,7 @@
 
 namespace App\Jobs\Search;
 
-use App\Events\Search\NewFeedEvent;
+use App\Events\Search\NewFeedReindexEvent;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -37,7 +37,7 @@ class IndexFeed implements ShouldQueue
     }
 
 
-    public function __construct(NewFeedEvent $event)
+    public function __construct(NewFeedReindexEvent $event)
     {
         $this->event = $event;
     }

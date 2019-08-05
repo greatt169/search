@@ -12,6 +12,10 @@ class ReindexRequest extends Request
 {
     protected $params = null;
 
+    protected function getSwaggerModelParams() {
+        return ReindexParams::class;
+    }
+
     public function rules()
     {
         $allowableValues = implode(',', $this->getEngine(false)->getNameAllowableValues());
@@ -34,7 +38,7 @@ class ReindexRequest extends Request
         /**
          * @var ReindexParams $params
          */
-        $params = ObjectSerializer::deserialize($data, ReindexParams::class, null);
+        $params = ObjectSerializer::deserialize($data, $this->getSwaggerModelParams(), null);
         $this->params = $params;
         return $params;
     }

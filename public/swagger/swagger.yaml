@@ -125,7 +125,7 @@ paths:
         500:
           $ref: '#/responses/500Error'
 
-  "/index/":
+  "/update/":
     post:
       summary: Обновление части элементов в индексе
       description: Частичное обновление элементов в индексе
@@ -141,7 +141,7 @@ paths:
           name: request
           required: true
           schema:
-            $ref: '#/definitions/IndexParams'
+            $ref: '#/definitions/UpdateParams'
 
       tags:
         - Catalog
@@ -177,7 +177,7 @@ definitions:
         example: /var/www/public/settings.json
         description: Ссылка на json-файл с настройками
 
-  IndexParams:
+  UpdateParams:
     type: object
     description: Параметры для обновления пачки элементов
     required:
@@ -187,7 +187,7 @@ definitions:
         $ref: '#/definitions/Engine'
       dataLink:
         type: string
-        example: /var/www/public/data.json
+        example: /var/www/public/data-update.json
         description: Ссылка на json-файл с данными
 
   ReindexResponse:

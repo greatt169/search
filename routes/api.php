@@ -15,4 +15,5 @@ Route::group([
 ], function () {
     Route::post('/catalog-list/', 'SearchController@catalogList')->name('catalog_list');
     Route::post('/reindex/', 'IndexController@reindex')->name('reindex');
+    Route::post('/update/', 'IndexController@update')->name('update');
 });

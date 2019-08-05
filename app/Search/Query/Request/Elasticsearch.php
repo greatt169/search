@@ -2,11 +2,13 @@
 
 namespace App\Search\Query\Request;
 
-use App\Events\Search\NewFeedEvent;
+use App\Events\Search\NewFeedReindexEvent;
+use App\Events\Search\NewFeedUpdateEvent;
 use App\Exceptions\ApiException;
 use App\Search\Entity\Engine\Elasticsearch as ElasticsearchEntity;
 use App\Search\Entity\Interfaces\EntityInterface;
 use App\Search\Index\Source\Elasticsearch as ElasticsearchSource;
+use App\Search\Index\Manager\Elasticsearch as ElasticsearchManager;
 use Elasticsearch\Client;
 use Exception;
 use SwaggerSearch\Model\Filter;
@@ -206,14 +208,14 @@ class Elasticsearch extends Engine
      * @return mixed
      * @throws ApiException
      */
-    public function reindex(string $index, string $dataLink, $settingsLink)
+    public function reindex(string $index, string $dataLink, $settingsLink) : ReindexResponse
     {
         $jobId = uniqid();
-        $indexer = new \App\Search\Index\Manager\Elasticsearch(
+        $indexer = new ElasticsearchManager(
             new ElasticsearchSource($index, $dataLink, $settingsLink),
             new ElasticsearchEntity()
         );
-        event(new NewFeedEvent($jobId, $this->engine, $indexer));
+        event(new NewFeedReindexEvent($jobId, $this->engine, $indexer));
         $reindexResponse = new ReindexResponse(
             [
                 'job_id' => $jobId,
@@ -229,8 +231,20 @@ class Elasticsearch extends Engine
      * @return mixed
      * @throws ApiException
      */
-    public function index(string $index, string $dataLink)
+    public function update(string $index, string $dataLink) : ReindexResponse
     {
-
+        $jobId = uniqid();
+        $indexer = new ElasticsearchManager(
+            new ElasticsearchSource($index, $dataLink),
+            new ElasticsearchEntity()
+        );
+        event(new NewFeedUpdateEvent($jobId, $this->engine, $indexer));
+        $reindexResponse = new ReindexResponse(
+            [
+                'job_id' => $jobId,
+                'message' => $this->jobAddedInQueueMessage
+            ]
+        );
+        return $reindexResponse;
     }
 }

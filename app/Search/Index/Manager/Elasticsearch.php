@@ -294,6 +294,16 @@ class Elasticsearch extends Base
         $this->log(sprintf($this->indexingFinishMemoryTemplate, $this->memory->calculateUsedMemory()));
     }
 
+    /**
+     * @throws ApiException
+     */
+    public function update()
+    {
+        $this->init();
+        $this->indexFrom = $this->getIndex();
+        $newIndex = $this->indexFrom;
+    }
+
     public function deleteIndex()
     {
         if ($this->indexExists($this->index)) {

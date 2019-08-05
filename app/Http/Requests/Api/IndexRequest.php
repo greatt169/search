@@ -2,7 +2,11 @@
 
 namespace App\Http\Requests\Api;
 
-class IndexRequest extends ReindexRequest
+use SwaggerSearch\Model\UpdateParams;
+
+class UpdateRequest extends ReindexRequest
 {
-    // it's feature for future developing
+    protected function getSwaggerModelParams() {
+        return UpdateParams::class;
+    }
 }

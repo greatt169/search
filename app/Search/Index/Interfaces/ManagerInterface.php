@@ -23,6 +23,11 @@ interface ManagerInterface
     public function reindex();
 
     /**
+     * @throws ApiException
+     */
+    public function update();
+
+    /**
      * @return SourceInterface
      */
     public function getSource();
