@@ -22,7 +22,8 @@ use SwaggerSearch\Model\Sorts;
 
 class Elasticsearch extends Engine
 {
-    private $jobAddedInQueueMessage = 'Job has added in reindexing queue';
+    private $jobAddedInReindexQueueMessage = 'Job has added in reindexing queue';
+    private $jobAddedInUpdateQueueMessage = 'Job has added in updating queue';
 
     /**
      * Elasticsearch constructor.
@@ -219,7 +220,7 @@ class Elasticsearch extends Engine
         $reindexResponse = new ReindexResponse(
             [
                 'job_id' => $jobId,
-                'message' => $this->jobAddedInQueueMessage
+                'message' => $this->jobAddedInReindexQueueMessage
             ]
         );
         return $reindexResponse;
@@ -242,7 +243,7 @@ class Elasticsearch extends Engine
         $reindexResponse = new ReindexResponse(
             [
                 'job_id' => $jobId,
-                'message' => $this->jobAddedInQueueMessage
+                'message' => $this->jobAddedInUpdateQueueMessage
             ]
         );
         return $reindexResponse;

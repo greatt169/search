@@ -3,7 +3,7 @@
 namespace App\Listeners\Search;
 
 use App\Events\Search\NewFeedUpdateEvent;
-use App\Jobs\Search\FeedReindex;
+use App\Jobs\Search\FeedUpdate;
 
 class NewFeedUpdateEventListener
 {
@@ -15,6 +15,6 @@ class NewFeedUpdateEventListener
      */
     public function handle(NewFeedUpdateEvent $event)
     {
-        FeedReindex::dispatch($event);
+        FeedUpdate::dispatch($event);
     }
 }

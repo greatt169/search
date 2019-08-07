@@ -5,6 +5,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\UpdateRequest;
 use App\Http\Requests\Api\ReindexRequest;
 use App\Exceptions\ApiException;
+use App\Search\Entity\Engine\Elasticsearch as ElasticsearchEntity;
+use App\Search\Index\Manager\Elasticsearch as ElasticsearchManager;
+use App\Search\Index\Source\Elasticsearch as ElasticsearchSource;
 use App\Search\Query\Interfaces\RequestEngineInterface;
 use App\Search\Query\Request\Engine as RequestEngine;
 use SwaggerSearch\Model\Engine;
@@ -18,7 +21,12 @@ class IndexController extends Controller
      */
     public function demo()
     {
-        echo date('d.m.Y H:i:S');
+        $indexer = new ElasticsearchManager(
+            new ElasticsearchSource('auto', '/var/www/public/data-update.json'),
+            new ElasticsearchEntity()
+        );
+
+        $indexer->update();
     }
 
     /**

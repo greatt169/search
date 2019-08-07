@@ -103,6 +103,16 @@ class Elasticsearch extends Base
     protected $mappingNotPassedMessageTemplate = 'Mapping are not passed. Trying to get from current index';
 
     /**
+     * @var string
+     */
+    private $reindexingStartMessageTemplate = 'Reindexing started';
+
+    /**
+     * @var string
+     */
+    private $updatingStartMessageTemplate = 'Updating started';
+
+    /**
      * @return null|string
      */
     protected function getCurrentIndex()
@@ -176,6 +186,16 @@ class Elasticsearch extends Base
     public function indexAll()
     {
         $this->setMapping();
+        $total = $this->indexAllElements();
+        return $total;
+    }
+
+    /**
+     * @return int
+     * @throws ApiException
+     */
+    public function updateElements()
+    {
         $total = $this->indexAllElements();
         return $total;
     }
@@ -286,6 +306,7 @@ class Elasticsearch extends Base
         $this->init();
         $this->indexFrom = $this->getIndex();
         $newIndex = $this->getNewIndex();
+        $this->log($this->reindexingStartMessageTemplate);
         $this->log(sprintf($this->indexingStartMessageTemplate, $this->indexFrom, $newIndex));
         $this->createAuxIndexForReindex($newIndex);
         $total = $this->indexAll();
@@ -301,7 +322,11 @@ class Elasticsearch extends Base
     {
         $this->init();
         $this->indexFrom = $this->getIndex();
-        $newIndex = $this->indexFrom;
+        $this->log($this->updatingStartMessageTemplate);
+        $this->log(sprintf($this->indexingStartMessageTemplate, $this->indexFrom, $this->indexFrom));
+        $total = $this->updateElements();;
+        $this->log(sprintf($this->indexingFinishMessageTemplate, $this->indexFrom, $this->indexFrom, $total));
+        $this->log(sprintf($this->indexingFinishMemoryTemplate, $this->memory->calculateUsedMemory()));
     }
 
     public function deleteIndex()
