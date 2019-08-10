@@ -6,7 +6,6 @@ use App\Exceptions\ApiException;
 use Exception;
 use Illuminate\Validation\Validator as ValidatorAlias;
 use SwaggerSearch\Model\EngineParam;
-use SwaggerSearch\Model\ReindexParams;
 
 class ReindexRequest extends Request
 {

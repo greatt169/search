@@ -11,7 +11,6 @@ use App\Search\Index\Manager\Elasticsearch as ElasticsearchManager;
 use App\Search\Index\Source\Elasticsearch as ElasticsearchSource;
 use App\Search\Query\Interfaces\RequestEngineInterface;
 use App\Search\Query\Request\Engine as RequestEngine;
-use SwaggerSearch\Model\Engine;
 use \Illuminate\Contracts\Container\BindingResolutionException;
 use SwaggerSearch\Model\ReindexResponse;
 

@@ -141,6 +141,5 @@ class CatalogListRequest extends Request
                 throw new ApiException('Internal Server Error', $exception->getMessage() , 500);
             }
         });
-
     }
 }
