@@ -33,7 +33,7 @@ responses:
       $ref: '#/definitions/Error'
 
 paths:
-  "/catalog-list":
+  "/catalog/search":
     post:
       summary: Получение списка элементов
       description: Получение списка элементов
@@ -91,7 +91,7 @@ paths:
         500:
           $ref: '#/responses/500Error'
 
-  "/reindex":
+  "/index/reindex":
     post:
       summary: Обновление индекса
       description: Полное обновление элементов в индексе
@@ -110,7 +110,7 @@ paths:
             $ref: '#/definitions/ReindexParams'
 
       tags:
-        - Catalog
+        - Index
       responses:
         200:
           description: Метод успешно отработал
@@ -125,7 +125,7 @@ paths:
         500:
           $ref: '#/responses/500Error'
 
-  "/update/":
+  "/index/update/":
     post:
       summary: Обновление части элементов в индексе
       description: Частичное обновление элементов в индексе
@@ -144,7 +144,42 @@ paths:
             $ref: '#/definitions/UpdateParams'
 
       tags:
-        - Catalog
+        - Index
+      responses:
+        200:
+          description: Метод успешно отработал
+          schema:
+            $ref: '#/definitions/ReindexResponse'
+        400:
+          $ref: '#/responses/400Error'
+        403:
+          $ref: '#/responses/403Error'
+        404:
+          $ref: '#/responses/404Error'
+        500:
+          $ref: '#/responses/500Error'
+
+  "/{index}/_doc/{doc-id}/":
+    delete:
+      summary: Обновление части элементов в индексе
+      description: Частичное обновление элементов в индексе
+      parameters:
+        - in: path
+          name: index
+          required: true
+          description: Код индекса
+          schema:
+            type: string
+            example: auto
+        - in: path
+          name: doc-id
+          required: true
+          description: Id элемента для удаления
+          schema:
+            type: string
+            example: 1
+      tags:
+        - Index
       responses:
         200:
           description: Метод успешно отработал

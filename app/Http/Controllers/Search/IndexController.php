@@ -73,4 +73,12 @@ class IndexController extends Controller
         $engineRequest = RequestEngine::getInstance($engine->getName(), $index);
         return $engineRequest->update($index, $dataLink);
     }
+
+    public function delete($index, $documentId)
+    {
+        /**
+         * @var RequestEngineInterface $engineRequest
+         */
+        //$engineRequest = RequestEngine::getInstance($engine->getName(), $index);
+    }
 }

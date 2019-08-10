@@ -10,10 +10,14 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+use Illuminate\Support\Facades\Route;
+
 Route::group([
     'namespace' => 'Search',
 ], function () {
-    Route::post('/catalog-list/', 'SearchController@catalogList')->name('catalog_list');
-    Route::post('/reindex/', 'IndexController@reindex')->name('reindex');
-    Route::post('/update/', 'IndexController@update')->name('update');
+    Route::post('/catalog/search/', 'SearchController@catalogList')->name('catalog_list');
+    Route::post('/index/reindex/', 'IndexController@reindex')->name('reindex');
+    Route::post('/index/update/', 'IndexController@update')->name('update');
+    Route::delete('/{index}/_doc/{doc_id}/', 'IndexController@delete')->name('delete-document');
 });
