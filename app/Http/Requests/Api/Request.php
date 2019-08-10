@@ -8,7 +8,6 @@ use App\Search\UseCases\Errors\Error;
 use Illuminate\Foundation\Http\FormRequest;
 use SwaggerSearch\Model\Engine;
 use SwaggerSearch\Model\ModelInterface;
-use SwaggerSearch\ObjectSerializer;
 
 class Request extends FormRequest
 {
