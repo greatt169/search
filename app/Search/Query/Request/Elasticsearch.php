@@ -9,6 +9,7 @@ use App\Search\Entity\Engine\Elasticsearch as ElasticsearchEntity;
 use App\Search\Entity\Interfaces\EntityInterface;
 use App\Search\Index\Source\Elasticsearch as ElasticsearchSource;
 use App\Search\Index\Manager\Elasticsearch as ElasticsearchManager;
+use App\Search\UseCases\Errors\Error;
 use Elasticsearch\Client;
 use Exception;
 use SwaggerSearch\Model\ActionSuccessResult;
@@ -199,7 +200,7 @@ class Elasticsearch extends Engine
             $response->setTotal($total);
             $response->setItems($items);
         } catch (Exception $exception) {
-            throw new ApiException(class_basename($exception), $exception->getMessage(), $exception->getCode());
+            throw new ApiException($exception->getMessage(), Error::CODE_INTERNAL_SERVER_ERROR);
         }
         return $response;
     }
@@ -281,8 +282,7 @@ class Elasticsearch extends Engine
             $successResult = new ActionSuccessResult($resultData);
             return $successResult;
         } catch (\Throwable $exception) {
-            throw new ApiException(class_basename($exception), $exception->getMessage(), $exception->getCode());
+            throw new ApiException($exception->getMessage(), Error::CODE_BAD_REQUEST);
         }
-
     }
 }

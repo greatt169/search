@@ -4,6 +4,7 @@ namespace App\Search\Index\Source;
 
 use App\Exceptions\ApiException;
 use App\Search\Index\Interfaces\SourceInterface;
+use App\Search\UseCases\Errors\Error;
 use SwaggerSearch\Model\SourceIndex;
 use SwaggerSearch\ObjectSerializer;
 
@@ -50,7 +51,7 @@ abstract class Base implements SourceInterface
     public function checkFiles()
     {
         if(!file_exists($this->dataLink)) {
-            throw new ApiException(sprintf('Could not open file %s', $this->dataLink), 'Internal Server Error');
+            throw new ApiException(sprintf('Could not open file %s', $this->dataLink), Error::FILE_NOT_FOUND);
         }
     }
 

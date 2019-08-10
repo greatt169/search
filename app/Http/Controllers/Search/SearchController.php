@@ -2,53 +2,58 @@
 
 namespace App\Http\Controllers\Search;
 
-use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\CatalogListRequest;
 use App\Search\Query\Interfaces\RequestEngineInterface;
 use App\Search\Query\Request\Engine as RequestEngine;
+use App\Search\UseCases\Errors\Error;
 use SwaggerSearch\Model\Filter;
 use SwaggerSearch\Model\Search;
 use SwaggerSearch\Model\Sorts;
 use SwaggerSearch\Model\ListItems;
-use Illuminate\Contracts\Container\BindingResolutionException;
+use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 class SearchController extends Controller
 {
     /**
      * @param CatalogListRequest $request
-     * @return ListItems
-     * @throws ApiException
-     * @throws BindingResolutionException
+     * @param Error $errorService
+     * @return ListItems|Response
      */
-    public function catalogList(CatalogListRequest $request)
+    public function catalogList(CatalogListRequest $request, Error $errorService)
     {
-        /**
-         * @var Search $search
-         */
-        $search = $request->getValid('search');
+        try {
+            /**
+             * @var Search $search
+             */
+            $search = $request->getValid('search');
 
-        /**
-         * @var Filter $filter
-         */
-        $filter = $request->getValid('filter');
+            /**
+             * @var Filter $filter
+             */
+            $filter = $request->getValid('filter');
 
-        /**
-         * @var Sorts $sorts
-         */
-        $sorts = $request->getValid('sorts');
+            /**
+             * @var Sorts $sorts
+             */
+            $sorts = $request->getValid('sorts');
 
-        $engine = $request->route('engine');
-        $index = $request->route('index');
-        $page = $request->get('page');
-        $pageSize = $request->get('pageSize');
+            $engine = $request->route('engine');
+            $index = $request->route('index');
+            $page = $request->get('page');
+            $pageSize = $request->get('pageSize');
 
-        $items = null;
-        /**
-         * @var RequestEngineInterface $engineRequest
-         */
-        $engineRequest = RequestEngine::getInstance($engine, $index);
-        $items = $engineRequest->postCatalogList($search, $filter, $sorts, $page, $pageSize);
-        return $items;
+            $items = null;
+            /**
+             * @var RequestEngineInterface $engineRequest
+             */
+            $engineRequest = RequestEngine::getInstance($engine, $index);
+            $items = $engineRequest->postCatalogList($search, $filter, $sorts, $page, $pageSize);
+            return $items;
+        } catch (Throwable $exception) {
+            $error = $errorService->getError($exception);
+            return new Response($error->__toString(), $error->getHttpCode());
+        }
     }
 }

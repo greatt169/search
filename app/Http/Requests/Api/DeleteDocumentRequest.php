@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Api;
 
 use App\Exceptions\ApiException;
+use App\Search\UseCases\Errors\Error;
 use Exception;
 use Illuminate\Validation\Validator as ValidatorAlias;
 use SwaggerSearch\Model\EngineParam;
@@ -37,10 +38,10 @@ class DeleteDocumentRequest extends Request
                  */
                 $errors = $validator->errors();
                 if ($errors->count() > 0) {
-                    throw new ApiException('BadRequest', $errors->first(), 400);
+                    throw new ApiException($errors->first(), Error::CODE_BAD_REQUEST);
                 }
             } catch (Exception $exception) {
-                throw new ApiException('Internal Server Error', $exception->getMessage() , 500);
+                throw new ApiException($exception->getMessage(), Error::CODE_INTERNAL_SERVER_ERROR);
             }
         });
 

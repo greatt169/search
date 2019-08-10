@@ -6,6 +6,7 @@ use App\Exceptions\ApiException;
 use App\Search\Entity\Interfaces\EntityInterface;
 use App\Search\Index\Interfaces\SourceInterface;
 use App\Search\Index\Listeners\SourceListener;
+use App\Search\UseCases\Errors\Error;
 use Elasticsearch\Client;
 use Exception;
 use Illuminate\Support\Facades\Log;
@@ -470,7 +471,7 @@ class Elasticsearch extends Base
             fclose($stream);
         } catch (Exception $e) {
             fclose($stream);
-            throw new ApiException($e->getMessage(), $e->getTraceAsString(), 500);
+            throw new ApiException($e->getMessage(), Error::CODE_INTERNAL_SERVER_ERROR);
         }
         return $total;
     }

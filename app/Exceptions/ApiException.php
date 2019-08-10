@@ -2,50 +2,57 @@
 
 namespace App\Exceptions;
 
-use Exception;
-use Throwable;
+use App\Search\UseCases\Errors\Interfaces\ApiExceptionInterface;
+use SwaggerSearch\Model\ModelInterface;
 
-class ApiException extends Exception
+class ApiException extends \Exception implements ApiExceptionInterface
 {
-    protected $applicationCode;
 
-    protected $debug;
+    /**
+     * @var ModelInterface
+     */
+    protected $model;
 
-    public function __construct(string $message, $debug, int $code = 0, $applicationCode = null, Throwable $previous = null)
+    protected $invalidProperties;
+    /**
+     * @var string
+     */
+    private $appCode;
+    /**
+     * @var string
+     */
+    protected $message;
+
+    public function __construct(string $message, $appCode, ModelInterface $model = null)
     {
-        parent::__construct($message, $code, $previous);
-        $this->debug = $debug;
-        $this->applicationCode = $applicationCode ? $applicationCode : $code;
+        parent::__construct();
+        if ($model !== null) {
+            $this->invalidProperties = $model->listInvalidProperties();
+            $this->model = $model->getModelName();
+        }
+        $this->message = $message;
+        $this->appCode = $appCode;
     }
 
     /**
-     * Render the exception into an HTTP response.
-     *
-     * @param  \Illuminate\Http\Request
-     * @return \Illuminate\Http\Response
+     * @return array
      */
-    public function render($request)
+    public function getInvalidProperties(): array
     {
-        return response([
-            'application_error_code' => $this->getApplicationCode(),
-            'debug' => $this->getDebug(),
-            'message' => $this->getMessage(),
-        ], $this->getApplicationCode());
+        return $this->invalidProperties;
+    }
+
+
+    public function getModel(): ModelInterface
+    {
+        return $this->model;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getApplicationCode()
+    public function getAppCode(): string
     {
-        return $this->applicationCode;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDebug()
-    {
-        return $this->debug;
+        return $this->appCode;
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Search\Entity\Engine;
 
 use App\Exceptions\ApiException;
+use App\Search\UseCases\Errors\Error;
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 use Illuminate\Support\Facades\Log;
@@ -47,9 +48,7 @@ class Elasticsearch extends Base
             }
         } catch (Throwable $e) {
             throw new ApiException(
-                'Connect error. Try later',
-                $e->getMessage(),
-                500
+                'Connect error. Try later: ' . $e->getMessage(), Error::CODE_INTERNAL_SERVER_ERROR
             );
         }
         return null;

@@ -1,18 +1,21 @@
 <?php
+
 namespace App\Http\Controllers\Search;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\DeleteDocumentRequest;
 use App\Http\Requests\Api\UpdateRequest;
 use App\Http\Requests\Api\ReindexRequest;
-use App\Exceptions\ApiException;
 use App\Search\Entity\Engine\Elasticsearch as ElasticsearchEntity;
 use App\Search\Index\Manager\Elasticsearch as ElasticsearchManager;
 use App\Search\Index\Source\Elasticsearch as ElasticsearchSource;
 use App\Search\Query\Interfaces\RequestEngineInterface;
 use App\Search\Query\Request\Engine as RequestEngine;
-use \Illuminate\Contracts\Container\BindingResolutionException;
+use App\Search\UseCases\Errors\Error;
+use SwaggerSearch\Model\ActionSuccessResult;
 use SwaggerSearch\Model\ReindexResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 class IndexController extends Controller
 {
@@ -31,60 +34,71 @@ class IndexController extends Controller
 
     /**
      * @param ReindexRequest $request
-     * @return ReindexResponse
-     * @throws ApiException
-     * @throws BindingResolutionException
+     * @param Error $errorService
+     * @return ReindexResponse|Response
      */
-    public function reindex(ReindexRequest $request)
+    public function reindex(ReindexRequest $request, Error $errorService)
     {
-        $engine = $request->route('engine');
-        $index = $request->route('index');
+        try {
+            $engine = $request->route('engine');
+            $index = $request->route('index');
 
-        /**
-         * @var RequestEngineInterface $engineRequest
-         */
-        $engineRequest = RequestEngine::getInstance($engine, $index);
-        $dataLink = $request->input('dataLink');
-        $settingsLink = $request->input('settingsLink');
-        return $engineRequest->reindex($index, $dataLink, $settingsLink);
+            /**
+             * @var RequestEngineInterface $engineRequest
+             */
+            $engineRequest = RequestEngine::getInstance($engine, $index);
+            $dataLink = $request->input('dataLink');
+            $settingsLink = $request->input('settingsLink');
+            return $engineRequest->reindex($index, $dataLink, $settingsLink);
+        } catch (Throwable $exception) {
+            $error = $errorService->getError($exception);
+            return new Response($error->__toString(), $error->getHttpCode());
+        }
     }
 
     /**
      * @param UpdateRequest $request
-     * @return
-     * @throws ApiException
-     * @throws BindingResolutionException
+     * @param Error $errorService
+     * @return ReindexResponse|Response
      */
-    public function update(UpdateRequest $request)
+    public function update(UpdateRequest $request, Error $errorService)
     {
-        $engine = $request->route('engine');
-        $index = $request->route('index');
-        $dataLink = $request->input('dataLink');
+        try {
+            $engine = $request->route('engine');
+            $index = $request->route('index');
+            $dataLink = $request->input('dataLink');
 
-        /**
-         * @var RequestEngineInterface $engineRequest
-         */
-        $engineRequest = RequestEngine::getInstance($engine, $index);
-        return $engineRequest->update($index, $dataLink);
+            /**
+             * @var RequestEngineInterface $engineRequest
+             */
+            $engineRequest = RequestEngine::getInstance($engine, $index);
+            return $engineRequest->update($index, $dataLink);
+        } catch (Throwable $exception) {
+            $error = $errorService->getError($exception);
+            return new Response($error->__toString(), $error->getHttpCode());
+        }
     }
 
     /**
      * @param DeleteDocumentRequest $request
-     * @return mixed
-     * @throws ApiException
-     * @throws BindingResolutionException
+     * @param Error $errorService
+     * @return ActionSuccessResult|Response
      */
-    public function delete(DeleteDocumentRequest $request)
+    public function delete(DeleteDocumentRequest $request, Error $errorService)
     {
+        try {
+            $index = $request->route('index');
+            $engine = $request->route('engine');
+            $id = $request->route('doc_id');
 
-        $index = $request->route('index');
-        $engine = $request->route('engine');
-        $id = $request->route('doc_id');
-
-        /**
-         * @var RequestEngineInterface $engineRequest
-         */
-        $engineRequest = RequestEngine::getInstance($engine, $index);
-        return $engineRequest->deleteElement($id);
+            /**
+             * @var RequestEngineInterface $engineRequest
+             */
+            $engineRequest = RequestEngine::getInstance($engine, $index);
+            return $engineRequest->deleteElement($id);
+        } catch (Throwable $exception) {
+            $error = $errorService->getError($exception);
+            return new Response($error->__toString(), $error->getHttpCode());
+        }
     }
 }
