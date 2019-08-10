@@ -91,23 +91,37 @@ paths:
         500:
           $ref: '#/responses/500Error'
 
-  "/index/reindex":
+  /{engine}/_index/{index}/reindex/:
     post:
       summary: Обновление индекса
       description: Полное обновление элементов в индексе
       parameters:
-        - in: query
+        - in: path
+          name: engine
+          required: true
+          description: Код поискового движка
+          schema:
+            $ref: '#/definitions/EngineParam'
+        - in: path
           name: index
           required: true
           description: Код индекса
           schema:
             type: string
             example: auto
-        - in: body
-          name: request
+        - in: query
+          name: dataLink
           required: true
           schema:
-            $ref: '#/definitions/ReindexParams'
+            type: string
+            example: /var/www/public/data-update.json
+            description: Ссылка на json-файл с данными
+        - in: query
+          name: settingsLink
+          schema:
+            type: string
+            example: /var/www/public/settings.json
+            description: Ссылка на json-файл с настройками
 
       tags:
         - Index
@@ -125,23 +139,31 @@ paths:
         500:
           $ref: '#/responses/500Error'
 
-  "/index/update/":
+  "/{engine}/_index/{index}/update/":
     post:
       summary: Обновление части элементов в индексе
       description: Частичное обновление элементов в индексе
       parameters:
-        - in: query
+        - in: path
+          name: engine
+          required: true
+          description: Код поискового движка
+          schema:
+            $ref: '#/definitions/EngineParam'
+        - in: path
           name: index
           required: true
           description: Код индекса
           schema:
             type: string
             example: auto
-        - in: body
-          name: request
+        - in: query
+          name: dataLink
           required: true
           schema:
-            $ref: '#/definitions/UpdateParams'
+            type: string
+            example: /var/www/public/data-update.json
+            description: Ссылка на json-файл с данными
 
       tags:
         - Index
@@ -159,7 +181,7 @@ paths:
         500:
           $ref: '#/responses/500Error'
 
-  "/{engine}/{index}/_doc/{doc-id}":
+  "/{engine}/_index/{index}/_doc/{doc-id}":
     delete:
       summary: Удаление элемента из индекса
       description: Частичное обновление элементов в индексе
@@ -167,7 +189,7 @@ paths:
         - in: path
           name: engine
           required: true
-          description: Поисковик
+          description: Код поискового движка
           schema:
             $ref: '#/definitions/EngineParam'
         - in: path
@@ -214,35 +236,6 @@ definitions:
         description: Текстовое сообщение при успешном выполнении
         example: Операция успешно выполнена
 
-  ReindexParams:
-    type: object
-    description: Параметры для переиндексации
-    required:
-      - name
-    properties:
-      engine:
-        $ref: '#/definitions/Engine'
-      dataLink:
-        type: string
-        example: /var/www/public/data.json
-        description: Ссылка на json-файл с данными
-      settingsLink:
-        type: string
-        example: /var/www/public/settings.json
-        description: Ссылка на json-файл с настройками
-
-  UpdateParams:
-    type: object
-    description: Параметры для обновления пачки элементов
-    required:
-      - name
-    properties:
-      engine:
-        $ref: '#/definitions/Engine'
-      dataLink:
-        type: string
-        example: /var/www/public/data-update.json
-        description: Ссылка на json-файл с данными
 
   ReindexResponse:
     type: object
@@ -254,18 +247,6 @@ definitions:
       jobId:
         type: string
         example: '5d452f74de76c'
-
-  Engine:
-    type: object
-    description: Вид поискового движка
-    required:
-      - name
-    properties:
-      name:
-        type: string
-        default: elasticsearch
-        example: elasticsearch
-        enum: [elasticsearch, sphinx]
 
   EngineParam:
     type: string

@@ -38,18 +38,15 @@ class IndexController extends Controller
      */
     public function reindex(ReindexRequest $request)
     {
-        /**
-         * @var Engine $engine
-         */
-        $engine = $request->getValid('engine');
-        $index = $request->get('index');
+        $engine = $request->route('engine');
+        $index = $request->route('index');
 
         /**
          * @var RequestEngineInterface $engineRequest
          */
-        $engineRequest = RequestEngine::getInstance($engine->getName(), $index);
-        $dataLink = $request->getValid('dataLink');
-        $settingsLink = $request->get('settingsLink');
+        $engineRequest = RequestEngine::getInstance($engine, $index);
+        $dataLink = $request->input('dataLink');
+        $settingsLink = $request->input('settingsLink');
         return $engineRequest->reindex($index, $dataLink, $settingsLink);
     }
 
@@ -61,17 +58,14 @@ class IndexController extends Controller
      */
     public function update(UpdateRequest $request)
     {
-        /**
-         * @var Engine $engine
-         */
-        $engine = $request->getValid('engine');
-        $index = $request->get('index');
-        $dataLink = $request->getValid('dataLink');
+        $engine = $request->route('engine');
+        $index = $request->route('index');
+        $dataLink = $request->input('dataLink');
 
         /**
          * @var RequestEngineInterface $engineRequest
          */
-        $engineRequest = RequestEngine::getInstance($engine->getName(), $index);
+        $engineRequest = RequestEngine::getInstance($engine, $index);
         return $engineRequest->update($index, $dataLink);
     }
 

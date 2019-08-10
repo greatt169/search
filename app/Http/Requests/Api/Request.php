@@ -25,27 +25,6 @@ class Request extends FormRequest
 
     protected $engine = null;
 
-    /**
-     * @param bool $withData
-     * @return Engine
-     */
-    protected function getEngine($withData = true)
-    {
-        $data = '';
-        if ($withData) {
-            $sourceData = $this->getDeserializeData();
-            if (property_exists($sourceData, 'engine')) {
-                $data = $sourceData->engine;
-            }
-        }
-        /**
-         * @var Engine $engine
-         */
-        $engine = ObjectSerializer::deserialize($data, Engine::class, null);
-        $this->engine = $engine;
-        return $engine;
-    }
-
     public function setValid($key, $value) {
         $this->validData[$key] = $value;
     }
