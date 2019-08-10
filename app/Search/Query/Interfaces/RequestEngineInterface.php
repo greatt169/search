@@ -51,4 +51,10 @@ interface RequestEngineInterface
      * @return mixed
      */
     public function update(string $index, string $dataLink) : ReindexResponse;
+
+    /**
+     * @param string $id
+     * @return mixed
+     */
+    public function deleteElement(string $id);
 }

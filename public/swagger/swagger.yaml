@@ -159,11 +159,17 @@ paths:
         500:
           $ref: '#/responses/500Error'
 
-  "/{index}/_doc/{doc-id}/":
+  "/{engine}/{index}/_doc/{doc-id}":
     delete:
-      summary: Обновление части элементов в индексе
+      summary: Удаление элемента из индекса
       description: Частичное обновление элементов в индексе
       parameters:
+        - in: path
+          name: engine
+          required: true
+          description: Поисковик
+          schema:
+            $ref: '#/definitions/EngineParam'
         - in: path
           name: index
           required: true
@@ -184,7 +190,7 @@ paths:
         200:
           description: Метод успешно отработал
           schema:
-            $ref: '#/definitions/ReindexResponse'
+            $ref: '#/definitions/ActionSuccessResult'
         400:
           $ref: '#/responses/400Error'
         403:
@@ -195,6 +201,19 @@ paths:
           $ref: '#/responses/500Error'
 
 definitions:
+  ActionSuccessResult:
+    type: object
+    description: Ответ об успешном выполнении операции
+    properties:
+      code:
+        type: string
+        description: Символьный код ответа при выполнении операции
+        example: success
+      message:
+        type: string
+        description: Текстовое сообщение при успешном выполнении
+        example: Операция успешно выполнена
+
   ReindexParams:
     type: object
     description: Параметры для переиндексации
@@ -247,6 +266,12 @@ definitions:
         default: elasticsearch
         example: elasticsearch
         enum: [elasticsearch, sphinx]
+
+  EngineParam:
+    type: string
+    default: elasticsearch
+    example: elasticsearch
+    enum: [elasticsearch, sphinx]
 
   Sorts:
     type: object

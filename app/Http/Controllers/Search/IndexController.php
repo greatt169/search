@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Search;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\DeleteDocumentRequest;
 use App\Http\Requests\Api\UpdateRequest;
 use App\Http\Requests\Api\ReindexRequest;
 use App\Exceptions\ApiException;
@@ -74,11 +75,23 @@ class IndexController extends Controller
         return $engineRequest->update($index, $dataLink);
     }
 
-    public function delete($index, $documentId)
+    /**
+     * @param DeleteDocumentRequest $request
+     * @return mixed
+     * @throws ApiException
+     * @throws BindingResolutionException
+     */
+    public function delete(DeleteDocumentRequest $request)
     {
+
+        $index = $request->route('index');
+        $engine = $request->route('engine');
+        $id = $request->route('doc_id');
+
         /**
          * @var RequestEngineInterface $engineRequest
          */
-        //$engineRequest = RequestEngine::getInstance($engine->getName(), $index);
+        $engineRequest = RequestEngine::getInstance($engine, $index);
+        return $engineRequest->deleteElement($id);
     }
 }

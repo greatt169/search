@@ -11,6 +11,7 @@ use App\Search\Index\Source\Elasticsearch as ElasticsearchSource;
 use App\Search\Index\Manager\Elasticsearch as ElasticsearchManager;
 use Elasticsearch\Client;
 use Exception;
+use SwaggerSearch\Model\ActionSuccessResult;
 use SwaggerSearch\Model\Filter;
 use SwaggerSearch\Model\FilterParam;
 use SwaggerSearch\Model\FilterRangeParam;
@@ -24,6 +25,7 @@ class Elasticsearch extends Engine
 {
     private $jobAddedInReindexQueueMessage = 'Job has added in reindexing queue';
     private $jobAddedInUpdateQueueMessage = 'Job has added in updating queue';
+    private $indexElementDeletedMessageTemplate = 'Element has deleted. Index: %s, Element id: %s';
 
     /**
      * Elasticsearch constructor.
@@ -247,5 +249,40 @@ class Elasticsearch extends Engine
             ]
         );
         return $reindexResponse;
+    }
+
+    /**
+     * @param string $id
+     * @return mixed|void
+     * @throws ApiException
+     */
+    public function deleteElement(string $id)
+    {
+        /**
+         * @var Client $client
+         */
+        $client = $this->entity->getClient();
+        try {
+            $result = $client->delete(
+                [
+                    'id' => $id,
+                    'index' => $this->index
+                ]
+            );
+            $resultData = [
+                'code' => $result['result'],
+                'message' => sprintf(
+                    $this->indexElementDeletedMessageTemplate,
+                    $result['_index'],
+                    $result['_id']
+                )
+            ];
+
+            $successResult = new ActionSuccessResult($resultData);
+            return $successResult;
+        } catch (\Throwable $exception) {
+            throw new ApiException(class_basename($exception), $exception->getMessage(), $exception->getCode());
+        }
+
     }
 }

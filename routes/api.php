@@ -19,5 +19,5 @@ Route::group([
     Route::post('/catalog/search/', 'SearchController@catalogList')->name('catalog_list');
     Route::post('/index/reindex/', 'IndexController@reindex')->name('reindex');
     Route::post('/index/update/', 'IndexController@update')->name('update');
-    Route::delete('/{index}/_doc/{doc_id}/', 'IndexController@delete')->name('delete-document');
+    Route::delete('/{engine}/{index}/_doc/{doc_id}', 'IndexController@delete')->name('delete-document');
 });
