@@ -33,12 +33,18 @@ responses:
       $ref: '#/definitions/Error'
 
 paths:
-  "/catalog/search":
+  "/{engine}/_index/{index}/catalog/search":
     post:
       summary: Получение списка элементов
       description: Получение списка элементов
       parameters:
-        - in: query
+        - in: path
+          name: engine
+          required: true
+          description: Код поискового движка
+          schema:
+            $ref: '#/definitions/EngineParam'
+        - in: path
           name: index
           required: true
           description: Код индекса
@@ -69,8 +75,6 @@ paths:
                 $ref: '#/definitions/Filter'
               sorts:
                 $ref: '#/definitions/Sorts'
-              engine:
-                $ref: '#/definitions/Engine'
 
       tags:
       - Catalog
@@ -114,7 +118,7 @@ paths:
           required: true
           schema:
             type: string
-            example: /var/www/public/data-update.json
+            example: /var/www/public/data.json
             description: Ссылка на json-файл с данными
         - in: query
           name: settingsLink

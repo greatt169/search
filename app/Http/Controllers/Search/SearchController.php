@@ -37,11 +37,8 @@ class SearchController extends Controller
          */
         $sorts = $request->getValid('sorts');
 
-        /**
-         * @var Engine $engine
-         */
-        $engine = $request->getValid('engine');
-        $index = $request->get('index');
+        $engine = $request->route('engine');
+        $index = $request->route('index');
         $page = $request->get('page');
         $pageSize = $request->get('pageSize');
 
@@ -49,7 +46,7 @@ class SearchController extends Controller
         /**
          * @var RequestEngineInterface $engineRequest
          */
-        $engineRequest = RequestEngine::getInstance($engine->getName(), $index);
+        $engineRequest = RequestEngine::getInstance($engine, $index);
         $items = $engineRequest->postCatalogList($search, $filter, $sorts, $page, $pageSize);
         return $items;
     }

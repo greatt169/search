@@ -5,6 +5,7 @@ namespace App\Http\Requests\Api;
 use App\Exceptions\ApiException;
 use Exception;
 use Illuminate\Validation\Validator as ValidatorAlias;
+use SwaggerSearch\Model\EngineParam;
 use SwaggerSearch\Model\Filter;
 use SwaggerSearch\Model\FilterParam;
 use SwaggerSearch\Model\ModelInterface;
@@ -35,11 +36,15 @@ class CatalogListRequest extends Request
 
     public function rules()
     {
-        $allowableValues = implode(',', $this->getEngine(false)->getNameAllowableValues());
         return [
             'search.query' => 'max:255|min:3',
-            'engine.name' => 'in:' . $allowableValues
+            'engine' => 'in:' . implode(',', EngineParam::getAllowableEnumValues())
         ];
+    }
+
+    protected function validationData()
+    {
+        return array_merge((array) parent::all(), (array) $this->route()->parameters());
     }
 
     /**
@@ -130,7 +135,6 @@ class CatalogListRequest extends Request
                 if ($errors->count() > 0) {
                     throw new ApiException('BadRequest', $errors->first(), 400);
                 } else {
-                    $this->setValid('engine', $this->getEngine());
                     $this->setValid('search', $this->getSearch());
                 }
             } catch (Exception $exception) {
