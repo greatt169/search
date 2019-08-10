@@ -6,19 +6,20 @@ use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\CatalogListRequest;
 use App\Search\Query\Interfaces\RequestEngineInterface;
-use SwaggerSearch\Model\Engine;
 use App\Search\Query\Request\Engine as RequestEngine;
 use SwaggerSearch\Model\Filter;
 use SwaggerSearch\Model\Search;
 use SwaggerSearch\Model\Sorts;
+use SwaggerSearch\Model\ListItems;
+use Illuminate\Contracts\Container\BindingResolutionException;
 
 class SearchController extends Controller
 {
     /**
      * @param CatalogListRequest $request
-     * @return \SwaggerSearch\Model\ListItems
+     * @return ListItems
      * @throws ApiException
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws BindingResolutionException
      */
     public function catalogList(CatalogListRequest $request)
     {
