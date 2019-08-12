@@ -35,7 +35,7 @@ responses:
 paths:
   "/{engine}/_index/{index}/catalog/search":
     post:
-      summary: Получение списка элементов
+      summary: Поиск и фильтация элементов индекса
       description: Получение списка элементов
       parameters:
         - in: path
@@ -75,6 +75,12 @@ paths:
                 $ref: '#/definitions/Filter'
               sorts:
                 $ref: '#/definitions/Sorts'
+              aggregations:
+                type: array
+                items:
+                  type: string
+                  minItems: 1
+                  example: ['model', 'year', 'color']
 
       tags:
       - Catalog
