@@ -383,12 +383,89 @@ definitions:
         description: |
           Значение свойства
         example: 'white'
+
+
+  DisplayFilter:
+    type: object
+    description: Объект фильтрации для отображения
+    required:
+      - rangeParams
+      - selectParams
+    properties:
+      rangeParams:
+        type: array
+        description: |
+          Массив входных параметров фильтра типа range для отображения
+        items:
+          $ref: '#/definitions/DisplayFilterRangeParam'
+
+      selectParams:
+        type: array
+        description: |
+          Массив входных параметров фильтра остальных типов (checkbox, radio, select) для отображения
+        items:
+          $ref: '#/definitions/DisplayFilterParam'
+
+  DisplayFilterRangeParam:
+    type: object
+    required:
+      - code
+      - values
+    properties:
+      code:
+        type: string
+        description: |
+          Символьный код параметра
+        example: "price"
+      minValue:
+        type: number
+        description: |
+          Минимальное значение свойства
+        example: 0
+      maxValue:
+        type: number
+        description: |
+          Максимальное значение свойства
+        example: 10000
+
+  DisplayFilterParam:
+    type: object
+    required:
+      - code
+      - values
+    properties:
+      code:
+        type: string
+        description: |
+          Символьный код параметра
+        example: "color"
+      values:
+        type: array
+        description: |
+          Массив значений параметра
+        items:
+          $ref: '#/definitions/DisplayFilterValue'
+
+  DisplayFilterValue:
+    type: object
+    required:
+      - value
+    properties:
+      value:
+        type: string
+        description: |
+          Значение свойства
+        example: 'white'
+
+
   ListItems:
     type: object
     properties:
       total:
         type: integer
         example: 10
+      filter:
+        $ref: '#/definitions/DisplayFilter'
       items:
         type: array
         items:
