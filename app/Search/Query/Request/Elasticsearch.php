@@ -295,6 +295,39 @@ class Elasticsearch extends Engine
         }
     }
 
+    protected function getAggregations($arParamsAggregations)
+    {
+        $arAggregations = [];
+        foreach ($arParamsAggregations as $paramsAggregation) {
+            if (is_array($paramsAggregation)) {
+                $field = $paramsAggregation[0];
+                $func = $paramsAggregation[1];
+                $key = $func;
+                $code = $field . '_func_' . strtoupper($func);
+            } else {
+                $key = 'terms';
+                $code = $paramsAggregation;
+                $field = $paramsAggregation;
+            }
+
+            if (is_array($paramsAggregation)) {
+                $arAggregations[$code] = [
+                    $key => [
+                        'field' => $field
+                    ]
+                ];
+            } else {
+                $arAggregations[$code] = [
+                    $key => [
+                        'field' => $field,
+                        'size' => 10000
+                    ]
+                ];
+            }
+        }
+        return $arAggregations;
+    }
+
     /**
      * @param array $aggregations
      * @param array|null $filter
@@ -309,7 +342,7 @@ class Elasticsearch extends Engine
         $client = $this->entity->getClient();
 
         if($filter === null) {
-            $requestBody['aggregations'] = $aggregations;
+            $requestBody['body']['aggregations'] = $this->getAggregations($aggregations);
             $results = $client->search($requestBody);
             var_dump($results);
         }
