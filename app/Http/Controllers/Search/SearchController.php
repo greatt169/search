@@ -39,6 +39,8 @@ class SearchController extends Controller
              */
             $sorts = $request->getValid('sorts');
 
+            $aggregations = $request->input('aggregations');
+
             $engine = $request->route('engine');
             $index = $request->route('index');
             $page = $request->get('page');
@@ -49,7 +51,7 @@ class SearchController extends Controller
              * @var RequestEngineInterface $engineRequest
              */
             $engineRequest = RequestEngine::getInstance($engine, $index);
-            $items = $engineRequest->postCatalogList($search, $filter, $sorts, $page, $pageSize);
+            $items = $engineRequest->postCatalogList($search, $filter, $aggregations, $sorts, $page, $pageSize);
             return $items;
         } catch (Throwable $exception) {
             $error = $errorService->getError($exception);

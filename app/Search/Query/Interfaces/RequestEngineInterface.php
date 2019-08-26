@@ -12,12 +12,13 @@ interface RequestEngineInterface
     /**
      * @param Search|null $search
      * @param Filter|null $filter
+     * @param array|null $aggregations
      * @param Sorts|null $sorts
      * @param int $page
      * @param int $pageSize
      * @return ListItems
      */
-    public function postCatalogList(Search $search = null, Filter $filter = null, Sorts $sorts = null, $page = 1, $pageSize = 20) : ListItems;
+    public function postCatalogList(Search $search = null, Filter $filter = null, $aggregations = null, Sorts $sorts = null, $page = 1, $pageSize = 20) : ListItems;
 
     /**
      * @param Sorts $sorts

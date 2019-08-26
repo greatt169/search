@@ -80,7 +80,7 @@ paths:
                 items:
                   type: string
                   minItems: 1
-                  example: ['model', 'year', 'color']
+                example: ['model', 'year', 'color']
 
       tags:
       - Catalog

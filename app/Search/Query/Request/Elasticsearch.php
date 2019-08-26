@@ -13,6 +13,7 @@ use App\Search\UseCases\Errors\Error;
 use Elasticsearch\Client;
 use Exception;
 use SwaggerSearch\Model\ActionSuccessResult;
+use SwaggerSearch\Model\DisplayFilter;
 use SwaggerSearch\Model\Filter;
 use SwaggerSearch\Model\FilterParam;
 use SwaggerSearch\Model\FilterRangeParam;
@@ -159,13 +160,14 @@ class Elasticsearch extends Engine
     /**
      * @param Search|null $search
      * @param Filter|null $filter
+     * @param array|null $aggregations
      * @param Sorts|null $sorts
      * @param int $page
      * @param int $pageSize
      * @return ListItems
      * @throws ApiException
      */
-    public function postCatalogList(Search $search = null, Filter $filter = null, Sorts $sorts = null, $page = 1, $pageSize = 20) : ListItems
+    public function postCatalogList(Search $search = null, Filter $filter = null, $aggregations = null, Sorts $sorts = null, $page = 1, $pageSize = 20) : ListItems
     {
         try {
             $requestBody = [];
@@ -199,6 +201,13 @@ class Elasticsearch extends Engine
             $response = new ListItems();
             $response->setTotal($total);
             $response->setItems($items);
+
+
+            if($aggregations !== null) {
+                $aggregationFilter = $this->getAggregationFilter($aggregations);
+                $response->setFilter($aggregationFilter);
+            }
+
         } catch (Exception $exception) {
             throw new ApiException($exception->getMessage(), Error::CODE_INTERNAL_SERVER_ERROR);
         }
@@ -284,5 +293,13 @@ class Elasticsearch extends Engine
         } catch (\Throwable $exception) {
             throw new ApiException($exception->getMessage(), Error::CODE_BAD_REQUEST);
         }
+    }
+
+    /**
+     * @param array $aggregations
+     * @return DisplayFilter
+     */
+    protected function getAggregationFilter(array $aggregations): DisplayFilter
+    {
     }
 }
