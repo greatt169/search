@@ -204,7 +204,7 @@ class Elasticsearch extends Engine
 
 
             if($aggregations !== null) {
-                $aggregationFilter = $this->getAggregationFilter($aggregations);
+                $aggregationFilter = $this->getAggregationFilter($aggregations, $filter);
                 $response->setFilter($aggregationFilter);
             }
 
@@ -297,9 +297,24 @@ class Elasticsearch extends Engine
 
     /**
      * @param array $aggregations
+     * @param array|null $filter
+     *
      * @return DisplayFilter
      */
-    protected function getAggregationFilter(array $aggregations): DisplayFilter
+    protected function getAggregationFilter(array $aggregations, ?array $filter): DisplayFilter
     {
+        /**
+         * @var Client $client
+         */
+        $client = $this->entity->getClient();
+
+        if($filter === null) {
+            $requestBody['aggregations'] = $aggregations;
+            $results = $client->search($requestBody);
+            var_dump($results);
+        }
+
+        print_r($filter);
+        print_r($aggregations);
     }
 }
