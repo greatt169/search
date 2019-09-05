@@ -25,6 +25,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         mysqli \
         pdo_mysql \
         zip \
+        pcntl \
         soap
 
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
