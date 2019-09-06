@@ -19,18 +19,6 @@ use Throwable;
 
 class IndexController extends Controller
 {
-    /**
-     * @throws \Exception
-     */
-    public function demo()
-    {
-        $indexer = new ElasticsearchManager(
-            new ElasticsearchSource('auto', '/var/www/public/data-update.json'),
-            new ElasticsearchEntity()
-        );
-
-        $indexer->update();
-    }
 
     /**
      * @param ReindexRequest $request

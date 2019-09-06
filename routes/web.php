@@ -10,9 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'PagesController@index');
 
 Route::group([
     'namespace' => 'Search',
@@ -20,6 +18,3 @@ Route::group([
 ], function () {
     Route::get('/', 'IndexController@index')->name('search_home');
 });
-
-Route::get('/swagger/index.html')->name('search_swagger');
-Route::get('/frontend/index.html')->name('search_frontend');
