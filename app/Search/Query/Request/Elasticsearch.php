@@ -330,11 +330,11 @@ class Elasticsearch extends Engine
 
     /**
      * @param array $aggregations
-     * @param array|null $filter
+     * @param Filter|null $filter
      *
      * @return DisplayFilter
      */
-    protected function getAggregationFilter(array $aggregations, ?array $filter): DisplayFilter
+    protected function getAggregationFilter(array $aggregations, ?Filter $filter): DisplayFilter
     {
         /**
          * @var Client $client
@@ -343,11 +343,21 @@ class Elasticsearch extends Engine
 
         if($filter === null) {
             $requestBody['body']['aggregations'] = $this->getAggregations($aggregations);
+            $requestBody['body']['size'] = 0;
+            $requestBody['body']['from'] = 1;
+
             $results = $client->search($requestBody);
-            var_dump($results);
+            $aggregations = $results['aggregations'];
+
+            foreach ($aggregations as $field => $aggregation) {
+                print_r($field);
+                foreach ($aggregation['buckets'] as $bucket) {
+                    print_r($bucket);
+                }
+            }
         }
 
-        print_r($filter);
-        print_r($aggregations);
+        $outputFilter = new DisplayFilter();
+        return $outputFilter;
     }
 }
