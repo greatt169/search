@@ -6,9 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\DeleteDocumentRequest;
 use App\Http\Requests\Api\UpdateRequest;
 use App\Http\Requests\Api\ReindexRequest;
-use App\Search\Entity\Engine\Elasticsearch as ElasticsearchEntity;
-use App\Search\Index\Manager\Elasticsearch as ElasticsearchManager;
-use App\Search\Index\Source\Elasticsearch as ElasticsearchSource;
 use App\Search\Query\Interfaces\RequestEngineInterface;
 use App\Search\Query\Request\Engine as RequestEngine;
 use App\Search\UseCases\Errors\Error;
@@ -19,7 +16,6 @@ use Throwable;
 
 class IndexController extends Controller
 {
-
     /**
      * @param ReindexRequest $request
      * @param Error $errorService
