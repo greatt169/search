@@ -477,6 +477,11 @@ definitions:
     required:
       - value
     properties:
+      count:
+        type: integer
+        description: |
+          Количество элементов с установленным заначением свойства
+        example: 5
       value:
         type: string
         description: |

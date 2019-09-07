@@ -334,11 +334,17 @@ class Elasticsearch extends Engine
         return $arAggregations;
     }
 
+    protected function isCheckBoxAggregation($aggregationResultItem)
+    {
+        return array_key_exists('buckets', $aggregationResultItem);
+    }
+
     /**
      * @param Aggregations $aggregations
      * @param Filter|null $filter
      *
      * @return DisplayFilter
+     * @todo refactor
      */
     protected function getAggregationFilter(Aggregations $aggregations, ?Filter $filter): DisplayFilter
     {
@@ -347,15 +353,18 @@ class Elasticsearch extends Engine
          */
         $client = $this->entity->getClient();
 
-        if($filter === null) {
+        $filterData = [
+            'range_params' => [],
+            'select_params' => [],
+        ];
 
+        if($filter === null) {
             $aggregationList = [];
             /**
              * @var Aggregation $aggregation
              */
             foreach ($aggregations->getItems() as $aggregation) {
                 switch ($aggregation->getType()) {
-
                     case Aggregation::TYPE_CHECKBOX: {
                         $aggregationList[] = $aggregation->getField();
                         break;
@@ -372,7 +381,6 @@ class Elasticsearch extends Engine
                         break;
                     }
                 }
-
             }
 
             $requestBody['body']['aggregations'] = $this->getAggregations($aggregationList);
@@ -382,17 +390,48 @@ class Elasticsearch extends Engine
             $results = $client->search($requestBody);
             $aggregationResult = $results['aggregations'];
 
-            print_r($aggregationResult);
+            foreach ($aggregationResult as $field => $aggregationResultItem) {
+                if($this->isCheckBoxAggregation($aggregationResultItem)) {
+                    $filterData['select_params'][$field] = [
+                        'code' => $field
+                    ];
+                    foreach ($aggregationResultItem['buckets'] as $bucket) {
+                        $filterData['select_params'][$field]['values'][] = [
+                            'value' => $bucket['key'],
+                            'count' => $bucket['doc_count']
+                        ];
+                    }
+                } else {
 
-//            foreach ($aggregationResult as $field => $aggregationResultItem) {
-//                print_r($field);
-//                foreach ($aggregationResultItem['buckets'] as $bucket) {
-//                    print_r($bucket);
-//                }
-//            }
+                    $fieldRangeData = explode('_func_', $field);
+                    $fieldCode = reset($fieldRangeData);
+                    $func = end($fieldRangeData);
+
+                    if(!array_key_exists($fieldCode, $filterData['range_params'])) {
+                        $filterData['range_params'][$fieldCode] = [
+                            'code' => $fieldCode
+                        ];
+                    }
+
+                    switch ($func) {
+                        case 'min': {
+                            $filterData['range_params'][$fieldCode]['min_value'] = $aggregationResultItem['value'];
+                            break;
+                        }
+
+                        case 'max': {
+                            $filterData['range_params'][$fieldCode]['max_value'] = $aggregationResultItem['value'];
+                            break;
+                        }
+                    }
+                }
+            }
+
+            $filterData['select_params'] = array_values($filterData['select_params']);
+            $filterData['range_params'] = array_values($filterData['range_params']);
         }
 
-        $outputFilter = new DisplayFilter();
+        $outputFilter = new DisplayFilter($filterData);
         return $outputFilter;
     }
 }
