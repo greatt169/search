@@ -7,6 +7,7 @@ use App\Http\Requests\Api\CatalogListRequest;
 use App\Search\Query\Interfaces\RequestEngineInterface;
 use App\Search\Query\Request\Engine as RequestEngine;
 use App\Search\UseCases\Errors\Error;
+use SwaggerSearch\Model\Aggregations;
 use SwaggerSearch\Model\Filter;
 use SwaggerSearch\Model\Search;
 use SwaggerSearch\Model\Sorts;
@@ -39,7 +40,10 @@ class SearchController extends Controller
              */
             $sorts = $request->getValid('sorts');
 
-            $aggregations = $request->input('aggregations');
+            /**
+             * @var Aggregations $aggregations
+             */
+            $aggregations = $request->getValid('aggregations');
 
             $engine = $request->route('engine');
             $index = $request->route('index');

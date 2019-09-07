@@ -76,11 +76,7 @@ paths:
               sorts:
                 $ref: '#/definitions/Sorts'
               aggregations:
-                type: array
-                items:
-                  type: string
-                  minItems: 1
-                example: ['model', 'year', 'color']
+                $ref: '#/definitions/Aggregations'
 
       tags:
       - Catalog
@@ -275,6 +271,17 @@ definitions:
         items:
           $ref: '#/definitions/Sort'
 
+  Aggregations:
+    type: object
+    description: Объект, содержащий массив правил для аггрегации (построение матрицы фильтров)
+    required:
+      - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/Aggregation'
+
   Search:
     type: object
     description: Объект для параметров поиска
@@ -311,6 +318,25 @@ definitions:
         default: 'asc'
         example: 'asc'
         enum: [asc, desc]
+
+  Aggregation:
+    type: object
+    description: Объект аггрегации на вход
+    required:
+      - field
+      - type
+    properties:
+      field:
+        description: Поле для аггрегации
+        type: string
+        default: 'color'
+        example: 'color'
+      type:
+        description: Тип аггрегации
+        type: string
+        default: ''
+        example: 'checkbox'
+        enum: [checkbox, range]
 
   Filter:
     type: object

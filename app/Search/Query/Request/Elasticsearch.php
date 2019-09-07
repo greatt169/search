@@ -13,6 +13,8 @@ use App\Search\UseCases\Errors\Error;
 use Elasticsearch\Client;
 use Exception;
 use SwaggerSearch\Model\ActionSuccessResult;
+use SwaggerSearch\Model\Aggregation;
+use SwaggerSearch\Model\Aggregations;
 use SwaggerSearch\Model\DisplayFilter;
 use SwaggerSearch\Model\Filter;
 use SwaggerSearch\Model\FilterParam;
@@ -160,14 +162,14 @@ class Elasticsearch extends Engine
     /**
      * @param Search|null $search
      * @param Filter|null $filter
-     * @param array|null $aggregations
+     * @param Aggregations|null $aggregations
      * @param Sorts|null $sorts
      * @param int $page
      * @param int $pageSize
      * @return ListItems
      * @throws ApiException
      */
-    public function postCatalogList(Search $search = null, Filter $filter = null, $aggregations = null, Sorts $sorts = null, $page = 1, $pageSize = 20) : ListItems
+    public function postCatalogList(Search $search = null, Filter $filter = null, Aggregations $aggregations = null, Sorts $sorts = null, $page = 1, $pageSize = 20) : ListItems
     {
         try {
             $requestBody = [];
@@ -329,12 +331,12 @@ class Elasticsearch extends Engine
     }
 
     /**
-     * @param array $aggregations
+     * @param Aggregations $aggregations
      * @param Filter|null $filter
      *
      * @return DisplayFilter
      */
-    protected function getAggregationFilter(array $aggregations, ?Filter $filter): DisplayFilter
+    protected function getAggregationFilter(Aggregations $aggregations, ?Filter $filter): DisplayFilter
     {
         /**
          * @var Client $client
@@ -342,16 +344,25 @@ class Elasticsearch extends Engine
         $client = $this->entity->getClient();
 
         if($filter === null) {
-            $requestBody['body']['aggregations'] = $this->getAggregations($aggregations);
+
+            $aggregationList = [];
+            /**
+             * @var Aggregation $aggregation
+             */
+            foreach ($aggregations->getItems() as $aggregation) {
+                $aggregationList[] = $aggregation->getField();
+            }
+
+            $requestBody['body']['aggregations'] = $this->getAggregations($aggregationList);
             $requestBody['body']['size'] = 0;
             $requestBody['body']['from'] = 1;
 
             $results = $client->search($requestBody);
-            $aggregations = $results['aggregations'];
+            $aggregationResult = $results['aggregations'];
 
-            foreach ($aggregations as $field => $aggregation) {
+            foreach ($aggregationResult as $field => $aggregationResultItem) {
                 print_r($field);
-                foreach ($aggregation['buckets'] as $bucket) {
+                foreach ($aggregationResultItem['buckets'] as $bucket) {
                     print_r($bucket);
                 }
             }

@@ -6,6 +6,8 @@ use App\Exceptions\ApiException;
 use App\Search\UseCases\Errors\Error;
 use Exception;
 use Illuminate\Validation\Validator as ValidatorAlias;
+use SwaggerSearch\Model\Aggregation;
+use SwaggerSearch\Model\Aggregations;
 use SwaggerSearch\Model\EngineParam;
 use SwaggerSearch\Model\Filter;
 use SwaggerSearch\Model\FilterParam;
@@ -118,6 +120,32 @@ class CatalogListRequest extends Request
     }
 
     /**
+     * @throws ApiException
+     */
+    protected function validateAggregations()
+    {
+        /**
+         * @var Aggregations $aggregations
+         * @var Aggregation $aggregation
+         */
+        $sourceData = $this->getDeserializeData();
+        if (property_exists($sourceData, 'aggregations')) {
+            $sortData = $sourceData->aggregations;
+        } else {
+            $this->setValid('aggregations', null);
+            return;
+        }
+        $aggregations = ObjectSerializer::deserialize($sortData, Aggregations::class, null);
+        $this->validateBySwaggerModel($aggregations);
+        $aggregationItems = $aggregations->getItems();
+
+        foreach ($aggregationItems as $aggregation) {
+            $this->validateBySwaggerModel($aggregation);
+        }
+        $this->setValid('aggregations', $aggregations);
+    }
+
+    /**
      * Configure the validator instance.
      *
      * @param ValidatorAlias $validator
@@ -129,6 +157,7 @@ class CatalogListRequest extends Request
             try {
                 $this->validateFilter();
                 $this->validateSort();
+                $this->validateAggregations();
                 /**
                  * @var ValidatorAlias $validator
                  */
