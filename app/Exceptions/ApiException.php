@@ -2,12 +2,13 @@
 
 namespace App\Exceptions;
 
+use App\Search\UseCases\Errors\Error;
 use App\Search\UseCases\Errors\Interfaces\ApiExceptionInterface;
 use SwaggerSearch\Model\ModelInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class ApiException extends \Exception implements ApiExceptionInterface
 {
-
     /**
      * @var ModelInterface
      */
@@ -23,7 +24,12 @@ class ApiException extends \Exception implements ApiExceptionInterface
      */
     protected $message;
 
-    public function __construct(string $message, $appCode, ModelInterface $model = null)
+    /**
+     * @var Error $errorService;
+     */
+    protected $errorService;
+
+    public function __construct(string $message, $appCode, ModelInterface $model = null, Error $errorService = null)
     {
         parent::__construct();
         if ($model !== null) {
@@ -32,6 +38,10 @@ class ApiException extends \Exception implements ApiExceptionInterface
         }
         $this->message = $message;
         $this->appCode = $appCode;
+        $this->errorService = $errorService;
+        if($errorService === null) {
+            $this->errorService = new Error();
+        }
     }
 
     /**
@@ -54,5 +64,11 @@ class ApiException extends \Exception implements ApiExceptionInterface
     public function getAppCode(): string
     {
         return $this->appCode;
+    }
+
+    public function render($request)
+    {
+        $error = $this->errorService->getError($this);
+        return new Response($error->__toString(), $error->getHttpCode());
     }
 }

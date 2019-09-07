@@ -297,6 +297,10 @@ class Elasticsearch extends Engine
         }
     }
 
+    /**
+     * @param $arParamsAggregations
+     * @return array
+     */
     protected function getAggregations($arParamsAggregations)
     {
         $arAggregations = [];
@@ -305,7 +309,7 @@ class Elasticsearch extends Engine
                 $field = $paramsAggregation[0];
                 $func = $paramsAggregation[1];
                 $key = $func;
-                $code = $field . '_func_' . strtoupper($func);
+                $code = $field . '_func_' . $func;
             } else {
                 $key = 'terms';
                 $code = $paramsAggregation;
@@ -350,7 +354,25 @@ class Elasticsearch extends Engine
              * @var Aggregation $aggregation
              */
             foreach ($aggregations->getItems() as $aggregation) {
-                $aggregationList[] = $aggregation->getField();
+                switch ($aggregation->getType()) {
+
+                    case Aggregation::TYPE_CHECKBOX: {
+                        $aggregationList[] = $aggregation->getField();
+                        break;
+                    }
+                    case Aggregation::TYPE_RANGE: {
+                        $aggregationList[] = [
+                            $aggregation->getField(),
+                            'min'
+                        ];
+                        $aggregationList[] = [
+                            $aggregation->getField(),
+                            'max'
+                        ];
+                        break;
+                    }
+                }
+
             }
 
             $requestBody['body']['aggregations'] = $this->getAggregations($aggregationList);
@@ -360,12 +382,14 @@ class Elasticsearch extends Engine
             $results = $client->search($requestBody);
             $aggregationResult = $results['aggregations'];
 
-            foreach ($aggregationResult as $field => $aggregationResultItem) {
-                print_r($field);
-                foreach ($aggregationResultItem['buckets'] as $bucket) {
-                    print_r($bucket);
-                }
-            }
+            print_r($aggregationResult);
+
+//            foreach ($aggregationResult as $field => $aggregationResultItem) {
+//                print_r($field);
+//                foreach ($aggregationResultItem['buckets'] as $bucket) {
+//                    print_r($bucket);
+//                }
+//            }
         }
 
         $outputFilter = new DisplayFilter();
