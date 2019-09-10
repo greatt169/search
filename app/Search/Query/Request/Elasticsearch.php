@@ -353,7 +353,6 @@ class Elasticsearch extends Engine
         $client = $this->entity->getClient();
         if($filter === null) {
             $aggregationList = $this->getAggregationList($aggregations);
-
             $requestBody['body']['aggregations'] = $this->getAggregations($aggregationList);
             $requestBody['body']['size'] = 0;
             $requestBody['body']['from'] = 1;
@@ -362,6 +361,57 @@ class Elasticsearch extends Engine
             $aggregationResult = $results['aggregations'];
 
             $filterData = $this->getEngineConvertedAggregations($aggregationResult);
+        } else {
+
+            // getFilterTerms
+            // test
+            $filterTerms = [];
+            $selectedParams = $filter->getSelectParams();
+            /**
+             * @var FilterParam $selectedParam
+             */
+            foreach ($selectedParams as $selectedParam) {
+                $termCode = $selectedParam->getCode();
+                $term = [$selectedParam];
+                $termFilter = new Filter();
+                $termFilter->setRangeParams([]);
+                $termFilter->setSelectParams($term);
+                $filterTerms[$termCode] = $termFilter;
+            }
+
+            // getFilterMatrix
+            /**
+             * @todo: see search in term get query
+             *
+             * @var Client $client
+             */
+            $client = $this->entity->getClient();
+            $futures = [];
+
+            foreach ($filterTerms as $filterTermCode => $filterTerm) {
+
+                $termQuery = $this->getQuery(null, $filterTerm);
+                $aggregationList = $this->getAggregationList($aggregations);
+
+                if(!empty($termQuery)) {
+                    $requestBody['body']['query'] = $termQuery;
+                }
+                $requestBody['body']['aggregations'] = $this->getAggregations($aggregationList);
+                $requestBody['body']['size'] = 0;
+                $requestBody['body']['from'] = 1;
+
+                // future mode
+                $results = $client->search($requestBody);
+                $aggregationResult = $results['aggregations'];
+
+                $filterData = $this->getEngineConvertedAggregations($aggregationResult);
+
+                print_r($filterData);
+            }
+
+
+
+            $filterData = [];
         }
         $outputFilter = new DisplayFilter($filterData);
         return $outputFilter;
