@@ -11,7 +11,7 @@
         "php": ">=7.1",
         "ext-json": "*",
         "bramus/monolog-colored-line-formatter": "~3.0",
-        "elasticsearch/elasticsearch": "7.0",
+        "elasticsearch/elasticsearch": "7.0.2",
         "laravel/framework": "^5.8.0",
         "laravel/horizon": "^3.3",
         "predis/predis": "^1.1",
