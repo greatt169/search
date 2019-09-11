@@ -361,10 +361,22 @@ class Elasticsearch extends Engine
             $aggregationResult = $results['aggregations'];
 
             $filterData = $this->getEngineConvertedAggregations($aggregationResult);
-        } else {
+        } else { // test
+
+            // full
+            $aggregationList = $this->getAggregationList($aggregations);
+            $requestBody['body']['aggregations'] = $this->getAggregations($aggregationList);
+            $requestBody['body']['size'] = 0;
+            $requestBody['body']['from'] = 1;
+
+            $results = $client->search($requestBody);
+            $aggregationResult = $results['aggregations'];
+
+            $rawMatrix = $this->getEngineConvertedAggregations($aggregationResult);
+            print_r($rawMatrix);
+            print_r('=======================' . PHP_EOL);
 
             // getFilterTerms
-            // test
             $filterTerms = [];
             $selectedParams = $filter->getSelectParams();
             /**
@@ -379,7 +391,7 @@ class Elasticsearch extends Engine
                 $filterTerms[$termCode] = $termFilter;
             }
 
-            // getFilterMatrix
+            // getTermMatrix
             /**
              * @todo: see search in term get query
              *
@@ -387,9 +399,9 @@ class Elasticsearch extends Engine
              */
             $client = $this->entity->getClient();
             $futures = [];
+            $termMatrix = [];
 
             foreach ($filterTerms as $filterTermCode => $filterTerm) {
-
                 $termQuery = $this->getQuery(null, $filterTerm);
                 $aggregationList = $this->getAggregationList($aggregations);
 
@@ -403,12 +415,41 @@ class Elasticsearch extends Engine
                 // future mode
                 $results = $client->search($requestBody);
                 $aggregationResult = $results['aggregations'];
-
                 $filterData = $this->getEngineConvertedAggregations($aggregationResult);
 
-                print_r($filterData);
+                $termMatrix[$filterTermCode] = $filterData;
+
+            }
+            print_r($termMatrix);
+            print_r('=======================' . PHP_EOL);
+
+            foreach ($termMatrix as $term => $termMatrixItem) {
+                // todo range
+
+                foreach ($termMatrixItem['select_params'] as $selectParamCode => $selectParam) {
+
+                    /*if($selectParamCode == $term) {
+                        continue;
+                    }*/
+
+                    foreach ($selectParam['values'] as $selectParamVal => $selectParamValue) {
+                        if($rawMatrix['select_params'][$selectParamCode]['values'][$selectParamVal]) {
+                            if($selectParamValue['count'] < $rawMatrix['select_params'][$selectParamCode]['values'][$selectParamVal]['count']) {
+                                $rawMatrix['select_params'][$selectParamCode]['values'][$selectParamVal]['count'] = $selectParamValue['count'];
+                            }
+                        } else {
+                            $rawMatrix['select_params'][$selectParamCode]['values'][$selectParamVal]['count'] = 0;
+                            $rawMatrix['select_params'][$selectParamCode]['values'][$selectParamVal]['disabled'] = true;
+
+                        }
+
+                    }
+                }
             }
 
+            $resultMatrix = $rawMatrix;
+            print_r($resultMatrix);
+            print_r('=======================' . PHP_EOL);
 
 
             $filterData = [];
@@ -457,9 +498,11 @@ class Elasticsearch extends Engine
                     'code' => $field
                 ];
                 foreach ($aggregationResultItem['buckets'] as $bucket) {
-                    $filterData['select_params'][$field]['values'][] = [
+                    $filterData['select_params'][$field]['values'][$bucket['key']] = [
                         'value' => $bucket['key'],
-                        'count' => $bucket['doc_count']
+                        'count' => $bucket['doc_count'],
+                        'selected' => null,
+                        'disabled' => null
                     ];
                 }
             } else {
@@ -485,8 +528,8 @@ class Elasticsearch extends Engine
                 }
             }
         }
-        $filterData['select_params'] = array_values($filterData['select_params']);
-        $filterData['range_params'] = array_values($filterData['range_params']);
+        //$filterData['select_params'] = array_values($filterData['select_params']);
+        //$filterData['range_params'] = array_values($filterData['range_params']);
         return $filterData;
     }
 }

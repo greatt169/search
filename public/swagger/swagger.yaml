@@ -477,6 +477,14 @@ definitions:
     required:
       - value
     properties:
+      selected:
+        type: boolean
+        description: Параметр явсляется выбранным
+        example: false
+      disabled:
+        type: boolean
+        description: Параметр явсляется недоступным для выбора
+        example: false
       count:
         type: integer
         description: |
