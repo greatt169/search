@@ -349,38 +349,24 @@ class Elasticsearch extends Engine
      */
     protected function getAggregationFilter(Aggregations $aggregations, ?Filter $filter): DisplayFilter
     {
-        $timer = new Timer();
-        $timer->start('aggregations');
-        $resultMatrix = [];
-
         /**
          * @var Client $client
          */
         $client = $this->entity->getClient();
-        if ($filter === null) {
-            $aggregationList = $this->getAggregationList($aggregations);
-            $requestParams['index'] = $this->index;
-            $requestParams['body']['aggregations'] = $this->getAggregations($aggregationList);
-            $requestParams['body']['size'] = 0;
-            $requestParams['body']['from'] = 1;
 
-            $results = $client->search($requestParams);
-            $aggregationResult = $results['aggregations'];
+        // full
+        $aggregationList = $this->getAggregationList($aggregations);
+        $requestParams['index'] = $this->index;
+        $requestParams['body']['aggregations'] = $this->getAggregations($aggregationList);
+        $requestParams['body']['size'] = 0;
+        $requestParams['body']['from'] = 1;
 
-            $filterData = $this->getEngineConvertedAggregations($aggregationResult);
-        } else { // test
+        $results = $client->search($requestParams);
+        $aggregationResult = $results['aggregations'];
 
-            // full
-            $aggregationList = $this->getAggregationList($aggregations);
-            $requestParams['index'] = $this->index;
-            $requestParams['body']['aggregations'] = $this->getAggregations($aggregationList);
-            $requestParams['body']['size'] = 0;
-            $requestParams['body']['from'] = 1;
+        $rawMatrix = $this->getEngineConvertedAggregations($aggregationResult);
 
-            $results = $client->search($requestParams);
-            $aggregationResult = $results['aggregations'];
-
-            $rawMatrix = $this->getEngineConvertedAggregations($aggregationResult);
+        if ($filter !== null) {
 
             // getFilterTerms
             $filterTerms = [];
@@ -399,7 +385,6 @@ class Elasticsearch extends Engine
 
             // getTermMatrix
             /**
-             * @todo: see search in term get query
              *
              * @var Client $client
              */
@@ -420,16 +405,8 @@ class Elasticsearch extends Engine
                 $requestParams['client'] = [
                     'future' => 'lazy'
                 ];
-
                 // future mode
                 $futures[$filterTermCode] = $client->search($requestParams);
-
-
-                /*$results = $client->search($requestParams);
-                $aggregationResult = $results['aggregations'];
-                $filterData = $this->getEngineConvertedAggregations($aggregationResult);
-
-                $termMatrix[$filterTermCode] = $filterData;*/
             }
 
             foreach ($futures as $filterTermCode => $future) {
@@ -437,41 +414,34 @@ class Elasticsearch extends Engine
                 $filterData = $this->getEngineConvertedAggregations($aggregationResult);
                 $termMatrix[$filterTermCode] = $filterData;
             }
-
             unset($futures);
 
 
             foreach ($termMatrix as $term => $termMatrixItem) {
                 // todo range
-
                 foreach ($termMatrixItem['select_params'] as $selectParamCode => $selectParam) {
-
                     if ($selectParamCode == $term) {
                         continue;
                     }
-
                     $diffPropValues = array_diff_key($rawMatrix['select_params'][$selectParamCode]['values'], $selectParam['values']);
                     $intersectPropValues = array_intersect_key($selectParam['values'], $rawMatrix['select_params'][$selectParamCode]['values']);
-
-
                     foreach ($diffPropValues as $difPropValueCode => $diffPropValue) {
                         $rawMatrix['select_params'][$selectParamCode]['values'][$difPropValueCode]['count'] = 0;
                         $rawMatrix['select_params'][$selectParamCode]['values'][$difPropValueCode]['disabled'] = true;
                     }
-
                     foreach ($intersectPropValues as $intersectPropValueCode => $intersectPropValue) {
                         $rawMatrix['select_params'][$selectParamCode]['values'][$intersectPropValueCode]['disabled'] = false;
-                        if($rawMatrix['select_params'][$selectParamCode]['values'][$intersectPropValueCode]['count'] > $intersectPropValue['count']) {
+                        if ($rawMatrix['select_params'][$selectParamCode]['values'][$intersectPropValueCode]['count'] > $intersectPropValue['count']) {
                             $rawMatrix['select_params'][$selectParamCode]['values'][$intersectPropValueCode]['count'] = $intersectPropValue['count'];
                         }
                     }
-
                 }
             }
+        }
 
-            $resultMatrix = $rawMatrix;
+        $resultMatrix = $rawMatrix;
 
-
+        if ($filter !== null) {
             // select
             $filterSelectedParams = $filter->getSelectParams();
             foreach ($filterSelectedParams as $filterSelectedParam) {
@@ -482,18 +452,16 @@ class Elasticsearch extends Engine
                     $resultMatrix['select_params'][$code]['values'][$val]['selected'] = true;
                 }
             }
-
-
-            // array values
-            $resultMatrix['select_params'] = array_values($resultMatrix['select_params']);
-            foreach ($resultMatrix['select_params'] as $index => $selectParam) {
-                $resultMatrix['select_params'][$index]['values'] = array_values($selectParam['values']);
-            }
-
         }
+
+
+        // array values
+        $resultMatrix['select_params'] = array_values($resultMatrix['select_params']);
+        foreach ($resultMatrix['select_params'] as $index => $selectParam) {
+            $resultMatrix['select_params'][$index]['values'] = array_values($selectParam['values']);
+        }
+
         $outputFilter = new DisplayFilter($resultMatrix);
-        $timer->end('aggregations');
-        print_r($timer->getInterval('aggregations'));
         return $outputFilter;
     }
 
@@ -543,7 +511,7 @@ class Elasticsearch extends Engine
                         'value' => $bucket['key'],
                         'count' => $bucket['doc_count'],
                         'selected' => false,
-                        'disabled' => null
+                        'disabled' => false
                     ];
                 }
             } else {
