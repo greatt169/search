@@ -528,12 +528,16 @@ class Elasticsearch extends Engine
                     case 'min':
                         {
                             $filterData['range_params'][$fieldCode]['min_value'] = $aggregationResultItem['value'];
+                            $filterData['range_params'][$fieldCode]['min_selected'] = $aggregationResultItem['value'];
+                            $filterData['range_params'][$fieldCode]['min_displayed'] = $aggregationResultItem['value'];
                             break;
                         }
 
                     case 'max':
                         {
                             $filterData['range_params'][$fieldCode]['max_value'] = $aggregationResultItem['value'];
+                            $filterData['range_params'][$fieldCode]['max_selected'] = $aggregationResultItem['value'];
+                            $filterData['range_params'][$fieldCode]['max_displayed'] = $aggregationResultItem['value'];
                             break;
                         }
                 }
