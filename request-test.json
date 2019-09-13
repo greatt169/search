@@ -35,6 +35,10 @@
       {
         "field": "year",
         "type": "checkbox"
+      },
+      {
+        "field": "price",
+        "type": "range"
       }
     ]
   }
