@@ -443,16 +443,36 @@ definitions:
         description: |
           Символьный код параметра
         example: "price"
-      minValue:
+      minTotal:
         type: number
         description: |
           Минимальное значение свойства
         example: 0
-      maxValue:
+      maxTotal:
         type: number
         description: |
           Максимальное значение свойства
         example: 10000
+      minSelected:
+        type: number
+        description: |
+          Минимальное выбранное значение
+        example: 0
+      maxSelected:
+        type: number
+        description: |
+          Максимальное выбранное значение
+        example: 10000
+      minDisplayed:
+        type: number
+        description: |
+          Минимальное отображенное значение
+        example: 100
+      maxDisplayed:
+        type: number
+        description: |
+          Максимальное отображенное значение
+        example: 5000
 
   DisplayFilterParam:
     type: object
