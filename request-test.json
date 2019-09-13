@@ -1,6 +1,12 @@
 {
   "filter": {
-    "rangeParams": [],
+    "rangeParams": [
+      {
+        "code": "price",
+        "minValue": 300000,
+        "maxValue": 450000
+      }
+    ],
     "selectParams": [
       {
         "code": "color",

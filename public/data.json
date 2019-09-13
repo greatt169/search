@@ -83,7 +83,7 @@
           "description": null,
           "img": null,
           "additionalInfo": null,
-          "value": "5000000"
+          "value": "50000"
         }
       }
     ],
@@ -459,7 +459,7 @@
           "description": null,
           "img": null,
           "additionalInfo": null,
-          "value": "50000"
+          "value": "65000"
         }
       }
     ],
@@ -582,7 +582,7 @@
           "description": null,
           "img": null,
           "additionalInfo": null,
-          "value": "50000"
+          "value": "355000"
         }
       }
     ],
@@ -705,7 +705,7 @@
           "description": null,
           "img": null,
           "additionalInfo": null,
-          "value": "50000"
+          "value": "71000"
         }
       }
     ],
@@ -723,6 +723,252 @@
             "img": null,
             "additionalInfo": null,
             "value": "Krasniy"
+          }
+        ]
+      },
+      {
+        "code": "insurance",
+        "name": "Strahovka",
+        "description": null,
+        "img": null,
+        "additionalInfo": null,
+        "values": [
+          {
+            "code": "osago",
+            "description": null,
+            "img": null,
+            "additionalInfo": null,
+            "value": "OSAGO"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "singleAttributes": [
+      {
+        "code": "name",
+        "name": "Nazvanie",
+        "description": null,
+        "img": null,
+        "additionalInfo": null,
+        "value": {
+          "code": null,
+          "description": null,
+          "img": null,
+          "additionalInfo": null,
+          "value": "Staraya Lada Granta"
+        }
+      },
+      {
+        "code": "type",
+        "name": "Tip elementa",
+        "description": null,
+        "img": null,
+        "additionalInfo": null,
+        "value": {
+          "code": null,
+          "description": null,
+          "img": null,
+          "additionalInfo": null,
+          "value": "element"
+        }
+      },
+      {
+        "code": "brand",
+        "name": "Marka mashiny",
+        "description": null,
+        "img": null,
+        "additionalInfo": null,
+        "value": {
+          "code": "vaz",
+          "description": null,
+          "img": null,
+          "additionalInfo": null,
+          "value": "Lada"
+        }
+      },
+      {
+        "code": "model",
+        "name": "Model' mashiny",
+        "description": null,
+        "img": null,
+        "additionalInfo": null,
+        "value": {
+          "code": "granta_new",
+          "description": null,
+          "img": null,
+          "additionalInfo": null,
+          "value": "Granta Novaya"
+        }
+      },
+      {
+        "code": "year",
+        "name": "God vypuska",
+        "description": null,
+        "img": null,
+        "additionalInfo": null,
+        "value": {
+          "code": null,
+          "description": null,
+          "img": null,
+          "additionalInfo": null,
+          "value": "2015"
+        }
+      },
+      {
+        "code": "price",
+        "name": "Cena",
+        "description": null,
+        "img": null,
+        "additionalInfo": null,
+        "value": {
+          "code": null,
+          "description": null,
+          "img": null,
+          "additionalInfo": null,
+          "value": "455000"
+        }
+      }
+    ],
+    "multipleAttributes": [
+      {
+        "code": "color",
+        "name": "Cvet",
+        "description": null,
+        "img": null,
+        "additionalInfo": null,
+        "values": [
+          {
+            "code": "white",
+            "description": null,
+            "img": null,
+            "additionalInfo": null,
+            "value": "Belyj"
+          }
+        ]
+      },
+      {
+        "code": "insurance",
+        "name": "Strahovka",
+        "description": null,
+        "img": null,
+        "additionalInfo": null,
+        "values": [
+          {
+            "code": "osago",
+            "description": null,
+            "img": null,
+            "additionalInfo": null,
+            "value": "OSAGO"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "singleAttributes": [
+      {
+        "code": "name",
+        "name": "Nazvanie",
+        "description": null,
+        "img": null,
+        "additionalInfo": null,
+        "value": {
+          "code": null,
+          "description": null,
+          "img": null,
+          "additionalInfo": null,
+          "value": "Staraya Lada Granta"
+        }
+      },
+      {
+        "code": "type",
+        "name": "Tip elementa",
+        "description": null,
+        "img": null,
+        "additionalInfo": null,
+        "value": {
+          "code": null,
+          "description": null,
+          "img": null,
+          "additionalInfo": null,
+          "value": "element"
+        }
+      },
+      {
+        "code": "brand",
+        "name": "Marka mashiny",
+        "description": null,
+        "img": null,
+        "additionalInfo": null,
+        "value": {
+          "code": "vaz",
+          "description": null,
+          "img": null,
+          "additionalInfo": null,
+          "value": "Lada"
+        }
+      },
+      {
+        "code": "model",
+        "name": "Model' mashiny",
+        "description": null,
+        "img": null,
+        "additionalInfo": null,
+        "value": {
+          "code": "granta_new",
+          "description": null,
+          "img": null,
+          "additionalInfo": null,
+          "value": "Granta Novaya"
+        }
+      },
+      {
+        "code": "year",
+        "name": "God vypuska",
+        "description": null,
+        "img": null,
+        "additionalInfo": null,
+        "value": {
+          "code": null,
+          "description": null,
+          "img": null,
+          "additionalInfo": null,
+          "value": "2015"
+        }
+      },
+      {
+        "code": "price",
+        "name": "Cena",
+        "description": null,
+        "img": null,
+        "additionalInfo": null,
+        "value": {
+          "code": null,
+          "description": null,
+          "img": null,
+          "additionalInfo": null,
+          "value": "400000"
+        }
+      }
+    ],
+    "multipleAttributes": [
+      {
+        "code": "color",
+        "name": "Cvet",
+        "description": null,
+        "img": null,
+        "additionalInfo": null,
+        "values": [
+          {
+            "code": "white",
+            "description": null,
+            "img": null,
+            "additionalInfo": null,
+            "value": "Belyj"
           }
         ]
       },
