@@ -383,6 +383,19 @@ class Elasticsearch extends Engine
                 $filterTerms[$termCode] = $termFilter;
             }
 
+            $rangedParams = $filter->getRangeParams();
+            /**
+             * @var FilterRangeParam $rangedParam
+             */
+            foreach ($rangedParams as $rangedParam) {
+                $termCode = $rangedParam->getCode();
+                $term = [$rangedParam];
+                $termFilter = new Filter();
+                $termFilter->setRangeParams($term);
+                $termFilter->setSelectParams([]);
+                $filterTerms[$termCode] = $termFilter;
+            }
+
             // getTermMatrix
             /**
              *
@@ -418,7 +431,11 @@ class Elasticsearch extends Engine
 
 
             foreach ($termMatrix as $term => $termMatrixItem) {
-                // todo range
+
+                foreach ($termMatrixItem['range_params'] as $rangeParamCode => $rangeParam) {
+                    print_r($rangeParamCode);
+                }
+
                 foreach ($termMatrixItem['select_params'] as $selectParamCode => $selectParam) {
                     if ($selectParamCode == $term) {
                         continue;
@@ -452,6 +469,9 @@ class Elasticsearch extends Engine
                     $resultMatrix['select_params'][$code]['values'][$val]['selected'] = true;
                 }
             }
+
+            // range
+            $filterRangedParams = $filter->getRangeParams();
         }
 
 
