@@ -429,19 +429,69 @@ class Elasticsearch extends Engine
             }
             unset($futures);
 
-
             foreach ($termMatrix as $term => $termMatrixItem) {
 
+                $diffPropValues = array_diff_key($rawMatrix['range_params'], $termMatrixItem['range_params']);
+                $intersectPropValues = array_intersect_key($termMatrixItem['range_params'], $rawMatrix['range_params']);
+
+                foreach ($intersectPropValues as $intersectPropValueCode => $intersectPropValue) {
+
+                    // todo past continue
+
+
+                    if ($rawMatrix['range_params'][$intersectPropValueCode]['min_displayed'] > $intersectPropValue['min_displayed']) {
+                        $rawMatrix['range_params'][$intersectPropValueCode]['min_displayed'] = $intersectPropValue['min_displayed'];
+                    }
+
+                    if ($rawMatrix['range_params'][$intersectPropValueCode]['max_displayed'] < $intersectPropValue['max_displayed']) {
+                        $rawMatrix['range_params'][$intersectPropValueCode]['max_displayed'] = $intersectPropValue['max_displayed'];
+                    }
+                }
+
+
                 foreach ($termMatrixItem['range_params'] as $rangeParamCode => $rangeParam) {
-                    print_r($rangeParamCode);
+
+                    if ($rangeParamCode == $term) {
+                        continue;
+                    }
+
+                    // range params
+
+
+                    /*print_r($term); echo PHP_EOL;
+                    print_r($rangeParamCode); echo PHP_EOL;
+                    print_r('------ diff -------'); echo PHP_EOL;
+                    print_r($diffPropValues); echo PHP_EOL;
+                    print_r('------ rangeParam -------'); echo PHP_EOL;
+                    print_r($rangeParam); echo PHP_EOL;
+                    print_r('------ intersect -------'); echo PHP_EOL;
+                    print_r($intersectPropValues); echo PHP_EOL;
+                    print_r('================='); echo PHP_EOL;*/
+
+                   /* foreach ($intersectPropValues as $intersectPropValue) {
+                        if ($rawMatrix['range_params'][$rangeParamCode]['min_displayed'] > $intersectPropValue['min_displayed']) {
+                            $rawMatrix['range_params'][$rangeParamCode]['min_displayed'] = $intersectPropValue['min_displayed'];
+                        }
+
+                        if ($rawMatrix['range_params'][$rangeParamCode]['max_displayed'] < $intersectPropValue['max_displayed']) {
+                            $rawMatrix['range_params'][$rangeParamCode]['max_displayed'] = $intersectPropValue['max_displayed'];
+                        }
+                    }*/
+
+                    //print_r($rangeParamCode);
+                    //print_r($termMatrixItem);
                 }
 
                 foreach ($termMatrixItem['select_params'] as $selectParamCode => $selectParam) {
+
                     if ($selectParamCode == $term) {
                         continue;
                     }
+
+                    // select params
                     $diffPropValues = array_diff_key($rawMatrix['select_params'][$selectParamCode]['values'], $selectParam['values']);
                     $intersectPropValues = array_intersect_key($selectParam['values'], $rawMatrix['select_params'][$selectParamCode]['values']);
+
                     foreach ($diffPropValues as $difPropValueCode => $diffPropValue) {
                         $rawMatrix['select_params'][$selectParamCode]['values'][$difPropValueCode]['count'] = 0;
                         $rawMatrix['select_params'][$selectParamCode]['values'][$difPropValueCode]['disabled'] = true;
@@ -452,6 +502,9 @@ class Elasticsearch extends Engine
                             $rawMatrix['select_params'][$selectParamCode]['values'][$intersectPropValueCode]['count'] = $intersectPropValue['count'];
                         }
                     }
+
+
+
                 }
             }
         }
@@ -472,6 +525,13 @@ class Elasticsearch extends Engine
 
             // range
             $filterRangedParams = $filter->getRangeParams();
+            foreach ($filterRangedParams as $filterRangedParam) {
+                $code = $filterRangedParam->getCode();
+                $filterRangedParamMinSelected = $filterRangedParam->getMinValue();
+                $filterRangedParamMaxSelected = $filterRangedParam->getMaxValue();
+                $resultMatrix['range_params'][$code]['min_selected'] = $filterRangedParamMinSelected;
+                $resultMatrix['range_params'][$code]['max_selected'] = $filterRangedParamMaxSelected;
+            }
         }
 
 
