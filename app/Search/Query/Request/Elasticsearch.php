@@ -209,7 +209,7 @@ class Elasticsearch extends Engine
 
 
             if ($aggregations !== null) {
-                $aggregationFilter = $this->getAggregationFilter($aggregations, $filter);
+                $aggregationFilter = $this->getAggregationFilter($aggregations, $filter, $search);
                 $response->setFilter($aggregationFilter);
             }
 
@@ -345,10 +345,11 @@ class Elasticsearch extends Engine
     /**
      * @param Aggregations $aggregations
      * @param Filter|null $filter
+     * @param Search|null $search
      *
      * @return DisplayFilter
      */
-    protected function getAggregationFilter(Aggregations $aggregations, ?Filter $filter): DisplayFilter
+    protected function getAggregationFilter(Aggregations $aggregations, ?Filter $filter, ?Search $search): DisplayFilter
     {
         /**
          * @var Client $client
@@ -426,7 +427,7 @@ class Elasticsearch extends Engine
 
             $futures = [];
             foreach ($filterTerms as $filterTermCode => $filterTerm) {
-                $termQuery = $this->getQuery(null, $filterTerm);
+                $termQuery = $this->getQuery($search, $filterTerm);
                 $aggregationList = $this->getAggregationList($aggregations);
                 $requestParams['index'] = $this->index;
                 if (!empty($termQuery)) {
