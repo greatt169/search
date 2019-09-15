@@ -369,7 +369,7 @@ class Elasticsearch extends Engine
 
         if ($filter !== null) {
 
-            $rawFilter = $filter;
+            $rawFilter = clone $filter;
 
             // getFilterTerms
             $filterTerms = [];
@@ -409,10 +409,12 @@ class Elasticsearch extends Engine
                 }
 
                 $rawFilter->setRangeParams($rawFilterRangeParams);
+                if(empty($rawFilter->getRangeParams()) && empty($rawFilter->getSelectParams())) {
+                    continue;
+                }
                 $filterTerms[$this->rangePropAggsPrefix . $termCode] = $rawFilter;
 
             }
-
 
             // getTermMatrix
             /**
@@ -446,7 +448,6 @@ class Elasticsearch extends Engine
                 $termMatrix[$filterTermCode] = $filterData;
             }
             unset($futures);
-
 
 
             foreach ($termMatrix as $term => $termMatrixItem) {
@@ -494,9 +495,6 @@ class Elasticsearch extends Engine
                             $rawMatrix['select_params'][$selectParamCode]['values'][$intersectPropValueCode]['count'] = $intersectPropValue['count'];
                         }
                     }
-
-
-
                 }
             }
         }
@@ -515,7 +513,7 @@ class Elasticsearch extends Engine
                 }
             }
 
-            // range
+            // range select
             $filterRangedParams = $filter->getRangeParams();
             foreach ($filterRangedParams as $filterRangedParam) {
                 $code = $filterRangedParam->getCode();
@@ -523,9 +521,26 @@ class Elasticsearch extends Engine
                 $filterRangedParamMaxSelected = $filterRangedParam->getMaxValue();
                 $resultMatrix['range_params'][$code]['min_selected'] = $filterRangedParamMinSelected;
                 $resultMatrix['range_params'][$code]['max_selected'] = $filterRangedParamMaxSelected;
+
+            }
+
+            // range display
+            $filterRangedParams = $filter->getRangeParams();
+            foreach ($filterRangedParams as $filterRangedParam) {
+                $code = $filterRangedParam->getCode();
+                $filterRangedParamMinSelected = $filterRangedParam->getMinValue();
+                $filterRangedParamMaxSelected = $filterRangedParam->getMaxValue();
+
+
+                if($resultMatrix['range_params'][$code]['min_displayed'] < $filterRangedParamMinSelected) {
+                    $resultMatrix['range_params'][$code]['min_displayed'] = $filterRangedParamMinSelected;
+                }
+
+                if($resultMatrix['range_params'][$code]['max_displayed'] > $filterRangedParamMaxSelected) {
+                    $resultMatrix['range_params'][$code]['max_displayed'] = $filterRangedParamMaxSelected;
+                }
             }
         }
-
 
         // array values
         $resultMatrix['select_params'] = array_values($resultMatrix['select_params']);
@@ -578,6 +593,7 @@ class Elasticsearch extends Engine
                 $filterData['select_params'][$field] = [
                     'code' => $field
                 ];
+                $filterData['select_params'][$field]['values'] = [];
                 foreach ($aggregationResultItem['buckets'] as $bucket) {
                     $filterData['select_params'][$field]['values'][$bucket['key']] = [
                         'value' => $bucket['key'],
