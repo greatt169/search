@@ -31,6 +31,7 @@ class Elasticsearch extends Engine
     private $jobAddedInReindexQueueMessage = 'Job has added in reindexing queue';
     private $jobAddedInUpdateQueueMessage = 'Job has added in updating queue';
     private $indexElementDeletedMessageTemplate = 'Element has deleted. Index: %s, Element id: %s';
+    private $rangePropAggsPrefix = 'range_';
 
     /**
      * Elasticsearch constructor.
@@ -368,6 +369,8 @@ class Elasticsearch extends Engine
 
         if ($filter !== null) {
 
+            $rawFilter = $filter;
+
             // getFilterTerms
             $filterTerms = [];
             $selectedParams = $filter->getSelectParams();
@@ -388,13 +391,28 @@ class Elasticsearch extends Engine
              * @var FilterRangeParam $rangedParam
              */
             foreach ($rangedParams as $rangedParam) {
+
                 $termCode = $rangedParam->getCode();
                 $term = [$rangedParam];
                 $termFilter = new Filter();
                 $termFilter->setRangeParams($term);
                 $termFilter->setSelectParams([]);
                 $filterTerms[$termCode] = $termFilter;
+
+
+                $rawFilterRangeParams = $rawFilter->getRangeParams();
+                foreach ($rawFilterRangeParams as $index => $rawFilterRangeParam) {
+                    $rawFilterRangeParamCode = $rawFilterRangeParam->getCode();
+                    if($rawFilterRangeParamCode == $termCode) {
+                        unset($rawFilterRangeParams[$index]);
+                    }
+                }
+
+                $rawFilter->setRangeParams($rawFilterRangeParams);
+                $filterTerms[$this->rangePropAggsPrefix . $termCode] = $rawFilter;
+
             }
+
 
             // getTermMatrix
             /**
@@ -429,60 +447,34 @@ class Elasticsearch extends Engine
             }
             unset($futures);
 
+
+
             foreach ($termMatrix as $term => $termMatrixItem) {
 
-                $diffPropValues = array_diff_key($rawMatrix['range_params'], $termMatrixItem['range_params']);
-                $intersectPropValues = array_intersect_key($termMatrixItem['range_params'], $rawMatrix['range_params']);
+                foreach ($termMatrixItem['range_params'] as $termMatrixItemRangeParamCode => $termMatrixItemRangeParamValue) {
 
-                foreach ($intersectPropValues as $intersectPropValueCode => $intersectPropValue) {
-
-                    // todo past continue
-
-
-                    if ($rawMatrix['range_params'][$intersectPropValueCode]['min_displayed'] > $intersectPropValue['min_displayed']) {
-                        $rawMatrix['range_params'][$intersectPropValueCode]['min_displayed'] = $intersectPropValue['min_displayed'];
-                    }
-
-                    if ($rawMatrix['range_params'][$intersectPropValueCode]['max_displayed'] < $intersectPropValue['max_displayed']) {
-                        $rawMatrix['range_params'][$intersectPropValueCode]['max_displayed'] = $intersectPropValue['max_displayed'];
-                    }
-                }
-
-
-                foreach ($termMatrixItem['range_params'] as $rangeParamCode => $rangeParam) {
-
-                    if ($rangeParamCode == $term) {
+                    if ($termMatrixItemRangeParamCode == $term) {
                         continue;
                     }
 
-                    // range params
+                    if ($rawMatrix['range_params'][$termMatrixItemRangeParamCode]['min_displayed'] < $termMatrixItemRangeParamValue['min_total']) {
+
+                        $rawMatrix['range_params'][$termMatrixItemRangeParamCode]['min_displayed'] = $termMatrixItemRangeParamValue['min_total'];
+                    }
+
+                    if ($rawMatrix['range_params'][$termMatrixItemRangeParamCode]['max_displayed'] > $termMatrixItemRangeParamValue['max_total']) {
+
+                        $rawMatrix['range_params'][$termMatrixItemRangeParamCode]['max_displayed'] = $termMatrixItemRangeParamValue['max_total'];
+                    }
+                }
 
 
-                    /*print_r($term); echo PHP_EOL;
-                    print_r($rangeParamCode); echo PHP_EOL;
-                    print_r('------ diff -------'); echo PHP_EOL;
-                    print_r($diffPropValues); echo PHP_EOL;
-                    print_r('------ rangeParam -------'); echo PHP_EOL;
-                    print_r($rangeParam); echo PHP_EOL;
-                    print_r('------ intersect -------'); echo PHP_EOL;
-                    print_r($intersectPropValues); echo PHP_EOL;
-                    print_r('================='); echo PHP_EOL;*/
-
-                   /* foreach ($intersectPropValues as $intersectPropValue) {
-                        if ($rawMatrix['range_params'][$rangeParamCode]['min_displayed'] > $intersectPropValue['min_displayed']) {
-                            $rawMatrix['range_params'][$rangeParamCode]['min_displayed'] = $intersectPropValue['min_displayed'];
-                        }
-
-                        if ($rawMatrix['range_params'][$rangeParamCode]['max_displayed'] < $intersectPropValue['max_displayed']) {
-                            $rawMatrix['range_params'][$rangeParamCode]['max_displayed'] = $intersectPropValue['max_displayed'];
-                        }
-                    }*/
-
-                    //print_r($rangeParamCode);
-                    //print_r($termMatrixItem);
+                if(stripos($term, $this->rangePropAggsPrefix) !== false) {
+                    continue;
                 }
 
                 foreach ($termMatrixItem['select_params'] as $selectParamCode => $selectParam) {
+
 
                     if ($selectParamCode == $term) {
                         continue;
@@ -607,7 +599,7 @@ class Elasticsearch extends Engine
                 switch ($func) {
                     case 'min':
                         {
-                            $filterData['range_params'][$fieldCode]['min_value'] = $aggregationResultItem['value'];
+                            $filterData['range_params'][$fieldCode]['min_total'] = $aggregationResultItem['value'];
                             $filterData['range_params'][$fieldCode]['min_selected'] = $aggregationResultItem['value'];
                             $filterData['range_params'][$fieldCode]['min_displayed'] = $aggregationResultItem['value'];
                             break;
@@ -615,7 +607,7 @@ class Elasticsearch extends Engine
 
                     case 'max':
                         {
-                            $filterData['range_params'][$fieldCode]['max_value'] = $aggregationResultItem['value'];
+                            $filterData['range_params'][$fieldCode]['max_total'] = $aggregationResultItem['value'];
                             $filterData['range_params'][$fieldCode]['max_selected'] = $aggregationResultItem['value'];
                             $filterData['range_params'][$fieldCode]['max_displayed'] = $aggregationResultItem['value'];
                             break;
