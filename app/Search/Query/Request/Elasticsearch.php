@@ -5,7 +5,6 @@ namespace App\Search\Query\Request;
 use App\Events\Search\NewFeedReindexEvent;
 use App\Events\Search\NewFeedUpdateEvent;
 use App\Exceptions\ApiException;
-use App\Helpers\Timer;
 use App\Search\Entity\Engine\Elasticsearch as ElasticsearchEntity;
 use App\Search\Entity\Interfaces\EntityInterface;
 use App\Search\Index\Source\Elasticsearch as ElasticsearchSource;
@@ -337,9 +336,229 @@ class Elasticsearch extends Engine
         return $arAggregations;
     }
 
+    /**
+     * @param $aggregationResultItem
+     * @return bool
+     */
     protected function isCheckBoxAggregation($aggregationResultItem)
     {
         return array_key_exists('buckets', $aggregationResultItem);
+    }
+
+    /**
+     * @param Aggregations $aggregations
+     * @return array
+     */
+    protected function getAggregationRawMatrix(Aggregations $aggregations)
+    {
+        /**
+         * @var Client $client
+         */
+        $client = $this->entity->getClient();
+        $aggregationList = $this->getAggregationList($aggregations);
+        $requestParams = [];
+        $requestParams['index'] = $this->index;
+        $requestParams['body']['aggregations'] = $this->getAggregations($aggregationList);
+        $requestParams['body']['size'] = 0;
+        $requestParams['body']['from'] = 1;
+        $results = $client->search($requestParams);
+        $aggregationResult = $results['aggregations'];
+        $rawMatrix = $this->getEngineConvertedAggregations($aggregationResult);
+        return $rawMatrix;
+    }
+
+    /**
+     * @param Filter $filter
+     * @return array
+     */
+    protected function getAggregationFilterTerms(Filter $filter)
+    {
+        $rawFilter = clone $filter;
+        $filterTerms = [];
+        $selectedParams = $filter->getSelectParams();
+        /**
+         * @var FilterParam $selectedParam
+         */
+        foreach ($selectedParams as $selectedParam) {
+            $termCode = $selectedParam->getCode();
+            $term = [$selectedParam];
+            $termFilter = new Filter();
+            $termFilter->setRangeParams([]);
+            $termFilter->setSelectParams($term);
+            $filterTerms[$termCode] = $termFilter;
+        }
+
+        $rangedParams = $filter->getRangeParams();
+        /**
+         * @var FilterRangeParam $rangedParam
+         */
+        foreach ($rangedParams as $rangedParam) {
+
+            $termCode = $rangedParam->getCode();
+            $term = [$rangedParam];
+            $termFilter = new Filter();
+            $termFilter->setRangeParams($term);
+            $termFilter->setSelectParams([]);
+            $filterTerms[$termCode] = $termFilter;
+
+            $rawFilterRangeParams = $rawFilter->getRangeParams();
+            foreach ($rawFilterRangeParams as $index => $rawFilterRangeParam) {
+                $rawFilterRangeParamCode = $rawFilterRangeParam->getCode();
+                if($rawFilterRangeParamCode == $termCode) {
+                    unset($rawFilterRangeParams[$index]);
+                }
+            }
+
+            $rawFilter->setRangeParams($rawFilterRangeParams);
+            if(empty($rawFilter->getRangeParams()) && empty($rawFilter->getSelectParams())) {
+                continue;
+            }
+            $filterTerms[$this->rangePropAggsPrefix . $termCode] = $rawFilter;
+        }
+
+        return  $filterTerms;
+    }
+
+    /**
+     * @param array $filterTerms
+     * @param Aggregations $aggregations
+     * @param Search|null $search
+     * @return array
+     */
+    protected function getAggregationTermMatrix(array $filterTerms, Aggregations $aggregations, ?Search $search)
+    {
+        /**
+         * @var Client $client
+         */
+        $client = $this->entity->getClient();
+        $termMatrix = [];
+        $requestParams = [];
+        $futures = [];
+        foreach ($filterTerms as $filterTermCode => $filterTerm) {
+            $termQuery = $this->getQuery($search, $filterTerm);
+            $aggregationList = $this->getAggregationList($aggregations);
+            $requestParams['index'] = $this->index;
+            if (!empty($termQuery)) {
+                $requestParams['body']['query'] = $termQuery;
+            }
+            $requestParams['body']['aggregations'] = $this->getAggregations($aggregationList);
+            $requestParams['body']['size'] = 0;
+            $requestParams['body']['from'] = 1;
+            $requestParams['client'] = [
+                'future' => 'lazy'
+            ];
+            // future mode
+            $futures[$filterTermCode] = $client->search($requestParams);
+        }
+        foreach ($futures as $filterTermCode => $future) {
+            $aggregationResult = $future['aggregations'];
+            $filterData = $this->getEngineConvertedAggregations($aggregationResult);
+            $termMatrix[$filterTermCode] = $filterData;
+        }
+        unset($futures);
+
+        return $termMatrix;
+    }
+
+    /**
+     * @param array $termMatrix
+     * @param array $rawMatrix
+     * @return array
+     */
+    protected function getAggregationResultMatrix(array $termMatrix, array $rawMatrix)
+    {
+        foreach ($termMatrix as $term => $termMatrixItem) {
+            foreach ($termMatrixItem['range_params'] as $termMatrixItemRangeParamCode => $termMatrixItemRangeParamValue) {
+                if ($termMatrixItemRangeParamCode == $term) {
+                    continue;
+                }
+                if ($rawMatrix['range_params'][$termMatrixItemRangeParamCode]['min_displayed'] < $termMatrixItemRangeParamValue['min_total']) {
+                    $rawMatrix['range_params'][$termMatrixItemRangeParamCode]['min_displayed'] = $termMatrixItemRangeParamValue['min_total'];
+                }
+                if ($rawMatrix['range_params'][$termMatrixItemRangeParamCode]['max_displayed'] > $termMatrixItemRangeParamValue['max_total']) {
+                    $rawMatrix['range_params'][$termMatrixItemRangeParamCode]['max_displayed'] = $termMatrixItemRangeParamValue['max_total'];
+                }
+            }
+            if(stripos($term, $this->rangePropAggsPrefix) !== false) {
+                continue;
+            }
+            foreach ($termMatrixItem['select_params'] as $selectParamCode => $selectParam) {
+                if ($selectParamCode == $term) {
+                    continue;
+                }
+                $diffPropValues = array_diff_key($rawMatrix['select_params'][$selectParamCode]['values'], $selectParam['values']);
+                $intersectPropValues = array_intersect_key($selectParam['values'], $rawMatrix['select_params'][$selectParamCode]['values']);
+
+                foreach ($diffPropValues as $difPropValueCode => $diffPropValue) {
+                    $rawMatrix['select_params'][$selectParamCode]['values'][$difPropValueCode]['count'] = 0;
+                    $rawMatrix['select_params'][$selectParamCode]['values'][$difPropValueCode]['disabled'] = true;
+                }
+                foreach ($intersectPropValues as $intersectPropValueCode => $intersectPropValue) {
+                    $rawMatrix['select_params'][$selectParamCode]['values'][$intersectPropValueCode]['disabled'] = false;
+                    if ($rawMatrix['select_params'][$selectParamCode]['values'][$intersectPropValueCode]['count'] > $intersectPropValue['count']) {
+                        $rawMatrix['select_params'][$selectParamCode]['values'][$intersectPropValueCode]['count'] = $intersectPropValue['count'];
+                    }
+                }
+            }
+        }
+
+        $resultMatrix = $rawMatrix;
+        return $resultMatrix;
+    }
+
+    /**
+     * @param $resultMatrix
+     * @param Filter $filter
+     */
+    protected function setRequestParamsToAggregationResultMatrix(&$resultMatrix, Filter $filter)
+    {
+        $filterSelectedParams = $filter->getSelectParams();
+        foreach ($filterSelectedParams as $filterSelectedParam) {
+            $code = $filterSelectedParam->getCode();
+            $values = $filterSelectedParam->getValues();
+            foreach ($values as $value) {
+                $val = $value->getValue();
+                $resultMatrix['select_params'][$code]['values'][$val]['selected'] = true;
+            }
+        }
+
+        $filterRangedParams = $filter->getRangeParams();
+        foreach ($filterRangedParams as $filterRangedParam) {
+            $code = $filterRangedParam->getCode();
+            $filterRangedParamMinSelected = $filterRangedParam->getMinValue();
+            $filterRangedParamMaxSelected = $filterRangedParam->getMaxValue();
+            $resultMatrix['range_params'][$code]['min_selected'] = $filterRangedParamMinSelected;
+            $resultMatrix['range_params'][$code]['max_selected'] = $filterRangedParamMaxSelected;
+
+        }
+
+        $filterRangedParams = $filter->getRangeParams();
+        foreach ($filterRangedParams as $filterRangedParam) {
+            $code = $filterRangedParam->getCode();
+            $filterRangedParamMinSelected = $filterRangedParam->getMinValue();
+            $filterRangedParamMaxSelected = $filterRangedParam->getMaxValue();
+
+
+            if($resultMatrix['range_params'][$code]['min_displayed'] < $filterRangedParamMinSelected) {
+                $resultMatrix['range_params'][$code]['min_displayed'] = $filterRangedParamMinSelected;
+            }
+
+            if($resultMatrix['range_params'][$code]['max_displayed'] > $filterRangedParamMaxSelected) {
+                $resultMatrix['range_params'][$code]['max_displayed'] = $filterRangedParamMaxSelected;
+            }
+        }
+    }
+
+    /**
+     * @param $resultMatrix
+     */
+    protected function resetAssocKeysAggregationResultMatrix(&$resultMatrix)
+    {
+        // array values
+        $resultMatrix['select_params'] = array_values($resultMatrix['select_params']);
+        foreach ($resultMatrix['select_params'] as $index => $selectParam) {
+            $resultMatrix['select_params'][$index]['values'] = array_values($selectParam['values']);
+        }
     }
 
     /**
@@ -351,204 +570,16 @@ class Elasticsearch extends Engine
      */
     protected function getAggregationFilter(Aggregations $aggregations, ?Filter $filter, ?Search $search): DisplayFilter
     {
-        /**
-         * @var Client $client
-         */
-        $client = $this->entity->getClient();
-
-        // full
-        $aggregationList = $this->getAggregationList($aggregations);
-        $requestParams['index'] = $this->index;
-        $requestParams['body']['aggregations'] = $this->getAggregations($aggregationList);
-        $requestParams['body']['size'] = 0;
-        $requestParams['body']['from'] = 1;
-
-        $results = $client->search($requestParams);
-        $aggregationResult = $results['aggregations'];
-
-        $rawMatrix = $this->getEngineConvertedAggregations($aggregationResult);
-
+        $rawMatrix = $this->getAggregationRawMatrix($aggregations);
         if ($filter !== null) {
-
-            $rawFilter = clone $filter;
-
-            // getFilterTerms
-            $filterTerms = [];
-            $selectedParams = $filter->getSelectParams();
-            /**
-             * @var FilterParam $selectedParam
-             */
-            foreach ($selectedParams as $selectedParam) {
-                $termCode = $selectedParam->getCode();
-                $term = [$selectedParam];
-                $termFilter = new Filter();
-                $termFilter->setRangeParams([]);
-                $termFilter->setSelectParams($term);
-                $filterTerms[$termCode] = $termFilter;
-            }
-
-            $rangedParams = $filter->getRangeParams();
-            /**
-             * @var FilterRangeParam $rangedParam
-             */
-            foreach ($rangedParams as $rangedParam) {
-
-                $termCode = $rangedParam->getCode();
-                $term = [$rangedParam];
-                $termFilter = new Filter();
-                $termFilter->setRangeParams($term);
-                $termFilter->setSelectParams([]);
-                $filterTerms[$termCode] = $termFilter;
-
-
-                $rawFilterRangeParams = $rawFilter->getRangeParams();
-                foreach ($rawFilterRangeParams as $index => $rawFilterRangeParam) {
-                    $rawFilterRangeParamCode = $rawFilterRangeParam->getCode();
-                    if($rawFilterRangeParamCode == $termCode) {
-                        unset($rawFilterRangeParams[$index]);
-                    }
-                }
-
-                $rawFilter->setRangeParams($rawFilterRangeParams);
-                if(empty($rawFilter->getRangeParams()) && empty($rawFilter->getSelectParams())) {
-                    continue;
-                }
-                $filterTerms[$this->rangePropAggsPrefix . $termCode] = $rawFilter;
-
-            }
-
-            // getTermMatrix
-            /**
-             *
-             * @var Client $client
-             */
-            $client = $this->entity->getClient();
-            $termMatrix = [];
-
-            $futures = [];
-            foreach ($filterTerms as $filterTermCode => $filterTerm) {
-                $termQuery = $this->getQuery($search, $filterTerm);
-                $aggregationList = $this->getAggregationList($aggregations);
-                $requestParams['index'] = $this->index;
-                if (!empty($termQuery)) {
-                    $requestParams['body']['query'] = $termQuery;
-                }
-                $requestParams['body']['aggregations'] = $this->getAggregations($aggregationList);
-                $requestParams['body']['size'] = 0;
-                $requestParams['body']['from'] = 1;
-                $requestParams['client'] = [
-                    'future' => 'lazy'
-                ];
-                // future mode
-                $futures[$filterTermCode] = $client->search($requestParams);
-            }
-
-            foreach ($futures as $filterTermCode => $future) {
-                $aggregationResult = $future['aggregations'];
-                $filterData = $this->getEngineConvertedAggregations($aggregationResult);
-                $termMatrix[$filterTermCode] = $filterData;
-            }
-            unset($futures);
-
-
-            foreach ($termMatrix as $term => $termMatrixItem) {
-
-                foreach ($termMatrixItem['range_params'] as $termMatrixItemRangeParamCode => $termMatrixItemRangeParamValue) {
-
-                    if ($termMatrixItemRangeParamCode == $term) {
-                        continue;
-                    }
-
-                    if ($rawMatrix['range_params'][$termMatrixItemRangeParamCode]['min_displayed'] < $termMatrixItemRangeParamValue['min_total']) {
-
-                        $rawMatrix['range_params'][$termMatrixItemRangeParamCode]['min_displayed'] = $termMatrixItemRangeParamValue['min_total'];
-                    }
-
-                    if ($rawMatrix['range_params'][$termMatrixItemRangeParamCode]['max_displayed'] > $termMatrixItemRangeParamValue['max_total']) {
-
-                        $rawMatrix['range_params'][$termMatrixItemRangeParamCode]['max_displayed'] = $termMatrixItemRangeParamValue['max_total'];
-                    }
-                }
-
-
-                if(stripos($term, $this->rangePropAggsPrefix) !== false) {
-                    continue;
-                }
-
-                foreach ($termMatrixItem['select_params'] as $selectParamCode => $selectParam) {
-
-
-                    if ($selectParamCode == $term) {
-                        continue;
-                    }
-
-                    // select params
-                    $diffPropValues = array_diff_key($rawMatrix['select_params'][$selectParamCode]['values'], $selectParam['values']);
-                    $intersectPropValues = array_intersect_key($selectParam['values'], $rawMatrix['select_params'][$selectParamCode]['values']);
-
-                    foreach ($diffPropValues as $difPropValueCode => $diffPropValue) {
-                        $rawMatrix['select_params'][$selectParamCode]['values'][$difPropValueCode]['count'] = 0;
-                        $rawMatrix['select_params'][$selectParamCode]['values'][$difPropValueCode]['disabled'] = true;
-                    }
-                    foreach ($intersectPropValues as $intersectPropValueCode => $intersectPropValue) {
-                        $rawMatrix['select_params'][$selectParamCode]['values'][$intersectPropValueCode]['disabled'] = false;
-                        if ($rawMatrix['select_params'][$selectParamCode]['values'][$intersectPropValueCode]['count'] > $intersectPropValue['count']) {
-                            $rawMatrix['select_params'][$selectParamCode]['values'][$intersectPropValueCode]['count'] = $intersectPropValue['count'];
-                        }
-                    }
-                }
-            }
+            $filterTerms = $this->getAggregationFilterTerms($filter);
+            $termMatrix = $this->getAggregationTermMatrix($filterTerms, $aggregations, $search);
+            $resultMatrix = $this->getAggregationResultMatrix($termMatrix, $rawMatrix);
+            $this->setRequestParamsToAggregationResultMatrix($resultMatrix, $filter);
+        } else {
+            $resultMatrix = $rawMatrix;
         }
-
-        $resultMatrix = $rawMatrix;
-
-        if ($filter !== null) {
-            // select
-            $filterSelectedParams = $filter->getSelectParams();
-            foreach ($filterSelectedParams as $filterSelectedParam) {
-                $code = $filterSelectedParam->getCode();
-                $values = $filterSelectedParam->getValues();
-                foreach ($values as $value) {
-                    $val = $value->getValue();
-                    $resultMatrix['select_params'][$code]['values'][$val]['selected'] = true;
-                }
-            }
-
-            // range select
-            $filterRangedParams = $filter->getRangeParams();
-            foreach ($filterRangedParams as $filterRangedParam) {
-                $code = $filterRangedParam->getCode();
-                $filterRangedParamMinSelected = $filterRangedParam->getMinValue();
-                $filterRangedParamMaxSelected = $filterRangedParam->getMaxValue();
-                $resultMatrix['range_params'][$code]['min_selected'] = $filterRangedParamMinSelected;
-                $resultMatrix['range_params'][$code]['max_selected'] = $filterRangedParamMaxSelected;
-
-            }
-
-            // range display
-            $filterRangedParams = $filter->getRangeParams();
-            foreach ($filterRangedParams as $filterRangedParam) {
-                $code = $filterRangedParam->getCode();
-                $filterRangedParamMinSelected = $filterRangedParam->getMinValue();
-                $filterRangedParamMaxSelected = $filterRangedParam->getMaxValue();
-
-
-                if($resultMatrix['range_params'][$code]['min_displayed'] < $filterRangedParamMinSelected) {
-                    $resultMatrix['range_params'][$code]['min_displayed'] = $filterRangedParamMinSelected;
-                }
-
-                if($resultMatrix['range_params'][$code]['max_displayed'] > $filterRangedParamMaxSelected) {
-                    $resultMatrix['range_params'][$code]['max_displayed'] = $filterRangedParamMaxSelected;
-                }
-            }
-        }
-
-        // array values
-        $resultMatrix['select_params'] = array_values($resultMatrix['select_params']);
-        foreach ($resultMatrix['select_params'] as $index => $selectParam) {
-            $resultMatrix['select_params'][$index]['values'] = array_values($selectParam['values']);
-        }
-
+        $this->resetAssocKeysAggregationResultMatrix($resultMatrix);
         $outputFilter = new DisplayFilter($resultMatrix);
         return $outputFilter;
     }
