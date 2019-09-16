@@ -16,8 +16,12 @@ use Illuminate\Support\Facades\Route;
 Route::group([
     'namespace' => 'Search',
 ], function () {
-    Route::post('/catalog/search/', 'SearchController@catalogList')->name('catalog_list');
-    Route::post('/reindex/', 'IndexController@reindex')->name('reindex');
-    Route::post('/update/', 'IndexController@update')->name('update');
-    Route::delete('/_doc/{doc_id}', 'IndexController@delete')->name('delete-document');
+    Route::group([
+        'namespace' => 'Api',
+    ], function () {
+        Route::post('/catalog/search/', 'SearchController@catalogList')->name('catalog_list');
+        Route::post('/reindex/', 'IndexController@reindex')->name('reindex');
+        Route::post('/update/', 'IndexController@update')->name('update');
+        Route::delete('/_doc/{doc_id}', 'IndexController@delete')->name('delete-document');
+    });
 });

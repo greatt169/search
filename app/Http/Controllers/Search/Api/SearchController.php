@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Search;
+namespace App\Http\Controllers\Search\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\CatalogListRequest;

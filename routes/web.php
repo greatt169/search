@@ -14,7 +14,11 @@ Route::get('/', 'PagesController@index');
 
 Route::group([
     'namespace' => 'Search',
-    'prefix' => '/search',
 ], function () {
-    Route::get('/', 'IndexController@index')->name('search_home');
+    Route::group([
+        'namespace' => 'Web',
+        'prefix' => '/demo',
+    ], function () {
+        Route::get('/', 'IndexController@index')->name('search_home');
+    });
 });
