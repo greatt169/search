@@ -584,6 +584,10 @@ class Elasticsearch extends Engine
         return $outputFilter;
     }
 
+    /**
+     * @param Aggregations $aggregations
+     * @return array
+     */
     protected function getAggregationList(Aggregations $aggregations)
     {
         $aggregationList = [];
