@@ -379,7 +379,7 @@ definitions:
         type: number
         description: |
           Максимальное значение свойства
-        example: 10000
+        example: 1000000
 
   FilterParam:
     type: object

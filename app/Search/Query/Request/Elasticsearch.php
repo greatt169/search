@@ -508,13 +508,16 @@ class Elasticsearch extends Engine
 
     /**
      * @param $resultMatrix
-     * @param Filter $filter
+     * @param Filter|null $filter
      */
-    protected function setRequestParamsToAggregationResultMatrix(&$resultMatrix, Filter $filter)
+    protected function setRequestParamsToAggregationResultMatrix(&$resultMatrix, ?Filter $filter)
     {
         $filterSelectedParams = $filter->getSelectParams();
         foreach ($filterSelectedParams as $filterSelectedParam) {
             $code = $filterSelectedParam->getCode();
+            if(!array_key_exists($code, $resultMatrix['select_params'])) {
+                continue;
+            }
             $values = $filterSelectedParam->getValues();
             foreach ($values as $value) {
                 $val = $value->getValue();
@@ -525,6 +528,9 @@ class Elasticsearch extends Engine
         $filterRangedParams = $filter->getRangeParams();
         foreach ($filterRangedParams as $filterRangedParam) {
             $code = $filterRangedParam->getCode();
+            if(!array_key_exists($code, $resultMatrix['range_params'])) {
+                continue;
+            }
             $filterRangedParamMinSelected = $filterRangedParam->getMinValue();
             $filterRangedParamMaxSelected = $filterRangedParam->getMaxValue();
             $resultMatrix['range_params'][$code]['min_selected'] = $filterRangedParamMinSelected;
@@ -537,12 +543,12 @@ class Elasticsearch extends Engine
             $code = $filterRangedParam->getCode();
             $filterRangedParamMinSelected = $filterRangedParam->getMinValue();
             $filterRangedParamMaxSelected = $filterRangedParam->getMaxValue();
-
-
+            if(!array_key_exists($code, $resultMatrix['range_params'])) {
+                continue;
+            }
             if($resultMatrix['range_params'][$code]['min_displayed'] < $filterRangedParamMinSelected) {
                 $resultMatrix['range_params'][$code]['min_displayed'] = $filterRangedParamMinSelected;
             }
-
             if($resultMatrix['range_params'][$code]['max_displayed'] > $filterRangedParamMaxSelected) {
                 $resultMatrix['range_params'][$code]['max_displayed'] = $filterRangedParamMaxSelected;
             }
