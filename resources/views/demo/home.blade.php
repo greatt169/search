@@ -9,8 +9,8 @@
                     <header class="intro-wrap text-white">
                         <h2 class="display-3"> Умное решение для поиска </h2>
                         <p class="lead">REST Api для решение задач поиска на проектах <br> Индексация, поиск, анализ данных</p>
-                        <a href="#" class="btn btn-warning">Начать!</a>
-                        <a href="#" class="btn btn-light">Документация</a>
+                        <a href="{{ route('demo_catalog') }}" class="btn btn-warning">Начать!</a>
+                        <a href="{{ route('swagger_page') }}" class="btn btn-light">Документация</a>
                     </header>  <!-- intro-wrap .// -->
                 </div> <!-- col.// -->
                 <div class="col-sm-6 text-right">
@@ -63,7 +63,7 @@
 
             <p class="text-center">
                 <br>
-                <a href="#" class="btn btn-warning">Начать!</a>
+                <a href="{{ route('demo_catalog') }}" class="btn btn-warning">Начать!</a>
             </p>
 
         </div><!-- container // -->

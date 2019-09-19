@@ -11,6 +11,7 @@
 |
 */
 Route::get('/', 'PagesController@index');
+Route::get('/swagger/index.html', 'PagesController@swagger')->name('swagger_page');
 
 Route::group([
     'namespace' => 'Search',
@@ -19,6 +20,9 @@ Route::group([
         'namespace' => 'Web',
         'prefix' => '/demo',
     ], function () {
-        Route::get('/', 'IndexController@index')->name('search_home');
+        Route::get('/', 'IndexController@index')->name('demo_home');
+        Route::get('/catalog', 'CatalogController@index')->name('demo_catalog');
+        Route::get('/search', 'SearchController@index')->name('demo_search');
+        Route::get('/update', 'UpdateController@index')->name('demo_update');
     });
 });

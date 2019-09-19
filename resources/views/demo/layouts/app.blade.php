@@ -29,16 +29,16 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="/demo/">Главная</a>
+                        <a class="nav-link" href="{{ route('demo_home') }}">Главная</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/demo/section/">Фильтрация</a>
+                        <a class="nav-link" href="{{ route('demo_catalog') }}">Каталог</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/demo/search/">Поиск</a>
+                        <a class="nav-link" href="{{ route('demo_search') }}">Поиск</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/demo/update/">Обновить индекс</a>
+                        <a class="nav-link" href="{{ route('demo_update') }}">Обновить индекс</a>
                     </li>
                 </ul>
             </div>

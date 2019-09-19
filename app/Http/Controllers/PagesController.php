@@ -13,10 +13,4 @@ class PagesController extends Controller
    {
        return redirect('/swagger/index.html');
    }
-
-    public function frontend()
-    {
-        return redirect('/frontend/index.html');
-    }
-
 }
