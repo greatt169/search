@@ -66,7 +66,7 @@
                 </div>
 
                 <div class="links">
-                    <a href="{{ route('search_home') }}">Demo</a>
+                    <a href="{{ route('demo_home') }}">Demo</a>
                     <a href="/swagger/index.html">Swagger</a>
                     <a href="https://laravel.com/docs">Documentation</a>
                     <a href="https://github.com/greatt169/search">GitHub</a>
