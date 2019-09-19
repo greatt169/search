@@ -40,12 +40,14 @@ paths:
       parameters:
         - in: path
           name: engine
+          type: string
           required: true
           description: Код поискового движка
           schema:
             $ref: '#/definitions/EngineParam'
         - in: path
           name: index
+          type: string
           required: true
           description: Код индекса
           schema:
@@ -84,10 +86,7 @@ paths:
         200:
           description: Метод успешно отработал
           schema:
-            uniqueItems: false
-            type: array
-            items:
-              $ref: '#/definitions/ListItems'
+            $ref: '#/definitions/ListItems'
         400:
           $ref: '#/responses/400Error'
         403:
@@ -104,12 +103,14 @@ paths:
       parameters:
         - in: path
           name: engine
+          type: string
           required: true
           description: Код поискового движка
           schema:
             $ref: '#/definitions/EngineParam'
         - in: path
           name: index
+          type: string
           required: true
           description: Код индекса
           schema:
@@ -152,11 +153,13 @@ paths:
       parameters:
         - in: path
           name: engine
+          type: string
           required: true
           description: Код поискового движка
           schema:
             $ref: '#/definitions/EngineParam'
         - in: path
+          type: string
           name: index
           required: true
           description: Код индекса
@@ -194,18 +197,21 @@ paths:
       parameters:
         - in: path
           name: engine
+          type: string
           required: true
           description: Код поискового движка
           schema:
             $ref: '#/definitions/EngineParam'
         - in: path
           name: index
+          type: string
           required: true
           description: Код индекса
           schema:
             type: string
             example: auto
         - in: path
+          type: string
           name: doc-id
           required: true
           description: Id элемента для удаления
