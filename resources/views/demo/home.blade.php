@@ -7,10 +7,10 @@
             <div class="row d-flex" style="min-height:600px;">
                 <div class="col-sm-6 d-flex align-items-center">
                     <header class="intro-wrap text-white">
-                        <h2 class="display-3"> Amazing place for  hero title </h2>
-                        <p class="lead">Bootstrap ecommerce is more then template - also framework. <br> It is modern and fully customizable websites, WebApp and Mobile template for Your Project</p>
-                        <a href="#" class="btn btn-warning">Download</a>
-                        <a href="#" class="btn btn-light">Learn more</a>
+                        <h2 class="display-3"> Умное решение для поиска </h2>
+                        <p class="lead">REST Api для решение задач поиска на проектах <br> Индексация, поиск, анализ данных</p>
+                        <a href="#" class="btn btn-warning">Начать!</a>
+                        <a href="#" class="btn btn-light">Документация</a>
                     </header>  <!-- intro-wrap .// -->
                 </div> <!-- col.// -->
                 <div class="col-sm-6 text-right">
@@ -27,8 +27,8 @@
         <div class="container">
 
             <header class="section-heading text-center">
-                <h2 class="title-section">How it works </h2>
-                <p class="lead"> Good sub heading this sounded nonsense to Alice </p>
+                <h2 class="title-section">Как это работает?</h2>
+                <p class="lead">Все очень просто. Посмотрите на схему ниже</p>
             </header><!-- sect-heading -->
 
             <div class="row">
@@ -36,8 +36,8 @@
                     <figure class="itembox text-center">
                         <span class="icon-wrap icon-lg bg-secondary white"><i class="fa fa-envelope-open"></i></span>
                         <figcaption class="text-wrap">
-                            <h4 class="title">Sync across all devices</h4>
-                            <p>This sounded nonsense to Alice, so she said nothing, but set off at once toward the Red Queen. To her surprise.</p>
+                            <h4 class="title">Индексация данных</h4>
+                            <p>Необходим файл специального формата, его надо загрузить в форму на странице по ссылке "Обновить индекс" в верхнем меню</p>
                         </figcaption>
                     </figure> <!-- iconbox // -->
                 </aside> <!-- col.// -->
@@ -45,8 +45,8 @@
                     <figure class="itembox text-center">
                         <span class="icon-wrap icon-lg bg-secondary  white"><i class="fa fa-heart"></i></span>
                         <figcaption class="text-wrap">
-                            <h4 class="title">Easy to Customize</h4>
-                            <p>This sounded nonsense to Alice, so she said nothing, but set off at once toward the Red Queen. To her surprise. </p>
+                            <h4 class="title">Фильтр и Поиск</h4>
+                            <p>На базе REST API сервиса можно очень легко написать свой клиент. Сервис поддерживает зависимость фильтров и ранжирование поиска</p>
                         </figcaption>
                     </figure> <!-- iconbox // -->
                 </aside> <!-- col.// -->
@@ -54,8 +54,8 @@
                     <figure class="itembox text-center">
                         <span class="icon-wrap icon-lg bg-secondary  white"><i class="fa fa-users"></i> </span>
                         <figcaption class="text-wrap">
-                            <h4 class="title">Unique Interface Design</h4>
-                            <p>This sounded nonsense to Alice, so she said nothing, but set off at once toward the Red Queen. To her surprise. </p>
+                            <h4 class="title">Анализ данных</h4>
+                            <p>Сервис фиксирует действия пользователя и полученные результаты по ним. Полученные данные влияют на его работу</p>
                         </figcaption>
                     </figure> <!-- iconbox // -->
                 </aside> <!-- col.// -->
@@ -63,7 +63,7 @@
 
             <p class="text-center">
                 <br>
-                <a href="#" class="btn btn-warning">Some action button</a>
+                <a href="#" class="btn btn-warning">Начать!</a>
             </p>
 
         </div><!-- container // -->
@@ -75,23 +75,17 @@
         <div class="container">
 
             <header class="section-heading text-center">
-                <h2 class="title-section">Section name</h2>
-                <p class="lead"> Good sub heading this sounded nonsense to Alice </p>
+                <h2 class="title-section">Немного подробностей</h2>
+                <p class="lead"> Elasticsearch / Sphinx / Lucene </p>
             </header><!-- sect-heading -->
 
             <div class="row justify-content-center">
                 <article class="col-md-6 text-center">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                        cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                        proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                    <p>Ut enim ad minim veniam,
-                        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                        cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                        proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                    <p>В основе сервиса лежит идея того, что разработав алгоритмы поиска и фильтрации, можно их переиспользовать в разных инструментах.
+                        Основной инструмент на сегодняшний день - это Elasticsearch, но мы постоянно в поиске новых решений.
+                        Работа с инструментом отделена от бизнес-логики проекта, поэтому легко можно подключать новые решения.</p>
+                    <p>Качество и простота в разработке также очень важны. Сервис построен на docker-контецнерах, в которых уже есть тестовые наботы данных.
+                        Также постоянно улучшаются инструменты для автоматического тестирования.</p>
                 </article> <!-- col.// -->
             </div> <!-- row.// -->
 
@@ -105,23 +99,18 @@
         <div class="container">
 
             <header class="section-heading text-center">
-                <h2 class="title-section"> Another Section</h2>
-                <p class="lead"> Good sub heading this sounded nonsense to Alice </p>
+                <h2 class="title-section"> Планы на будущее</h2>
+                <p class="lead"> Развитие - наше все </p>
             </header><!-- sect-heading -->
 
             <div class="row justify-content-center">
                 <article class="col-md-6 text-center">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                        cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                        proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                    <p>Ut enim ad minim veniam,
-                        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                        cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                        proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                    <p>
+                        Планов очень много: собрать команду тех, кому хочется пробовать новое.
+                        Постоянно улучшать продукт, внедрять в него новые возможности и технологии.
+                        Важно, чтобы это был удобный продукт, решающий задачи бизнеса.
+                        Но с другой стороны сервис всегда должен оставаться надежным и современным инструментом.
+                    </p>
                 </article> <!-- col.// -->
             </div> <!-- row.// -->
 
