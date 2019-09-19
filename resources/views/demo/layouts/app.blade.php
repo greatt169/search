@@ -13,6 +13,10 @@
     <!-- custom style -->
     <link href="/frontend/css/ui.css" rel="stylesheet" type="text/css"/>
     <link href="/frontend/css/responsive.css" rel="stylesheet" media="only screen and (max-width: 1200px)"/>
+
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
 </head>
 <body>
 <header class="section-header">
@@ -66,9 +70,45 @@
     </section> <!-- header-main .// -->
 </header> <!-- section-header.// -->
 
+@yield('content')
 
+<!--
+<div id="root"></div>
+<script type="text/babel">
 
+    /*class Hello extends React.Component {
 
+        constructor(){
+            super();
+            this.state = {
+                message: "my friend (from state)!"
+            };
+            this.updateMessage = this.updateMessage.bind(this);
+        }
+
+        updateMessage() {
+            this.setState({
+                message: "my friend (from changed state)!"
+            });
+        }
+
+        render() {
+            return (
+                <div>
+                    <h1>Hello {this.state.message}!</h1>
+                    <button onClick={this.updateMessage}>Click me!</button>
+                </div>
+            )
+        }
+    }
+
+    ReactDOM.render(
+        <Hello message="my friend" />,
+        document.getElementById("root")
+    );*/
+
+</script>
+-->
 <!-- ========================= FOOTER ========================= -->
 <footer class="section-footer bg-secondary">
     <div class="container">
