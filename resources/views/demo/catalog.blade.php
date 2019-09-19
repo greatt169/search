@@ -12,7 +12,7 @@
                         <nav class="col-md-18-24">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="#">Главная</a></li>
-                                <li class="breadcrumb-item"><a href="#">Фильтрация</a></li>
+                                <li class="breadcrumb-item"><a href="#">Каталог</a></li>
                             </ol>
                         </nav> <!-- col.// -->
                     </div> <!-- row.// -->
