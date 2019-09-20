@@ -135,471 +135,73 @@
                 </aside> <!-- col.// -->
                 <main class="col-sm-9">
 
+                    @foreach ($result->items as $item)
 
-                    <article class="card card-product">
-                        <div class="card-body">
-                            <div class="row">
-                                <aside class="col-sm-3">
-                                    <div class="img-wrap"><img src="/frontend/images/items/2.jpg"></div>
-                                </aside> <!-- col.// -->
-                                <article class="col-sm-6">
-                                    <h4 class="title"> Ut wisi enim ad minim veniam </h4>
-                                    <div class="rating-wrap  mb-2">
-                                        <ul class="rating-stars">
-                                            <li style="width:80%" class="stars-active">
-                                                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                            </li>
-                                            <li>
-                                                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                            </li>
-                                        </ul>
-                                        <div class="label-rating">132 reviews</div>
-                                        <div class="label-rating">154 orders</div>
-                                    </div> <!-- rating-wrap.// -->
-                                    <p> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, Lorem ipsum dolor sit
-                                        amet, consectetuer adipiscing elit, Ut wisi enim ad minim veniam </p>
-                                    <dl class="dlist-align">
-                                        <dt>Color</dt>
-                                        <dd>Black and white</dd>
-                                    </dl>  <!-- item-property-hor .// -->
-                                    <dl class="dlist-align">
-                                        <dt>Material</dt>
-                                        <dd>Syntetic, wooden</dd>
-                                    </dl>  <!-- item-property-hor .// -->
-                                    <dl class="dlist-align">
-                                        <dt>Delivery</dt>
-                                        <dd>Russia, USA, and Europe</dd>
-                                    </dl>  <!-- item-property-hor .// -->
+                        <article class="card card-product">
+                            <div class="card-body">
+                                <div class="row">
+                                    <aside class="col-sm-3">
+                                        <div class="img-wrap"><img src="/frontend/images/items/2.jpg"></div>
+                                    </aside> <!-- col.// -->
+                                    <article class="col-sm-6">
+                                        <h4 class="title">{{ $item->singleAttributes[0]->value->value }}</h4>
+                                        <div class="rating-wrap  mb-2">
+                                            <ul class="rating-stars">
+                                                <li style="width:80%" class="stars-active">
+                                                    <i class="fa fa-star"></i> <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i> <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i> <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i> <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                            </ul>
+                                            <div class="label-rating">132 reviews</div>
+                                            <div class="label-rating">154 orders</div>
+                                        </div> <!-- rating-wrap.// -->
+                                        <p> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, Lorem ipsum dolor sit
+                                            amet, consectetuer adipiscing elit, Ut wisi enim ad minim veniam </p>
+                                        <dl class="dlist-align">
+                                            <dt>Color</dt>
+                                            <dd>Black and white</dd>
+                                        </dl>  <!-- item-property-hor .// -->
+                                        <dl class="dlist-align">
+                                            <dt>Material</dt>
+                                            <dd>Syntetic, wooden</dd>
+                                        </dl>  <!-- item-property-hor .// -->
+                                        <dl class="dlist-align">
+                                            <dt>Delivery</dt>
+                                            <dd>Russia, USA, and Europe</dd>
+                                        </dl>  <!-- item-property-hor .// -->
 
-                                </article> <!-- col.// -->
-                                <aside class="col-sm-3 border-left">
-                                    <div class="action-wrap">
-                                        <div class="price-wrap h4">
-                                            <span class="price"> $56 </span>
-                                            <del class="price-old"> $98</del>
-                                        </div> <!-- info-price-detail // -->
-                                        <p class="text-success">Free shipping</p>
-                                        <br>
-                                        <p>
-                                            <a href="#" class="btn btn-primary"> Buy now </a>
-                                            <a href="#" class="btn btn-secondary"> Details </a>
-                                        </p>
-                                        <a href="#"><i class="fa fa-heart"></i> Add to wishlist</a>
-                                    </div> <!-- action-wrap.// -->
-                                </aside> <!-- col.// -->
-                            </div> <!-- row.// -->
-                        </div> <!-- card-body .// -->
-                    </article> <!-- card product .// -->
+                                    </article> <!-- col.// -->
+                                    <aside class="col-sm-3 border-left">
+                                        <div class="action-wrap">
+                                            <div class="price-wrap h4">
+                                                <span class="price"> $56 </span>
+                                                <del class="price-old"> $98</del>
+                                            </div> <!-- info-price-detail // -->
+                                            <p class="text-success">Free shipping</p>
+                                            <br>
+                                            <p>
+                                                <a href="#" class="btn btn-primary"> Buy now </a>
+                                                <a href="#" class="btn btn-secondary"> Details </a>
+                                            </p>
+                                            <a href="#"><i class="fa fa-heart"></i> Add to wishlist</a>
+                                        </div> <!-- action-wrap.// -->
+                                    </aside> <!-- col.// -->
+                                </div> <!-- row.// -->
+                            </div> <!-- card-body .// -->
+                        </article> <!-- card product .// -->
 
-                    <article class="card card-product">
-                        <div class="card-body">
-                            <div class="row">
-                                <aside class="col-sm-3">
-                                    <div class="img-wrap"><img src="/frontend/images/items/1.jpg"></div>
-                                </aside> <!-- col.// -->
-                                <article class="col-sm-6">
-                                    <h4 class="title"> Ut wisi enim ad minim veniam </h4>
-                                    <div class="rating-wrap mb-2">
-                                        <ul class="rating-stars">
-                                            <li style="width:50%" class="stars-active">
-                                                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                            </li>
-                                            <li>
-                                                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                            </li>
-                                        </ul>
-                                        <div class="label-rating">12 reviews</div>
-                                        <div class="label-rating">154 orders</div>
-                                    </div> <!-- rating-wrap.// -->
-                                    <p> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, Lorem ipsum dolor sit
-                                        amet, consectetuer adipiscing elit, Ut wisi enim ad minim veniam </p>
-                                    <dl class="dlist-align">
-                                        <dt>Color</dt>
-                                        <dd>Black and white</dd>
-                                    </dl>  <!-- item-property-hor .// -->
-                                    <dl class="dlist-align">
-                                        <dt>Material</dt>
-                                        <dd>Syntetic, wooden</dd>
-                                    </dl>  <!-- item-property-hor .// -->
-                                    <dl class="dlist-align">
-                                        <dt>Delivery</dt>
-                                        <dd>Russia, USA, and Europe</dd>
-                                    </dl>  <!-- item-property-hor .// -->
-                                </article> <!-- col.// -->
-                                <aside class="col-sm-3 border-left">
-                                    <div class="action-wrap">
-                                        <div class="price-wrap h4">
-                                            <span class="price"> $245 </span>
-                                            <del class="price-old"> $528</del>
-                                        </div> <!-- info-price-detail // -->
-                                        <p class="text-success">Free shipping</p>
-                                        <br>
-                                        <p>
-                                            <a href="#" class="btn btn-primary"> Buy now </a>
-                                            <a href="#" class="btn btn-secondary"> Details </a>
-                                        </p>
-                                        <a href="#"><i class="fa fa-heart"></i> Add to wishlist</a>
-                                    </div> <!-- action-wrap.// -->
-                                </aside> <!-- col.// -->
-                            </div> <!-- row.// -->
-                        </div> <!-- card-body .// -->
-                    </article> <!-- card product .// -->
+                        @foreach ($item->singleAttributes as $singleAttribute)
+                            {{ $singleAttribute->name }}
+                        @endforeach
+                    @endforeach
 
-                    <article class="card card-product">
-                        <div class="card-body">
-                            <div class="row">
-                                <aside class="col-sm-3">
-                                    <div class="img-wrap"><img src="/frontend/images/items/1.jpg"></div>
-                                </aside> <!-- col.// -->
-                                <article class="col-sm-6">
-                                    <h4 class="title"> Ut wisi enim ad minim veniam </h4>
-                                    <div class="rating-wrap mb-2">
-                                        <ul class="rating-stars">
-                                            <li style="width:50%" class="stars-active">
-                                                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                            </li>
-                                            <li>
-                                                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                            </li>
-                                        </ul>
-                                        <div class="label-rating">12 reviews</div>
-                                        <div class="label-rating">154 orders</div>
-                                    </div> <!-- rating-wrap.// -->
-                                    <p> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, Lorem ipsum dolor sit
-                                        amet, consectetuer adipiscing elit, Ut wisi enim ad minim veniam </p>
-                                    <dl class="dlist-align">
-                                        <dt>Color</dt>
-                                        <dd>Black and white</dd>
-                                    </dl>  <!-- item-property-hor .// -->
-                                    <dl class="dlist-align">
-                                        <dt>Material</dt>
-                                        <dd>Syntetic, wooden</dd>
-                                    </dl>  <!-- item-property-hor .// -->
-                                    <dl class="dlist-align">
-                                        <dt>Delivery</dt>
-                                        <dd>Russia, USA, and Europe</dd>
-                                    </dl>  <!-- item-property-hor .// -->
-                                </article> <!-- col.// -->
-                                <aside class="col-sm-3 border-left">
-                                    <div class="action-wrap">
-                                        <div class="price-wrap h4">
-                                            <span class="price"> $245 </span>
-                                            <del class="price-old"> $528</del>
-                                        </div> <!-- info-price-detail // -->
-                                        <p class="text-success">Free shipping</p>
-                                        <br>
-                                        <p>
-                                            <a href="#" class="btn btn-primary"> Buy now </a>
-                                            <a href="#" class="btn btn-secondary"> Details </a>
-                                        </p>
-                                        <a href="#"><i class="fa fa-heart"></i> Add to wishlist</a>
-                                    </div> <!-- action-wrap.// -->
-                                </aside> <!-- col.// -->
-                            </div> <!-- row.// -->
-                        </div> <!-- card-body .// -->
-                    </article> <!-- card product .// -->
 
-                    <article class="card card-product">
-                        <div class="card-body">
-                            <div class="row">
-                                <aside class="col-sm-3">
-                                    <div class="img-wrap"><img src="/frontend/images/items/1.jpg"></div>
-                                </aside> <!-- col.// -->
-                                <article class="col-sm-6">
-                                    <h4 class="title"> Ut wisi enim ad minim veniam </h4>
-                                    <div class="rating-wrap mb-2">
-                                        <ul class="rating-stars">
-                                            <li style="width:50%" class="stars-active">
-                                                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                            </li>
-                                            <li>
-                                                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                            </li>
-                                        </ul>
-                                        <div class="label-rating">12 reviews</div>
-                                        <div class="label-rating">154 orders</div>
-                                    </div> <!-- rating-wrap.// -->
-                                    <p> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, Lorem ipsum dolor sit
-                                        amet, consectetuer adipiscing elit, Ut wisi enim ad minim veniam </p>
-                                    <dl class="dlist-align">
-                                        <dt>Color</dt>
-                                        <dd>Black and white</dd>
-                                    </dl>  <!-- item-property-hor .// -->
-                                    <dl class="dlist-align">
-                                        <dt>Material</dt>
-                                        <dd>Syntetic, wooden</dd>
-                                    </dl>  <!-- item-property-hor .// -->
-                                    <dl class="dlist-align">
-                                        <dt>Delivery</dt>
-                                        <dd>Russia, USA, and Europe</dd>
-                                    </dl>  <!-- item-property-hor .// -->
-                                </article> <!-- col.// -->
-                                <aside class="col-sm-3 border-left">
-                                    <div class="action-wrap">
-                                        <div class="price-wrap h4">
-                                            <span class="price"> $245 </span>
-                                            <del class="price-old"> $528</del>
-                                        </div> <!-- info-price-detail // -->
-                                        <p class="text-success">Free shipping</p>
-                                        <br>
-                                        <p>
-                                            <a href="#" class="btn btn-primary"> Buy now </a>
-                                            <a href="#" class="btn btn-secondary"> Details </a>
-                                        </p>
-                                        <a href="#"><i class="fa fa-heart"></i> Add to wishlist</a>
-                                    </div> <!-- action-wrap.// -->
-                                </aside> <!-- col.// -->
-                            </div> <!-- row.// -->
-                        </div> <!-- card-body .// -->
-                    </article> <!-- card product .// -->
-
-                    <article class="card card-product">
-                        <div class="card-body">
-                            <div class="row">
-                                <aside class="col-sm-3">
-                                    <div class="img-wrap"><img src="/frontend/images/items/1.jpg"></div>
-                                </aside> <!-- col.// -->
-                                <article class="col-sm-6">
-                                    <h4 class="title"> Ut wisi enim ad minim veniam </h4>
-                                    <div class="rating-wrap mb-2">
-                                        <ul class="rating-stars">
-                                            <li style="width:50%" class="stars-active">
-                                                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                            </li>
-                                            <li>
-                                                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                            </li>
-                                        </ul>
-                                        <div class="label-rating">12 reviews</div>
-                                        <div class="label-rating">154 orders</div>
-                                    </div> <!-- rating-wrap.// -->
-                                    <p> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, Lorem ipsum dolor sit
-                                        amet, consectetuer adipiscing elit, Ut wisi enim ad minim veniam </p>
-                                    <dl class="dlist-align">
-                                        <dt>Color</dt>
-                                        <dd>Black and white</dd>
-                                    </dl>  <!-- item-property-hor .// -->
-                                    <dl class="dlist-align">
-                                        <dt>Material</dt>
-                                        <dd>Syntetic, wooden</dd>
-                                    </dl>  <!-- item-property-hor .// -->
-                                    <dl class="dlist-align">
-                                        <dt>Delivery</dt>
-                                        <dd>Russia, USA, and Europe</dd>
-                                    </dl>  <!-- item-property-hor .// -->
-                                </article> <!-- col.// -->
-                                <aside class="col-sm-3 border-left">
-                                    <div class="action-wrap">
-                                        <div class="price-wrap h4">
-                                            <span class="price"> $245 </span>
-                                            <del class="price-old"> $528</del>
-                                        </div> <!-- info-price-detail // -->
-                                        <p class="text-success">Free shipping</p>
-                                        <br>
-                                        <p>
-                                            <a href="#" class="btn btn-primary"> Buy now </a>
-                                            <a href="#" class="btn btn-secondary"> Details </a>
-                                        </p>
-                                        <a href="#"><i class="fa fa-heart"></i> Add to wishlist</a>
-                                    </div> <!-- action-wrap.// -->
-                                </aside> <!-- col.// -->
-                            </div> <!-- row.// -->
-                        </div> <!-- card-body .// -->
-                    </article> <!-- card product .// -->
-
-                    <article class="card card-product">
-                        <div class="card-body">
-                            <div class="row">
-                                <aside class="col-sm-3">
-                                    <div class="img-wrap"><img src="/frontend/images/items/1.jpg"></div>
-                                </aside> <!-- col.// -->
-                                <article class="col-sm-6">
-                                    <h4 class="title"> Ut wisi enim ad minim veniam </h4>
-                                    <div class="rating-wrap mb-2">
-                                        <ul class="rating-stars">
-                                            <li style="width:50%" class="stars-active">
-                                                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                            </li>
-                                            <li>
-                                                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                            </li>
-                                        </ul>
-                                        <div class="label-rating">12 reviews</div>
-                                        <div class="label-rating">154 orders</div>
-                                    </div> <!-- rating-wrap.// -->
-                                    <p> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, Lorem ipsum dolor sit
-                                        amet, consectetuer adipiscing elit, Ut wisi enim ad minim veniam </p>
-                                    <dl class="dlist-align">
-                                        <dt>Color</dt>
-                                        <dd>Black and white</dd>
-                                    </dl>  <!-- item-property-hor .// -->
-                                    <dl class="dlist-align">
-                                        <dt>Material</dt>
-                                        <dd>Syntetic, wooden</dd>
-                                    </dl>  <!-- item-property-hor .// -->
-                                    <dl class="dlist-align">
-                                        <dt>Delivery</dt>
-                                        <dd>Russia, USA, and Europe</dd>
-                                    </dl>  <!-- item-property-hor .// -->
-                                </article> <!-- col.// -->
-                                <aside class="col-sm-3 border-left">
-                                    <div class="action-wrap">
-                                        <div class="price-wrap h4">
-                                            <span class="price"> $245 </span>
-                                            <del class="price-old"> $528</del>
-                                        </div> <!-- info-price-detail // -->
-                                        <p class="text-success">Free shipping</p>
-                                        <br>
-                                        <p>
-                                            <a href="#" class="btn btn-primary"> Buy now </a>
-                                            <a href="#" class="btn btn-secondary"> Details </a>
-                                        </p>
-                                        <a href="#"><i class="fa fa-heart"></i> Add to wishlist</a>
-                                    </div> <!-- action-wrap.// -->
-                                </aside> <!-- col.// -->
-                            </div> <!-- row.// -->
-                        </div> <!-- card-body .// -->
-                    </article> <!-- card product .// -->
-
-                    <article class="card card-product">
-                        <div class="card-body">
-                            <div class="row">
-                                <aside class="col-sm-3">
-                                    <div class="img-wrap"><img src="/frontend/images/items/1.jpg"></div>
-                                </aside> <!-- col.// -->
-                                <article class="col-sm-6">
-                                    <h4 class="title"> Ut wisi enim ad minim veniam </h4>
-                                    <div class="rating-wrap mb-2">
-                                        <ul class="rating-stars">
-                                            <li style="width:50%" class="stars-active">
-                                                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                            </li>
-                                            <li>
-                                                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                            </li>
-                                        </ul>
-                                        <div class="label-rating">12 reviews</div>
-                                        <div class="label-rating">154 orders</div>
-                                    </div> <!-- rating-wrap.// -->
-                                    <p> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, Lorem ipsum dolor sit
-                                        amet, consectetuer adipiscing elit, Ut wisi enim ad minim veniam </p>
-                                    <dl class="dlist-align">
-                                        <dt>Color</dt>
-                                        <dd>Black and white</dd>
-                                    </dl>  <!-- item-property-hor .// -->
-                                    <dl class="dlist-align">
-                                        <dt>Material</dt>
-                                        <dd>Syntetic, wooden</dd>
-                                    </dl>  <!-- item-property-hor .// -->
-                                    <dl class="dlist-align">
-                                        <dt>Delivery</dt>
-                                        <dd>Russia, USA, and Europe</dd>
-                                    </dl>  <!-- item-property-hor .// -->
-                                </article> <!-- col.// -->
-                                <aside class="col-sm-3 border-left">
-                                    <div class="action-wrap">
-                                        <div class="price-wrap h4">
-                                            <span class="price"> $245 </span>
-                                            <del class="price-old"> $528</del>
-                                        </div> <!-- info-price-detail // -->
-                                        <p class="text-success">Free shipping</p>
-                                        <br>
-                                        <p>
-                                            <a href="#" class="btn btn-primary"> Buy now </a>
-                                            <a href="#" class="btn btn-secondary"> Details </a>
-                                        </p>
-                                        <a href="#"><i class="fa fa-heart"></i> Add to wishlist</a>
-                                    </div> <!-- action-wrap.// -->
-                                </aside> <!-- col.// -->
-                            </div> <!-- row.// -->
-                        </div> <!-- card-body .// -->
-                    </article> <!-- card product .// -->
-
-                    <article class="card card-product">
-                        <div class="card-body">
-                            <div class="row">
-                                <aside class="col-sm-3">
-                                    <div class="img-wrap"><img src="/frontend/images/items/1.jpg"></div>
-                                </aside> <!-- col.// -->
-                                <article class="col-sm-6">
-                                    <h4 class="title"> Ut wisi enim ad minim veniam </h4>
-                                    <div class="rating-wrap mb-2">
-                                        <ul class="rating-stars">
-                                            <li style="width:50%" class="stars-active">
-                                                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                            </li>
-                                            <li>
-                                                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                            </li>
-                                        </ul>
-                                        <div class="label-rating">12 reviews</div>
-                                        <div class="label-rating">154 orders</div>
-                                    </div> <!-- rating-wrap.// -->
-                                    <p> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, Lorem ipsum dolor sit
-                                        amet, consectetuer adipiscing elit, Ut wisi enim ad minim veniam </p>
-                                    <dl class="dlist-align">
-                                        <dt>Color</dt>
-                                        <dd>Black and white</dd>
-                                    </dl>  <!-- item-property-hor .// -->
-                                    <dl class="dlist-align">
-                                        <dt>Material</dt>
-                                        <dd>Syntetic, wooden</dd>
-                                    </dl>  <!-- item-property-hor .// -->
-                                    <dl class="dlist-align">
-                                        <dt>Delivery</dt>
-                                        <dd>Russia, USA, and Europe</dd>
-                                    </dl>  <!-- item-property-hor .// -->
-                                </article> <!-- col.// -->
-                                <aside class="col-sm-3 border-left">
-                                    <div class="action-wrap">
-                                        <div class="price-wrap h4">
-                                            <span class="price"> $245 </span>
-                                            <del class="price-old"> $528</del>
-                                        </div> <!-- info-price-detail // -->
-                                        <p class="text-success">Free shipping</p>
-                                        <br>
-                                        <p>
-                                            <a href="#" class="btn btn-primary"> Buy now </a>
-                                            <a href="#" class="btn btn-secondary"> Details </a>
-                                        </p>
-                                        <a href="#"><i class="fa fa-heart"></i> Add to wishlist</a>
-                                    </div> <!-- action-wrap.// -->
-                                </aside> <!-- col.// -->
-                            </div> <!-- row.// -->
-                        </div> <!-- card-body .// -->
-                    </article> <!-- card product .// -->
 
                 </main> <!-- col.// -->
             </div>

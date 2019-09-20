@@ -2,18 +2,23 @@
 
 namespace App\Http\Controllers\Search\Web;
 
+use App\Helpers\Serializer;
 use App\Http\Controllers\Controller;
+use App\UseCases\Catalog\Items;
+use SwaggerSearch\ObjectSerializer;
 
 class CatalogController extends Controller
 {
-   public function index()
+    /**
+     * @param Items $catalogItemsService
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @todo refactor
+     *
+     */
+   public function index(Items $catalogItemsService)
    {
-       $apiInstance = new \SwaggerSearch\Api\CatalogApi(
-       // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
-       // This is optional, `GuzzleHttp\Client` will be used as default.
-           new \GuzzleHttp\Client()
-       );
-       $apiInstance->getConfig()->setHost('http://10.101.2.10/api');
+       $apiInstance = new \SwaggerSearch\Api\CatalogApi();
+       $apiInstance->getConfig()->setHost('http://' . $_SERVER['SERVER_ADDR'] . '/api');
        $engine = 'elasticsearch'; //  | Код поискового движка
        $index = 'auto'; //  | Код индекса
        $request = new \SwaggerSearch\Model\Request([]); // \SwaggerSearch\Model\Request |
@@ -21,11 +26,11 @@ class CatalogController extends Controller
        $page_size = 20; // int | Количество возвращаемых объектов на странице
 
        try {
-           $result = $apiInstance->engineIndexIndexCatalogSearchPost($engine, $index, $request, $page, $page_size);
-           dump($result);
+           $response = $apiInstance->engineIndexIndexCatalogSearchPost($engine, $index, $request, $page, $page_size);
+           $result = $catalogItemsService->getResult($response);
        } catch (\Exception $e) {
            echo 'Exception when calling CatalogApi->engineIndexIndexCatalogSearchPost: ', $e->getMessage(), PHP_EOL;
        }
-       return view('demo.catalog');
+       return view('demo.catalog', ['result' => $result]);
    }
 }
