@@ -81,9 +81,8 @@
         }
       }
     },
-    "multipleAttributes": [
-      {
-        "code": "color",
+    "multipleAttributes": {
+      "color": {
         "name": "Cvet",
         "description": null,
         "img": null,
@@ -98,8 +97,7 @@
           }
         ]
       },
-      {
-        "code": "insurance",
+      "insurance": {
         "name": "Strahovka",
         "description": null,
         "img": null,
@@ -121,7 +119,7 @@
           }
         ]
       }
-    ]
+    }
   },
   {
     "id": 2,
