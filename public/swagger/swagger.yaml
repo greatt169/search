@@ -552,17 +552,17 @@ definitions:
           Идентификатор элемента
         example: 5
       singleAttributes:
-        type: array
+        type: object
         description: |
           Массив одиночных свойств элемента
-        items:
+        additionalProperties:
           $ref: '#/definitions/ListItemSingleAttribute'
 
       multipleAttributes:
-        type: array
+        type: object
         description: |
           Массив множественных свойств элемента
-        items:
+        additionalProperties:
           $ref: '#/definitions/ListItemMultipleAttribute'
 
   ListItemSingleAttribute:
