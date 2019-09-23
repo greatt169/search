@@ -1,9 +1,8 @@
 [
   {
     "id": 1,
-    "singleAttributes": [
-      {
-        "code": "name",
+    "singleAttributes": {
+      "name": {
         "name": "Nazvanie",
         "description": null,
         "img": null,
@@ -16,8 +15,7 @@
           "value": "Vnedorozhnik BMW-X5"
         }
       },
-      {
-        "code": "type",
+      "type": {
         "name": "Tip elementa",
         "description": null,
         "img": null,
@@ -30,8 +28,7 @@
           "value": "element"
         }
       },
-      {
-        "code": "brand",
+      "brand": {
         "name": "Marka mashiny",
         "description": null,
         "img": null,
@@ -44,8 +41,7 @@
           "value": "BMV"
         }
       },
-      {
-        "code": "model",
+      "model": {
         "name": "Model' mashiny",
         "description": null,
         "img": null,
@@ -58,8 +54,7 @@
           "value": "X5"
         }
       },
-      {
-        "code": "year",
+      "year": {
         "name": "God vypuska",
         "description": null,
         "img": null,
@@ -72,8 +67,7 @@
           "value": "1999"
         }
       },
-      {
-        "code": "price",
+      "price": {
         "name": "Cena",
         "description": null,
         "img": null,
@@ -86,7 +80,7 @@
           "value": "50000"
         }
       }
-    ],
+    },
     "multipleAttributes": [
       {
         "code": "color",
