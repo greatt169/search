@@ -61,7 +61,8 @@ class Elasticsearch extends Base
             /**
              * @var ListItemSingleAttribute $attribute
              */
-            foreach ($singleAttributes as $attributeCode => $attribute) {
+            foreach ($singleAttributes as $attribute) {
+                $attributeCode = $attribute->getCode();
                 /**
                  * @var ListItemAttributeValue $attributeValue
                  */
@@ -75,7 +76,8 @@ class Elasticsearch extends Base
             /**
              * @var ListItemMultipleAttribute $attribute
              */
-            foreach ($multipleAttributes as $attributeCode => $attribute) {
+            foreach ($multipleAttributes as $attribute) {
+                $attributeCode = $attribute->getCode();
                 $multipleAttributeValues = $attribute->getValues();
                 $sourceAttributeValues = [];
                 /**
