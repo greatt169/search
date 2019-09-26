@@ -568,14 +568,8 @@ definitions:
   ListItemSingleAttribute:
     type: object
     required:
-      - code
       - value
     properties:
-      code:
-        type: string
-        description: |
-          Код аттрибута элемента
-        example: 'transmission'
       name:
         type: string
         description: |
@@ -602,14 +596,8 @@ definitions:
   ListItemMultipleAttribute:
     type: object
     required:
-      - code
       - values
     properties:
-      code:
-        type: string
-        description: |
-          Код аттрибута элемента
-        example: 'transmission'
       name:
         type: string
         description: |

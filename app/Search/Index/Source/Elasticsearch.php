@@ -61,23 +61,21 @@ class Elasticsearch extends Base
             /**
              * @var ListItemSingleAttribute $attribute
              */
-            foreach ($singleAttributes as $attribute) {
-                $attributeCode = $attribute->getCode();
+            foreach ($singleAttributes as $attributeCode => $attribute) {
                 /**
                  * @var ListItemAttributeValue $attributeValue
                  */
                 $attributeValue = $attribute->getValue();
                 if($attributeValue) {
                     $sourceAttributes[$attributeCode] = $this->getAttributeVal($attributeValue);
-                    $searchData[$attribute->getCode()] = $attribute->getName() . ' ' . $attributeValue->getValue();
+                    $searchData[$attributeCode] = $attribute->getName() . ' ' . $attributeValue->getValue();
                 }
             }
 
             /**
              * @var ListItemMultipleAttribute $attribute
              */
-            foreach ($multipleAttributes as $attribute) {
-                $attributeCode = $attribute->getCode();
+            foreach ($multipleAttributes as $attributeCode => $attribute) {
                 $multipleAttributeValues = $attribute->getValues();
                 $sourceAttributeValues = [];
                 /**
@@ -86,7 +84,7 @@ class Elasticsearch extends Base
                 foreach ($multipleAttributeValues as $attributeValue) {
                     if($attributeValue) {
                         $sourceAttributeValues[] = $this->getAttributeVal($attributeValue);
-                        $searchData[$attribute->getCode()] = $attribute->getName() . ' ' . $attributeValue->getValue();
+                        $searchData[$attributeCode] = $attribute->getName() . ' ' . $attributeValue->getValue();
                     }
                 }
                 $sourceAttributes[$attributeCode] = $sourceAttributeValues;
