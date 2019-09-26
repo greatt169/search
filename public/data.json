@@ -123,9 +123,8 @@
   },
   {
     "id": 2,
-    "singleAttributes": [
-      {
-        "code": "name",
+    "singleAttributes": {
+      "name": {
         "name": "Nazvanie",
         "description": null,
         "img": null,
@@ -138,8 +137,7 @@
           "value": "SHikarnyj Volkswagen Polo"
         }
       },
-      {
-        "code": "type",
+      "type": {
         "name": "Tip elementa",
         "description": null,
         "img": null,
@@ -152,8 +150,7 @@
           "value": "element"
         }
       },
-      {
-        "code": "brand",
+      "brand": {
         "name": "Marka mashiny",
         "description": null,
         "img": null,
@@ -166,8 +163,7 @@
           "value": "volkswagen"
         }
       },
-      {
-        "code": "model",
+      "model": {
         "name": "Model' mashiny",
         "description": null,
         "img": null,
@@ -180,8 +176,7 @@
           "value": "Polo"
         }
       },
-      {
-        "code": "year",
+      "year": {
         "name": "God vypuska",
         "description": null,
         "img": null,
@@ -194,8 +189,7 @@
           "value": "2015"
         }
       },
-      {
-        "code": "price",
+      "price": {
         "name": "Cena",
         "description": null,
         "img": null,
@@ -208,10 +202,9 @@
           "value": "500000"
         }
       }
-    ],
-    "multipleAttributes": [
-      {
-        "code": "color",
+    },
+    "multipleAttributes": {
+      "color": {
         "name": "Cvet",
         "description": null,
         "img": null,
@@ -226,8 +219,7 @@
           }
         ]
       },
-      {
-        "code": "insurance",
+      "insurance": {
         "name": "Strahovka",
         "description": null,
         "img": null,
@@ -242,13 +234,12 @@
           }
         ]
       }
-    ]
+    }
   },
   {
     "id": 3,
-    "singleAttributes": [
-      {
-        "code": "name",
+    "singleAttributes": {
+      "name": {
         "name": "Nazvanie",
         "description": null,
         "img": null,
@@ -261,8 +252,7 @@
           "value": "Primium Volkswagen Polo"
         }
       },
-      {
-        "code": "type",
+      "type": {
         "name": "Tip elementa",
         "description": null,
         "img": null,
@@ -275,8 +265,7 @@
           "value": "element"
         }
       },
-      {
-        "code": "brand",
+      "brand": {
         "name": "Marka mashiny",
         "description": null,
         "img": null,
@@ -289,8 +278,7 @@
           "value": "volkswagen"
         }
       },
-      {
-        "code": "model",
+      "model": {
         "name": "Model' mashiny",
         "description": null,
         "img": null,
@@ -303,8 +291,7 @@
           "value": "Polo"
         }
       },
-      {
-        "code": "year",
+      "year": {
         "name": "God vypuska",
         "description": null,
         "img": null,
@@ -317,8 +304,7 @@
           "value": "2019"
         }
       },
-      {
-        "code": "price",
+      "price": {
         "name": "Cena",
         "description": null,
         "img": null,
@@ -331,10 +317,9 @@
           "value": "700000"
         }
       }
-    ],
-    "multipleAttributes": [
-      {
-        "code": "color",
+    },
+    "multipleAttributes": {
+      "color": {
         "name": "Cvet",
         "description": null,
         "img": null,
@@ -349,8 +334,7 @@
           }
         ]
       },
-      {
-        "code": "insurance",
+      "insurance": {
         "name": "Strahovka",
         "description": null,
         "img": null,
@@ -365,12 +349,12 @@
           }
         ]
       }
-    ]
+    }
   },
   {
     "id": 4,
-    "singleAttributes": [
-      {
+    "singleAttributes": {
+      "name": {
         "code": "name",
         "name": "Nazvanie",
         "description": null,
@@ -384,8 +368,7 @@
           "value": "Staraya Lada Granta"
         }
       },
-      {
-        "code": "type",
+      "type": {
         "name": "Tip elementa",
         "description": null,
         "img": null,
@@ -398,8 +381,7 @@
           "value": "element"
         }
       },
-      {
-        "code": "brand",
+      "brand": {
         "name": "Marka mashiny",
         "description": null,
         "img": null,
@@ -412,8 +394,7 @@
           "value": "Lada"
         }
       },
-      {
-        "code": "model",
+      "model": {
         "name": "Model' mashiny",
         "description": null,
         "img": null,
@@ -426,8 +407,7 @@
           "value": "Granta Novaya"
         }
       },
-      {
-        "code": "year",
+      "year": {
         "name": "God vypuska",
         "description": null,
         "img": null,
@@ -440,8 +420,7 @@
           "value": "1999"
         }
       },
-      {
-        "code": "price",
+      "price": {
         "name": "Cena",
         "description": null,
         "img": null,
@@ -454,10 +433,9 @@
           "value": "65000"
         }
       }
-    ],
-    "multipleAttributes": [
-      {
-        "code": "color",
+    },
+    "multipleAttributes": {
+      "color": {
         "name": "Cvet",
         "description": null,
         "img": null,
@@ -472,8 +450,7 @@
           }
         ]
       },
-      {
-        "code": "insurance",
+      "insurance": {
         "name": "Strahovka",
         "description": null,
         "img": null,
@@ -488,13 +465,12 @@
           }
         ]
       }
-    ]
+    }
   },
   {
     "id": 5,
-    "singleAttributes": [
-      {
-        "code": "name",
+    "singleAttributes": {
+      "name": {
         "name": "Nazvanie",
         "description": null,
         "img": null,
@@ -507,8 +483,7 @@
           "value": "Staraya Lada Granta"
         }
       },
-      {
-        "code": "type",
+      "type": {
         "name": "Tip elementa",
         "description": null,
         "img": null,
@@ -521,8 +496,7 @@
           "value": "element"
         }
       },
-      {
-        "code": "brand",
+      "brand": {
         "name": "Marka mashiny",
         "description": null,
         "img": null,
@@ -535,8 +509,7 @@
           "value": "Lada"
         }
       },
-      {
-        "code": "model",
+      "model": {
         "name": "Model' mashiny",
         "description": null,
         "img": null,
@@ -549,8 +522,7 @@
           "value": "Granta Novaya"
         }
       },
-      {
-        "code": "year",
+      "year": {
         "name": "God vypuska",
         "description": null,
         "img": null,
@@ -563,8 +535,7 @@
           "value": "2015"
         }
       },
-      {
-        "code": "price",
+      "price": {
         "name": "Cena",
         "description": null,
         "img": null,
@@ -577,10 +548,9 @@
           "value": "355000"
         }
       }
-    ],
-    "multipleAttributes": [
-      {
-        "code": "color",
+    },
+    "multipleAttributes": {
+      "color": {
         "name": "Cvet",
         "description": null,
         "img": null,
@@ -595,8 +565,7 @@
           }
         ]
       },
-      {
-        "code": "insurance",
+      "insurance": {
         "name": "Strahovka",
         "description": null,
         "img": null,
@@ -611,13 +580,12 @@
           }
         ]
       }
-    ]
+    }
   },
   {
     "id": 6,
-    "singleAttributes": [
-      {
-        "code": "name",
+    "singleAttributes": {
+      "name": {
         "name": "Nazvanie",
         "description": null,
         "img": null,
@@ -630,8 +598,7 @@
           "value": "Staraya Lada Granta"
         }
       },
-      {
-        "code": "type",
+      "type": {
         "name": "Tip elementa",
         "description": null,
         "img": null,
@@ -644,8 +611,7 @@
           "value": "element"
         }
       },
-      {
-        "code": "brand",
+      "brand": {
         "name": "Marka mashiny",
         "description": null,
         "img": null,
@@ -658,8 +624,7 @@
           "value": "Lada"
         }
       },
-      {
-        "code": "model",
+      "model": {
         "name": "Model' mashiny",
         "description": null,
         "img": null,
@@ -672,8 +637,7 @@
           "value": "Granta Novaya"
         }
       },
-      {
-        "code": "year",
+      "year": {
         "name": "God vypuska",
         "description": null,
         "img": null,
@@ -686,8 +650,7 @@
           "value": "1999"
         }
       },
-      {
-        "code": "price",
+      "price": {
         "name": "Cena",
         "description": null,
         "img": null,
@@ -700,10 +663,9 @@
           "value": "71000"
         }
       }
-    ],
-    "multipleAttributes": [
-      {
-        "code": "color",
+    },
+    "multipleAttributes": {
+      "color": {
         "name": "Cvet",
         "description": null,
         "img": null,
@@ -718,8 +680,7 @@
           }
         ]
       },
-      {
-        "code": "insurance",
+      "insurance": {
         "name": "Strahovka",
         "description": null,
         "img": null,
@@ -734,13 +695,12 @@
           }
         ]
       }
-    ]
+    }
   },
   {
     "id": 7,
-    "singleAttributes": [
-      {
-        "code": "name",
+    "singleAttributes": {
+      "name": {
         "name": "Nazvanie",
         "description": null,
         "img": null,
@@ -753,8 +713,7 @@
           "value": "Staraya Lada Granta"
         }
       },
-      {
-        "code": "type",
+      "type": {
         "name": "Tip elementa",
         "description": null,
         "img": null,
@@ -767,8 +726,7 @@
           "value": "element"
         }
       },
-      {
-        "code": "brand",
+      "brand": {
         "name": "Marka mashiny",
         "description": null,
         "img": null,
@@ -781,8 +739,7 @@
           "value": "Lada"
         }
       },
-      {
-        "code": "model",
+      "model": {
         "name": "Model' mashiny",
         "description": null,
         "img": null,
@@ -795,8 +752,7 @@
           "value": "Granta Novaya"
         }
       },
-      {
-        "code": "year",
+      "year": {
         "name": "God vypuska",
         "description": null,
         "img": null,
@@ -809,8 +765,7 @@
           "value": "2015"
         }
       },
-      {
-        "code": "price",
+      "price": {
         "name": "Cena",
         "description": null,
         "img": null,
@@ -823,10 +778,9 @@
           "value": "455000"
         }
       }
-    ],
-    "multipleAttributes": [
-      {
-        "code": "color",
+    },
+    "multipleAttributes": {
+      "color": {
         "name": "Cvet",
         "description": null,
         "img": null,
@@ -841,8 +795,7 @@
           }
         ]
       },
-      {
-        "code": "insurance",
+      "insurance": {
         "name": "Strahovka",
         "description": null,
         "img": null,
@@ -857,13 +810,12 @@
           }
         ]
       }
-    ]
+    }
   },
   {
     "id": 8,
-    "singleAttributes": [
-      {
-        "code": "name",
+    "singleAttributes": {
+      "name": {
         "name": "Nazvanie",
         "description": null,
         "img": null,
@@ -876,8 +828,7 @@
           "value": "Staraya Lada Granta"
         }
       },
-      {
-        "code": "type",
+      "type": {
         "name": "Tip elementa",
         "description": null,
         "img": null,
@@ -890,8 +841,7 @@
           "value": "element"
         }
       },
-      {
-        "code": "brand",
+      "brand": {
         "name": "Marka mashiny",
         "description": null,
         "img": null,
@@ -904,8 +854,7 @@
           "value": "Lada"
         }
       },
-      {
-        "code": "model",
+      "model": {
         "name": "Model' mashiny",
         "description": null,
         "img": null,
@@ -918,8 +867,7 @@
           "value": "Granta Novaya"
         }
       },
-      {
-        "code": "year",
+      "year": {
         "name": "God vypuska",
         "description": null,
         "img": null,
@@ -932,7 +880,7 @@
           "value": "2015"
         }
       },
-      {
+      "price": {
         "code": "price",
         "name": "Cena",
         "description": null,
@@ -946,10 +894,9 @@
           "value": "400000"
         }
       }
-    ],
-    "multipleAttributes": [
-      {
-        "code": "color",
+    },
+    "multipleAttributes": {
+      "color": {
         "name": "Cvet",
         "description": null,
         "img": null,
@@ -964,8 +911,7 @@
           }
         ]
       },
-      {
-        "code": "insurance",
+      "insurance": {
         "name": "Strahovka",
         "description": null,
         "img": null,
@@ -980,6 +926,6 @@
           }
         ]
       }
-    ]
+    }
   }
 ]
