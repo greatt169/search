@@ -12,8 +12,6 @@ class TestController extends Controller
 {
    public function index()
    {
-
-
        $listener = new SourceListener(function ($rawItems) {
            $source = new Elasticsearch('auto', '/var/www/public/data.json', '/var/www/public/settings.json');
            $items = $source->getElementsForIndexing($rawItems);
@@ -45,10 +43,15 @@ class TestController extends Controller
            $total = $listener->getTotal();
            fclose($stream);
        } catch (\Exception $e) {
+           dump($e);
            fclose($stream);
        }
+       return 'test 1';
+   }
 
-
-       return 'test';
+   public function jsonPack($filePath = '/var/www/public/data.json')
+   {
+       $content = file_get_contents($filePath);
+       file_put_contents($filePath, json_encode(json_decode($content, true)));
    }
 }

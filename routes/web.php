@@ -12,6 +12,7 @@
 */
 Route::get('/', 'PagesController@index');
 Route::get('/test', 'TestController@index');
+Route::get('/test/json', 'TestController@jsonPack');
 Route::get('/swagger/index.html', 'PagesController@swagger')->name('swagger_page');
 
 Route::group([

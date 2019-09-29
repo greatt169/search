@@ -141,12 +141,11 @@
                             <div class="card-body">
                                 <div class="row">
                                     <aside class="col-sm-3">
-                                        <div class="img-wrap"><img src="/frontend/images/items/2.jpg"></div>
+                                        <div class="img-wrap"><img src="{{ $item->singleAttributes['picture']->value->value }}"></div>
                                     </aside> <!-- col.// -->
                                     <article class="col-sm-6">
                                         <h4 class="title">{{ $item->singleAttributes['name']->value->value }}</h4>
-                                        <p> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, Lorem ipsum dolor sit
-                                            amet, consectetuer adipiscing elit, Ut wisi enim ad minim veniam </p>
+                                        <p> {{ $item->singleAttributes['preview']->value->value }}</p>
                                         <dl class="dlist-align">
                                             <dt>Цвет</dt>
                                             @foreach ($item->multipleAttributes['color']->values as $attrValue)
