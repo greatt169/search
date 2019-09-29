@@ -30,41 +30,6 @@
                     <div class="card card-filter">
                         <article class="card-group-item">
                             <header class="card-header">
-                                <a class="" aria-expanded="true" href="#" data-toggle="collapse"
-                                   data-target="#collapse22">
-                                    <i class="icon-action fa fa-chevron-down"></i>
-                                    <h6 class="title">By Category</h6>
-                                </a>
-                            </header>
-                            <div style="" class="filter-content collapse show" id="collapse22">
-                                <div class="card-body">
-                                    <form class="pb-3">
-                                        <div class="input-group">
-                                            <input class="form-control" placeholder="Search" type="text">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-primary" type="button"><i
-                                                            class="fa fa-search"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </form>
-
-                                    <ul class="list-unstyled list-lg">
-                                        <li><a href="#">Cras justo odio <span
-                                                        class="float-right badge badge-light round">142</span>
-                                            </a></li>
-                                        <li><a href="#">Dapibus ac facilisis <span
-                                                        class="float-right badge badge-light round">3</span> </a></li>
-                                        <li><a href="#">Morbi leo risus <span
-                                                        class="float-right badge badge-light round">32</span> </a></li>
-                                        <li><a href="#">Another item <span
-                                                        class="float-right badge badge-light round">12</span> </a></li>
-                                    </ul>
-                                </div> <!-- card-body.// -->
-                            </div> <!-- collapse .// -->
-                        </article> <!-- card-group-item.// -->
-                        <article class="card-group-item">
-                            <header class="card-header">
                                 <a href="#" data-toggle="collapse" data-target="#collapse33">
                                     <i class="icon-action fa fa-chevron-down"></i>
                                     <h6 class="title">By Price </h6>
@@ -87,12 +52,10 @@
                                 </div> <!-- card-body.// -->
                             </div> <!-- collapse .// -->
                         </article> <!-- card-group-item.// -->
-                        <article class="card-group-item">
+                        @foreach ($result->filter->selectParams as $param)
+                            <article class="card-group-item">
                             <header class="card-header">
-                                <a href="#" data-toggle="collapse" data-target="#collapse44">
-                                    <i class="icon-action fa fa-chevron-down"></i>
-                                    <h6 class="title">By Feature </h6>
-                                </a>
+                                <h6 class="title">By Feature </h6>
                             </header>
                             <div class="filter-content collapse show" id="collapse44">
                                 <div class="card-body">
@@ -129,6 +92,7 @@
                                 </div> <!-- card-body.// -->
                             </div> <!-- collapse .// -->
                         </article> <!-- card-group-item.// -->
+                        @endforeach
                     </div> <!-- card.// -->
 
 
