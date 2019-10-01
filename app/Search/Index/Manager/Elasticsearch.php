@@ -161,11 +161,10 @@ class Elasticsearch extends Base
      * Elasticsearch constructor.
      * @param SourceInterface $source
      * @param EntityInterface $entity
-     * @param AttributeStorageInterface $storage
      */
-    public function __construct(SourceInterface $source, EntityInterface $entity, AttributeStorageInterface $storage)
+    public function __construct(SourceInterface $source, EntityInterface $entity)
     {
-        parent::__construct($source, $entity, $storage);
+        parent::__construct($source, $entity);
     }
 
     public function createIndex()
