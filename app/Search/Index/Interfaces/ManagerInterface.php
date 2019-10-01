@@ -3,6 +3,7 @@
 namespace App\Search\Index\Interfaces;
 
 use App\Exceptions\ApiException;
+use App\Search\Entity\Interfaces\AttributeStorageInterface;
 use App\Search\Entity\Interfaces\EntityInterface;
 
 interface ManagerInterface
@@ -15,7 +16,7 @@ interface ManagerInterface
 
     public function indexAll();
 
-    public function __construct(SourceInterface $source, EntityInterface $entity);
+    public function __construct(SourceInterface $source, EntityInterface $entity, AttributeStorageInterface $storage);
 
     /**
      * @throws ApiException

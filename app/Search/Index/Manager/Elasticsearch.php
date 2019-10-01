@@ -3,6 +3,7 @@
 namespace App\Search\Index\Manager;
 
 use App\Exceptions\ApiException;
+use App\Search\Entity\Interfaces\AttributeStorageInterface;
 use App\Search\Entity\Interfaces\EntityInterface;
 use App\Search\Index\Interfaces\SourceInterface;
 use App\Search\Index\Listeners\SourceListener;
@@ -160,10 +161,11 @@ class Elasticsearch extends Base
      * Elasticsearch constructor.
      * @param SourceInterface $source
      * @param EntityInterface $entity
+     * @param AttributeStorageInterface $storage
      */
-    public function __construct(SourceInterface $source, EntityInterface $entity)
+    public function __construct(SourceInterface $source, EntityInterface $entity, AttributeStorageInterface $storage)
     {
-        parent::__construct($source, $entity);
+        parent::__construct($source, $entity, $storage);
     }
 
     public function createIndex()
