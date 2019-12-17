@@ -33,8 +33,7 @@
                         @foreach ($result->filter->rangeParams as $param)
                         <article class="card-group-item">
                             <header class="card-header">
-                                <a href="#" data-toggle="collapse" data-target="#collapse33">
-                                    <i class="icon-action fa fa-chevron-down"></i>
+                                <a href="#">
                                     <h6 class="title">{{$param->code}} </h6>
                                 </a>
                             </header>

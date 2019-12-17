@@ -565,6 +565,8 @@ class Elasticsearch extends Engine
         foreach ($resultMatrix['select_params'] as $index => $selectParam) {
             $resultMatrix['select_params'][$index]['values'] = array_values($selectParam['values']);
         }
+
+        $resultMatrix['range_params'] = array_values($resultMatrix['range_params']);
     }
 
     /**

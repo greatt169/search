@@ -60,7 +60,7 @@ class CatalogController extends Controller
         try {
             $response = $apiInstance->engineIndexIndexCatalogSearchPost($engine, $index, $request, $page, $page_size);
             $result = $catalogItemsService->getResult($response);
-            //1dump($result);
+            dd($result);
         } catch (\Exception $e) {
             echo 'Exception when calling CatalogApi->engineIndexIndexCatalogSearchPost: ', $e->getMessage(), PHP_EOL;
         }
