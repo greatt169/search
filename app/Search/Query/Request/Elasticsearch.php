@@ -472,11 +472,11 @@ class Elasticsearch extends Engine
                 if ($termMatrixItemRangeParamCode == $term) {
                     continue;
                 }
-                if ($rawMatrix['range_params'][$termMatrixItemRangeParamCode]['min_displayed'] < $termMatrixItemRangeParamValue['min_total']) {
-                    $rawMatrix['range_params'][$termMatrixItemRangeParamCode]['min_displayed'] = $termMatrixItemRangeParamValue['min_total'];
+                if ($rawMatrix['range_params'][$termMatrixItemRangeParamCode]['minDisplayed'] < $termMatrixItemRangeParamValue['minTotal']) {
+                    $rawMatrix['range_params'][$termMatrixItemRangeParamCode]['minDisplayed'] = $termMatrixItemRangeParamValue['minTotal'];
                 }
-                if ($rawMatrix['range_params'][$termMatrixItemRangeParamCode]['max_displayed'] > $termMatrixItemRangeParamValue['max_total']) {
-                    $rawMatrix['range_params'][$termMatrixItemRangeParamCode]['max_displayed'] = $termMatrixItemRangeParamValue['max_total'];
+                if ($rawMatrix['range_params'][$termMatrixItemRangeParamCode]['maDisplayed'] > $termMatrixItemRangeParamValue['maxTotal']) {
+                    $rawMatrix['range_params'][$termMatrixItemRangeParamCode]['maDisplayed'] = $termMatrixItemRangeParamValue['maxTotal'];
                 }
             }
             if(stripos($term, $this->rangePropAggsPrefix) !== false) {
@@ -533,8 +533,8 @@ class Elasticsearch extends Engine
             }
             $filterRangedParamMinSelected = $filterRangedParam->getMinValue();
             $filterRangedParamMaxSelected = $filterRangedParam->getMaxValue();
-            $resultMatrix['range_params'][$code]['min_selected'] = $filterRangedParamMinSelected;
-            $resultMatrix['range_params'][$code]['max_selected'] = $filterRangedParamMaxSelected;
+            $resultMatrix['range_params'][$code]['minSelected'] = $filterRangedParamMinSelected;
+            $resultMatrix['range_params'][$code]['maxSelected'] = $filterRangedParamMaxSelected;
 
         }
 
@@ -546,11 +546,11 @@ class Elasticsearch extends Engine
             if(!array_key_exists($code, $resultMatrix['range_params'])) {
                 continue;
             }
-            if($resultMatrix['range_params'][$code]['min_displayed'] < $filterRangedParamMinSelected) {
-                $resultMatrix['range_params'][$code]['min_displayed'] = $filterRangedParamMinSelected;
+            if($resultMatrix['range_params'][$code]['minDisplayed'] < $filterRangedParamMinSelected) {
+                $resultMatrix['range_params'][$code]['minDisplayed'] = $filterRangedParamMinSelected;
             }
-            if($resultMatrix['range_params'][$code]['max_displayed'] > $filterRangedParamMaxSelected) {
-                $resultMatrix['range_params'][$code]['max_displayed'] = $filterRangedParamMaxSelected;
+            if($resultMatrix['range_params'][$code]['maDisplayed'] > $filterRangedParamMaxSelected) {
+                $resultMatrix['range_params'][$code]['maDisplayed'] = $filterRangedParamMaxSelected;
             }
         }
     }
@@ -659,17 +659,17 @@ class Elasticsearch extends Engine
                 switch ($func) {
                     case 'min':
                         {
-                            $filterData['range_params'][$fieldCode]['min_total'] = $aggregationResultItem['value'];
-                            $filterData['range_params'][$fieldCode]['min_selected'] = $aggregationResultItem['value'];
-                            $filterData['range_params'][$fieldCode]['min_displayed'] = $aggregationResultItem['value'];
+                            $filterData['range_params'][$fieldCode]['minTotal'] = $aggregationResultItem['value'];
+                            $filterData['range_params'][$fieldCode]['minSelected'] = $aggregationResultItem['value'];
+                            $filterData['range_params'][$fieldCode]['minDisplayed'] = $aggregationResultItem['value'];
                             break;
                         }
 
                     case 'max':
                         {
-                            $filterData['range_params'][$fieldCode]['max_total'] = $aggregationResultItem['value'];
-                            $filterData['range_params'][$fieldCode]['max_selected'] = $aggregationResultItem['value'];
-                            $filterData['range_params'][$fieldCode]['max_displayed'] = $aggregationResultItem['value'];
+                            $filterData['range_params'][$fieldCode]['maxTotal'] = $aggregationResultItem['value'];
+                            $filterData['range_params'][$fieldCode]['maxSelected'] = $aggregationResultItem['value'];
+                            $filterData['range_params'][$fieldCode]['maDisplayed'] = $aggregationResultItem['value'];
                             break;
                         }
                 }
