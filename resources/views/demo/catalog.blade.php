@@ -1,5 +1,7 @@
 @extends('demo.layouts.app')
-
+@php
+//dd($result);
+@endphp
 @section('content')
     <!-- ========================= SECTION CONTENT ========================= -->
     <section class="section-content bg padding-y">
@@ -28,11 +30,12 @@
                 <aside class="col-sm-3">
 
                     <div class="card card-filter">
+                        @foreach ($result->filter->rangeParams as $param)
                         <article class="card-group-item">
                             <header class="card-header">
                                 <a href="#" data-toggle="collapse" data-target="#collapse33">
                                     <i class="icon-action fa fa-chevron-down"></i>
-                                    <h6 class="title">By Price </h6>
+                                    <h6 class="title">{{$param->code}} </h6>
                                 </a>
                             </header>
                             <div class="filter-content collapse show" id="collapse33">
@@ -48,46 +51,27 @@
                                             <input class="form-control" placeholder="$1,0000" type="number">
                                         </div>
                                     </div> <!-- form-row.// -->
-                                    <button class="btn btn-block btn-outline-primary">Apply</button>
                                 </div> <!-- card-body.// -->
                             </div> <!-- collapse .// -->
                         </article> <!-- card-group-item.// -->
+                        @endforeach
                         @foreach ($result->filter->selectParams as $param)
                             <article class="card-group-item">
                             <header class="card-header">
-                                <h6 class="title">By Feature </h6>
+                                <h6 class="title">{{$param->code}} </h6>
                             </header>
                             <div class="filter-content collapse show" id="collapse44">
                                 <div class="card-body">
                                     <form>
+                                        @foreach ($param->values as $value)
                                         <label class="form-check">
                                             <input class="form-check-input" value="" type="checkbox">
                                             <span class="form-check-label">
-				  	<span class="float-right badge badge-light round">5</span>
-				    Samsung
-				  </span>
+                                                <span class="float-right badge badge-light round">{{ $value->count }}</span>
+                                                {{ $value->value }}
+                                            </span>
                                         </label>  <!-- form-check.// -->
-                                        <label class="form-check">
-                                            <input class="form-check-input" value="" type="checkbox">
-                                            <span class="form-check-label">
-				  	<span class="float-right badge badge-light round">13</span>
-				    Mersedes Benz
-				  </span>
-                                        </label> <!-- form-check.// -->
-                                        <label class="form-check">
-                                            <input class="form-check-input" value="" type="checkbox">
-                                            <span class="form-check-label">
-				  	<span class="float-right badge badge-light round">12</span>
-				    Nissan Altima
-				  </span>
-                                        </label>  <!-- form-check.// -->
-                                        <label class="form-check">
-                                            <input class="form-check-input" value="" type="checkbox">
-                                            <span class="form-check-label">
-				  	<span class="float-right badge badge-light round">32</span>
-				    Another Brand
-				  </span>
-                                        </label>  <!-- form-check.// -->
+                                        @endforeach
                                     </form>
                                 </div> <!-- card-body.// -->
                             </div> <!-- collapse .// -->
