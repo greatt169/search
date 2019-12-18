@@ -24,6 +24,7 @@ use SwaggerSearch\Model\ListItems;
 use SwaggerSearch\Model\ReindexResponse;
 use SwaggerSearch\Model\Search;
 use SwaggerSearch\Model\Sorts;
+use SwaggerSearch\ObjectSerializer;
 
 class Elasticsearch extends Engine
 {
@@ -472,11 +473,11 @@ class Elasticsearch extends Engine
                 if ($termMatrixItemRangeParamCode == $term) {
                     continue;
                 }
-                if ($rawMatrix['range_params'][$termMatrixItemRangeParamCode]['minDisplayed'] < $termMatrixItemRangeParamValue['minTotal']) {
-                    $rawMatrix['range_params'][$termMatrixItemRangeParamCode]['minDisplayed'] = $termMatrixItemRangeParamValue['minTotal'];
+                if ($rawMatrix['range_params'][$termMatrixItemRangeParamCode]['min']['displayed'] < $termMatrixItemRangeParamValue['min']['total']) {
+                    $rawMatrix['range_params'][$termMatrixItemRangeParamCode]['min']['displayed'] = $termMatrixItemRangeParamValue['min']['total'];
                 }
-                if ($rawMatrix['range_params'][$termMatrixItemRangeParamCode]['maDisplayed'] > $termMatrixItemRangeParamValue['maxTotal']) {
-                    $rawMatrix['range_params'][$termMatrixItemRangeParamCode]['maDisplayed'] = $termMatrixItemRangeParamValue['maxTotal'];
+                if ($rawMatrix['range_params'][$termMatrixItemRangeParamCode]['max']['displayed'] > $termMatrixItemRangeParamValue['max']['total']) {
+                    $rawMatrix['range_params'][$termMatrixItemRangeParamCode]['max']['displayed'] = $termMatrixItemRangeParamValue['max']['total'];
                 }
             }
             if(stripos($term, $this->rangePropAggsPrefix) !== false) {
@@ -533,8 +534,8 @@ class Elasticsearch extends Engine
             }
             $filterRangedParamMinSelected = $filterRangedParam->getMinValue();
             $filterRangedParamMaxSelected = $filterRangedParam->getMaxValue();
-            $resultMatrix['range_params'][$code]['minSelected'] = $filterRangedParamMinSelected;
-            $resultMatrix['range_params'][$code]['maxSelected'] = $filterRangedParamMaxSelected;
+            $resultMatrix['range_params'][$code]['min']['selected'] = $filterRangedParamMinSelected;
+            $resultMatrix['range_params'][$code]['max']['selected'] = $filterRangedParamMaxSelected;
 
         }
 
@@ -546,11 +547,11 @@ class Elasticsearch extends Engine
             if(!array_key_exists($code, $resultMatrix['range_params'])) {
                 continue;
             }
-            if($resultMatrix['range_params'][$code]['minDisplayed'] < $filterRangedParamMinSelected) {
-                $resultMatrix['range_params'][$code]['minDisplayed'] = $filterRangedParamMinSelected;
+            if($resultMatrix['range_params'][$code]['min']['displayed'] < $filterRangedParamMinSelected) {
+                $resultMatrix['range_params'][$code]['min']['displayed'] = $filterRangedParamMinSelected;
             }
-            if($resultMatrix['range_params'][$code]['maDisplayed'] > $filterRangedParamMaxSelected) {
-                $resultMatrix['range_params'][$code]['maDisplayed'] = $filterRangedParamMaxSelected;
+            if($resultMatrix['range_params'][$code]['max']['displayed'] > $filterRangedParamMaxSelected) {
+                $resultMatrix['range_params'][$code]['max']['displayed'] = $filterRangedParamMaxSelected;
             }
         }
     }
@@ -566,7 +567,7 @@ class Elasticsearch extends Engine
             $resultMatrix['select_params'][$index]['values'] = array_values($selectParam['values']);
         }
 
-        $resultMatrix['range_params'] = array_values($resultMatrix['range_params']);
+        //$resultMatrix['range_params'] = array_values($resultMatrix['range_params']);
     }
 
     /**
@@ -659,17 +660,17 @@ class Elasticsearch extends Engine
                 switch ($func) {
                     case 'min':
                         {
-                            $filterData['range_params'][$fieldCode]['minTotal'] = $aggregationResultItem['value'];
-                            $filterData['range_params'][$fieldCode]['minSelected'] = $aggregationResultItem['value'];
-                            $filterData['range_params'][$fieldCode]['minDisplayed'] = $aggregationResultItem['value'];
+                            $filterData['range_params'][$fieldCode]['min']['total'] = $aggregationResultItem['value'];
+                            $filterData['range_params'][$fieldCode]['min']['selected'] = $aggregationResultItem['value'];
+                            $filterData['range_params'][$fieldCode]['min']['displayed'] = $aggregationResultItem['value'];
                             break;
                         }
 
                     case 'max':
                         {
-                            $filterData['range_params'][$fieldCode]['maxTotal'] = $aggregationResultItem['value'];
-                            $filterData['range_params'][$fieldCode]['maxSelected'] = $aggregationResultItem['value'];
-                            $filterData['range_params'][$fieldCode]['maDisplayed'] = $aggregationResultItem['value'];
+                            $filterData['range_params'][$fieldCode]['max']['total'] = $aggregationResultItem['value'];
+                            $filterData['range_params'][$fieldCode]['max']['selected'] = $aggregationResultItem['value'];
+                            $filterData['range_params'][$fieldCode]['max']['displayed'] = $aggregationResultItem['value'];
                             break;
                         }
                 }

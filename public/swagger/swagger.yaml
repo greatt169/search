@@ -449,35 +449,32 @@ definitions:
         description: |
           Символьный код параметра
         example: "price"
-      minTotal:
+      min:
+        $ref: '#/definitions/DisplayFilterRangeGroupParam'
+      max:
+        $ref: '#/definitions/DisplayFilterRangeGroupParam'
+
+  DisplayFilterRangeGroupParam:
+    type: object
+    required:
+      - total
+      - selected
+      - displayed
+    properties:
+      total:
         type: number
         description: |
-          Минимальное значение свойства
-        example: 0
-      maxTotal:
-        type: number
-        description: |
-          Максимальное значение свойства
-        example: 10000
-      minSelected:
-        type: number
-        description: |
-          Минимальное выбранное значение
-        example: 0
-      maxSelected:
-        type: number
-        description: |
-          Максимальное выбранное значение
-        example: 10000
-      minDisplayed:
-        type: number
-        description: |
-          Минимальное отображенное значение
+          Предельное (макс. или мин.) значение свойства
         example: 100
-      maxDisplayed:
+      selected:
         type: number
         description: |
-          Максимальное отображенное значение
+          Предельное (макс. или мин.) выбранное значение
+        example: 0
+      displayed:
+        type: number
+        description: |
+          Предельное (макс. или мин.) отображенное значение
         example: 5000
 
   DisplayFilterParam:

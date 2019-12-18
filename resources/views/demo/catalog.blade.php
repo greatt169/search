@@ -39,15 +39,15 @@
                             </header>
                             <div class="filter-content collapse show" id="collapse33">
                                 <div class="card-body">
-                                    <input type="range" class="custom-range" min="0" max="100" name="">
+                                    <input type="range" class="custom-range" min="{{$param->min->selected}}" max="{{$param->max->selected}}" name="">
                                     <div class="form-row">
                                         <div class="form-group col-md-6">
-                                            <label>Min</label>
-                                            <input class="form-control" placeholder="$0" type="number">
+                                            <label>min</label>
+                                            <input class="form-control" placeholder="{{$param->min->displayed}}" type="number">
                                         </div>
                                         <div class="form-group text-right col-md-6">
-                                            <label>Max</label>
-                                            <input class="form-control" placeholder="$1,0000" type="number">
+                                            <label>max</label>
+                                            <input class="form-control" placeholder="{{$param->max->displayed}}" type="number">
                                         </div>
                                     </div> <!-- form-row.// -->
                                 </div> <!-- card-body.// -->

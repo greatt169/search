@@ -48,6 +48,10 @@ class CatalogController extends Controller
                         "type" => "checkbox"
                     ],
                     [
+                        "field" => "year",
+                        "type" => "checkbox"
+                    ],
+                    [
                         "field" => "price",
                         "type" => "range"
                     ]
@@ -60,7 +64,7 @@ class CatalogController extends Controller
         try {
             $response = $apiInstance->engineIndexIndexCatalogSearchPost($engine, $index, $request, $page, $page_size);
             $result = $catalogItemsService->getResult($response);
-            dd($result);
+            //dd($result);
         } catch (\Exception $e) {
             echo 'Exception when calling CatalogApi->engineIndexIndexCatalogSearchPost: ', $e->getMessage(), PHP_EOL;
         }
