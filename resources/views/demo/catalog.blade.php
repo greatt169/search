@@ -33,9 +33,7 @@
                         @foreach ($result->filter->rangeParams as $param)
                         <article class="card-group-item">
                             <header class="card-header">
-                                <a href="#">
-                                    <h6 class="title">{{$param->code}} </h6>
-                                </a>
+                                <h6 class="title">{{$references['properties'][$param->code]['title']}} </h6>
                             </header>
                             <div class="filter-content collapse show" id="collapse33">
                                 <div class="card-body">
@@ -57,7 +55,7 @@
                         @foreach ($result->filter->selectParams as $param)
                             <article class="card-group-item">
                             <header class="card-header">
-                                <h6 class="title">{{$param->code}} </h6>
+                                <h6 class="title">{{$references['properties'][$param->code]['title']}} </h6>
                             </header>
                             <div class="filter-content collapse show" id="collapse44">
                                 <div class="card-body">
@@ -67,7 +65,11 @@
                                             <input class="form-check-input" value="" type="checkbox">
                                             <span class="form-check-label">
                                                 <span class="float-right badge badge-light round">{{ $value->count }}</span>
-                                                {{ $value->value }}
+                                                @if(array_key_exists('values', $references['properties'][$param->code]))
+                                                    {{$references['properties'][$param->code]['values'][$value->value]['title']}}
+                                                @else
+                                                    {{ $value->value }}
+                                                @endif
                                             </span>
                                         </label>  <!-- form-check.// -->
                                         @endforeach
