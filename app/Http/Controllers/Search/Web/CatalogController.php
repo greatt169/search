@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Search\Web;
 
+use App\Demo\Helpers\References;
 use App\Helpers\Serializer;
 use App\Http\Controllers\Controller;
 use App\UseCases\Catalog\Items;
@@ -64,10 +65,11 @@ class CatalogController extends Controller
         try {
             $response = $apiInstance->engineIndexIndexCatalogSearchPost($engine, $index, $request, $page, $page_size);
             $result = $catalogItemsService->getResult($response);
-            //dd($result);
+            $references = new References();
+            $referencesData = $references->getTree();
         } catch (\Exception $e) {
             echo 'Exception when calling CatalogApi->engineIndexIndexCatalogSearchPost: ', $e->getMessage(), PHP_EOL;
         }
-        return view('demo.catalog', ['result' => $result]);
+        return view('demo.catalog', ['result' => $result, 'references' => $referencesData]);
     }
 }

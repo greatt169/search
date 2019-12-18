@@ -24,7 +24,6 @@ use SwaggerSearch\Model\ListItems;
 use SwaggerSearch\Model\ReindexResponse;
 use SwaggerSearch\Model\Search;
 use SwaggerSearch\Model\Sorts;
-use SwaggerSearch\ObjectSerializer;
 
 class Elasticsearch extends Engine
 {
