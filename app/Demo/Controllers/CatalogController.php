@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Search\Web;
+namespace App\Demo\Controllers;
 
 use App\Demo\Helpers\References;
-use App\Helpers\Serializer;
 use App\Http\Controllers\Controller;
 use App\UseCases\Catalog\Items;
-use SwaggerSearch\ObjectSerializer;
 
 class CatalogController extends Controller
 {

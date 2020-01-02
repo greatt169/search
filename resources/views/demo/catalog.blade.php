@@ -4,6 +4,11 @@
 @endphp
 @section('content')
     <!-- ========================= SECTION CONTENT ========================= -->
+
+
+
+
+
     <section class="section-content bg padding-y">
         <div class="container">
 
@@ -25,6 +30,42 @@
             <section class="section-pagetop">
                 <h2 class="title-doc">Каталог продукции</h2>
             </section>
+
+            <div id="root"></div>
+            <script type="text/babel">
+
+                class Hello extends React.Component {
+
+                    constructor(){
+                        super();
+                        this.state = {
+                            message: "my friend (from state)!"
+                        };
+                        this.updateMessage = this.updateMessage.bind(this);
+                    }
+
+                    updateMessage() {
+                        this.setState({
+                            message: "my friend (from changed state)!"
+                        });
+                    }
+
+                    render() {
+                        return (
+                            <div>
+                                <h1>Hello {this.state.message}!</h1>
+                                <button onClick={this.updateMessage}>Click me!</button>
+                            </div>
+                        )
+                    }
+                }
+
+                ReactDOM.render(
+                    <Hello message="my friend" />,
+                    document.getElementById("root")
+                );
+
+            </script>
 
             <div class="row">
                 <aside class="col-sm-3">
@@ -62,7 +103,7 @@
                                     <form>
                                         @foreach ($param->values as $value)
                                         <label class="form-check">
-                                            <input class="form-check-input" value="" type="checkbox">
+                                            <input class="form-check-input" value="" type="checkbox" >
                                             <span class="form-check-label">
                                                 <span class="float-right badge badge-light round">{{ $value->count }}</span>
                                                 @if(array_key_exists('values', $references['properties'][$param->code]))

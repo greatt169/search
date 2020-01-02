@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Search\Web;
+namespace App\Demo\Controllers;
 
 use App\Http\Controllers\Controller;
 

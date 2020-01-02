@@ -16,10 +16,9 @@ Route::get('/test/json', 'TestController@jsonPack');
 Route::get('/swagger/index.html', 'PagesController@swagger')->name('swagger_page');
 
 Route::group([
-    'namespace' => 'Search',
+    'namespace' => '\App\Demo\Controllers',
 ], function () {
     Route::group([
-        'namespace' => 'Web',
         'prefix' => '/demo',
     ], function () {
         Route::get('/', 'IndexController@index')->name('demo_home');
