@@ -6,6 +6,7 @@
     <meta http-equiv="cache-control" content="max-age=604800"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>UI KIT - Marketplace and Ecommerce html template</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link href="/frontend/images/favicon.ico" rel="shortcut icon" type="image/x-icon">
     <link href="/frontend/css/bootstrap.css" rel="stylesheet" type="text/css"/>
     <!-- Font awesome 5 -->
@@ -17,6 +18,7 @@
     <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+
 </head>
 <body>
 <header class="section-header">

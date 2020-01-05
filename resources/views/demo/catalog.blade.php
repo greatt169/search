@@ -1,13 +1,9 @@
 @extends('demo.layouts.app')
 @php
-//dd($result);
+    //dd($result);
 @endphp
 @section('content')
     <!-- ========================= SECTION CONTENT ========================= -->
-
-
-
-
 
     <section class="section-content bg padding-y">
         <div class="container">
@@ -31,93 +27,63 @@
                 <h2 class="title-doc">Каталог продукции</h2>
             </section>
 
-            <div id="root"></div>
-            <script type="text/babel">
+            <div id="catalog-component" data-api="{{'http://10.101.2.10/api/elasticsearch/_index/auto/catalog/search/'}}"></div>
 
-                class Hello extends React.Component {
 
-                    constructor(){
-                        super();
-                        this.state = {
-                            message: "my friend (from state)!"
-                        };
-                        this.updateMessage = this.updateMessage.bind(this);
-                    }
-
-                    updateMessage() {
-                        this.setState({
-                            message: "my friend (from changed state)!"
-                        });
-                    }
-
-                    render() {
-                        return (
-                            <div>
-                                <h1>Hello {this.state.message}!</h1>
-                                <button onClick={this.updateMessage}>Click me!</button>
-                            </div>
-                        )
-                    }
-                }
-
-                ReactDOM.render(
-                    <Hello message="my friend" />,
-                    document.getElementById("root")
-                );
-
-            </script>
-
-            <div class="row">
+            <div class="row" style="display: none !important;">
                 <aside class="col-sm-3">
 
                     <div class="card card-filter">
                         @foreach ($result->filter->rangeParams as $param)
-                        <article class="card-group-item">
-                            <header class="card-header">
-                                <h6 class="title">{{$references['properties'][$param->code]['title']}} </h6>
-                            </header>
-                            <div class="filter-content collapse show" id="collapse33">
-                                <div class="card-body">
-                                    <input type="range" class="custom-range" min="{{$param->min->selected}}" max="{{$param->max->selected}}" name="">
-                                    <div class="form-row">
-                                        <div class="form-group col-md-6">
-                                            <label>min</label>
-                                            <input class="form-control" placeholder="{{$param->min->displayed}}" type="number">
-                                        </div>
-                                        <div class="form-group text-right col-md-6">
-                                            <label>max</label>
-                                            <input class="form-control" placeholder="{{$param->max->displayed}}" type="number">
-                                        </div>
-                                    </div> <!-- form-row.// -->
-                                </div> <!-- card-body.// -->
-                            </div> <!-- collapse .// -->
-                        </article> <!-- card-group-item.// -->
+                            <article class="card-group-item">
+                                <header class="card-header">
+                                    <h6 class="title">{{$references['properties'][$param->code]['title']}} </h6>
+                                </header>
+                                <div class="filter-content collapse show" id="collapse33">
+                                    <div class="card-body">
+                                        <input type="range" class="custom-range" min="{{$param->min->selected}}"
+                                               max="{{$param->max->selected}}" name="">
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                <label>min</label>
+                                                <input class="form-control" placeholder="{{$param->min->displayed}}"
+                                                       type="number">
+                                            </div>
+                                            <div class="form-group text-right col-md-6">
+                                                <label>max</label>
+                                                <input class="form-control" placeholder="{{$param->max->displayed}}"
+                                                       type="number">
+                                            </div>
+                                        </div> <!-- form-row.// -->
+                                    </div> <!-- card-body.// -->
+                                </div> <!-- collapse .// -->
+                            </article> <!-- card-group-item.// -->
                         @endforeach
                         @foreach ($result->filter->selectParams as $param)
                             <article class="card-group-item">
-                            <header class="card-header">
-                                <h6 class="title">{{$references['properties'][$param->code]['title']}} </h6>
-                            </header>
-                            <div class="filter-content collapse show" id="collapse44">
-                                <div class="card-body">
-                                    <form>
-                                        @foreach ($param->values as $value)
-                                        <label class="form-check">
-                                            <input class="form-check-input" value="" type="checkbox" >
-                                            <span class="form-check-label">
+                                <header class="card-header">
+                                    <h6 class="title">{{$references['properties'][$param->code]['title']}} </h6>
+                                </header>
+                                <div class="filter-content collapse show" id="collapse44">
+                                    <div class="card-body">
+                                        <form>
+                                            @foreach ($param->values as $value)
+                                                <label class="form-check">
+                                                    <input class="form-check-input" value="" type="checkbox">
+                                                    <span class="form-check-label">
                                                 <span class="float-right badge badge-light round">{{ $value->count }}</span>
                                                 @if(array_key_exists('values', $references['properties'][$param->code]))
-                                                    {{$references['properties'][$param->code]['values'][$value->value]['title']}}
-                                                @else
-                                                    {{ $value->value }}
-                                                @endif
+                                                            {{$references['properties'][$param->code]['values'][$value->value]['title']}}
+                                                        @else
+                                                            {{ $value->value }}
+                                                        @endif
                                             </span>
-                                        </label>  <!-- form-check.// -->
-                                        @endforeach
-                                    </form>
-                                </div> <!-- card-body.// -->
-                            </div> <!-- collapse .// -->
-                        </article> <!-- card-group-item.// -->
+                                                </label>  <!-- form-check.// -->
+                                            @endforeach
+                                        </form>
+                                    </div> <!-- card-body.// -->
+                                </div> <!-- collapse .// -->
+                            </article> <!-- card-group-item.// -->
                         @endforeach
                     </div> <!-- card.// -->
 
@@ -131,7 +97,8 @@
                             <div class="card-body">
                                 <div class="row">
                                     <aside class="col-sm-3">
-                                        <div class="img-wrap"><img src="{{ $item->singleAttributes['picture']->value->value }}"></div>
+                                        <div class="img-wrap"><img
+                                                    src="{{ $item->singleAttributes['picture']->value->value }}"></div>
                                     </aside> <!-- col.// -->
                                     <article class="col-sm-6">
                                         <h4 class="title">{{ $item->singleAttributes['name']->value->value }}</h4>
@@ -185,11 +152,11 @@
                     @endforeach
 
 
-
                 </main> <!-- col.// -->
             </div>
 
         </div> <!-- container .//  -->
     </section>
     <!-- ========================= SECTION CONTENT END// ========================= -->
+    <script type="text/babel" src="/frontend/js/catalog.js"></script>
 @endsection

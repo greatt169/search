@@ -20,26 +20,8 @@ class CatalogController extends Controller
         $apiInstance->getConfig()->setHost('http://' . $_SERVER['SERVER_ADDR'] . '/api');
         $engine = 'elasticsearch'; //  | Код поискового движка
         $index = 'auto'; //  | Код индекса
+
         $request = new \SwaggerSearch\Model\Request([
-            "filter" => [
-                "rangeParams" => [
-                    [
-                        "code" => "price",
-                        "minValue" => 0,
-                        "maxValue" => 1000000
-                    ]
-                ],
-                "selectParams" => [
-                    [
-                        "code" => "color",
-                        "values" => [
-                            [
-                                "value" => "white"
-                            ]
-                        ]
-                    ]
-                ]
-            ],
             "aggregations" => [
                 "items" => [
                     [
