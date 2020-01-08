@@ -9,19 +9,15 @@ use App\UseCases\Catalog\Items;
 class CatalogController extends Controller
 {
     /**
-     * @param Items $catalogItemsService
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @todo refactor
      *
      */
-    public function index(Items $catalogItemsService)
+    public function index(References $references)
     {
-        $apiInstance = new \SwaggerSearch\Api\CatalogApi();
-        $apiInstance->getConfig()->setHost('http://' . $_SERVER['SERVER_ADDR'] . '/api');
-        $engine = 'elasticsearch'; //  | Код поискового движка
-        $index = 'auto'; //  | Код индекса
+        $apiUrl = 'http://' . $_SERVER['SERVER_ADDR'] . '/api/elasticsearch/_index/auto/catalog/search?page=1&pageSize=20';
 
-        $request = new \SwaggerSearch\Model\Request([
+        $requestParams = [
             "aggregations" => [
                 "items" => [
                     [
@@ -38,18 +34,18 @@ class CatalogController extends Controller
                     ]
                 ]
             ]
-        ]); // \SwaggerSearch\Model\Request |
-        $page = 1; // int | Номер запрашиваемой страницы результата
-        $page_size = 20; // int | Количество возвращаемых объектов на странице
+        ];
 
-        try {
-            $response = $apiInstance->engineIndexIndexCatalogSearchPost($engine, $index, $request, $page, $page_size);
-            $result = $catalogItemsService->getResult($response);
-            $references = new References();
-            $referencesData = $references->getTree();
-        } catch (\Exception $e) {
-            echo 'Exception when calling CatalogApi->engineIndexIndexCatalogSearchPost: ', $e->getMessage(), PHP_EOL;
-        }
-        return view('demo.catalog', ['result' => $result, 'references' => $referencesData]);
+        $filterParams = json_encode($requestParams);
+        $referencesData = json_encode($references->getTree());
+
+        return view(
+            'demo.catalog',
+            [
+                'apiUrl' => $apiUrl,
+                'references' => $referencesData,
+                'filterParams' => $filterParams
+            ]
+        );
     }
 }
