@@ -184,69 +184,88 @@ function ItemsList(props) {
     );
 }
 
-function FilterRangeParams(props) {
-    return (
-        props.rangeParams.map((param) =>
-            <article key={param.code} className="card-group-item">
-                <header className="card-header">
-                    <h6 className="title">{props.references.properties[param.code].title} </h6>
-                </header>
-                <div className="filter-content collapse show" id="collapse33">
-                    <div className="card-body">
-                        <input type="range" className="custom-range"
-                               min={`${param.min.selected}`}
-                               max={`${param.max.selected}`} name=""/>
-                        <div className="form-row">
-                            <div className="form-group col-md-6">
-                                <label>min</label>
-                                <input className="form-control"
-                                       placeholder={`${param.min.displayed}`}
-                                       type="number"/>
-                            </div>
-                            <div className="form-group text-right col-md-6">
-                                <label>max</label>
-                                <input className="form-control"
-                                       placeholder={`${param.max.displayed}`}
-                                       type="number"/>
+class FilterRangeParams extends React.Component {
+
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return (
+            this.props.rangeParams.map((param) =>
+                <article key={param.code} className="card-group-item">
+                    <header className="card-header">
+                        <h6 className="title">{this.props.references.properties[param.code].title} </h6>
+                    </header>
+                    <div className="filter-content collapse show" id="collapse33">
+                        <div className="card-body">
+                            <input type="range" className="custom-range"
+                                   min={`${param.min.selected}`}
+                                   max={`${param.max.selected}`} name=""/>
+                            <div className="form-row">
+                                <div className="form-group col-md-6">
+                                    <label>min</label>
+                                    <input className="form-control"
+                                           placeholder={`${param.min.displayed}`}
+                                           type="number"/>
+                                </div>
+                                <div className="form-group text-right col-md-6">
+                                    <label>max</label>
+                                    <input className="form-control"
+                                           placeholder={`${param.max.displayed}`}
+                                           type="number"/>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </article>
-        )
-    );
+                </article>
+            )
+        );
+    }
 }
 
-function FilterSelectParams(props) {
-    return (
-        props.selectParams.map((param) =>
-            <article key={param.code} className="card-group-item">
-                <header className="card-header">
-                    <h6 className="title">{props.references.properties[param.code].title}</h6>
-                </header>
-                <div className="filter-content collapse show" id="collapse44">
-                    <div className="card-body">
-                        <form>
-                            {param["values"].map((value) =>
-                                <label key={value.value} className="form-check">
-                                    <input className="form-check-input" value=""
-                                           type="checkbox"/>
-                                    <span className="form-check-label">
+
+class FilterSelectParams extends React.Component {
+
+    constructor(props) {
+        super(props);
+    }
+
+    /*this.filterSelectCheckboxCheck = function () {
+        console.log(1111);
+    };*/
+
+    render() {
+        return (
+            this.props.selectParams.map((param) =>
+                <article key={param.code} className="card-group-item">
+                    <header className="card-header">
+                        <h6 className="title">{this.props.references.properties[param.code].title}</h6>
+                    </header>
+                    <div className="filter-content collapse show" id="collapse44">
+                        <div className="card-body">
+                            <form>
+                                {param["values"].map((value) =>
+                                    <label key={value.value} className="form-check">
+                                        <input className="form-check-input" value=""
+                                               type="checkbox"/>
+                                        <span className="form-check-label">
                                                                     <span
                                                                         className="float-right badge badge-light round">{value.count}</span>
-                                        {props.references.properties[param.code]["values"] ?
-                                            props.references["properties"][param.code]["values"][value.value]["title"] :
-                                            value.value
-                                        }
+                                            {this.props.references.properties[param.code]["values"] ?
+                                                this.props.references["properties"][param.code]["values"][value.value]["title"] :
+                                                value.value
+                                            }
                                                                 </span>
-                                </label>
-                            )}
-                        </form>
+                                    </label>
+                                )}
+                            </form>
+                        </div>
                     </div>
-                </div>
-            </article>
+                </article>
+            )
         )
-    );
+    }
 }
 
 var element = document.getElementById("catalog-component");
