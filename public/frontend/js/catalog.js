@@ -1,6 +1,6 @@
 class Catalog extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
         this.state = {
             isWithSpinner: true,
@@ -9,20 +9,26 @@ class Catalog extends React.Component {
             emptyMsg: "No results!",
             result: {total: 0},
             rangeParams: [],
-            selectParams: []
+            selectParams: [],
+            filterParams: props.filter
         };
 
         this.addSpinner = this.addSpinner.bind(this);
         this.removeSpinner = this.removeSpinner.bind(this);
+        this.reload = this.reload.bind(this);
     }
 
     componentDidMount() {
+        this.reload();
+    }
+
+    reload() {
         fetch(this.props.api, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
             },
-            body: this.props.filter
+            body: this.state.filterParams
         })
             .then(res => res.json())
             .then(

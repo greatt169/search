@@ -4,7 +4,6 @@ namespace App\Demo\Controllers;
 
 use App\Demo\Helpers\References;
 use App\Http\Controllers\Controller;
-use App\UseCases\Catalog\Items;
 
 class CatalogController extends Controller
 {
