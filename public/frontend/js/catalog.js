@@ -16,6 +16,7 @@ class Catalog extends React.Component {
         this.addSpinner = this.addSpinner.bind(this);
         this.removeSpinner = this.removeSpinner.bind(this);
         this.reload = this.reload.bind(this);
+        this.filterSelectCheckboxCheck = this.filterSelectCheckboxCheck.bind(this);
     }
 
     componentDidMount() {
@@ -79,6 +80,22 @@ class Catalog extends React.Component {
         });
     }
 
+    filterSelectCheckboxCheck(e) {
+
+        const name = e.target.name;
+        const splitName = name.split('_');
+        const propCode = splitName[0];
+        const valueCode = splitName[1];
+
+        if(e.target.checked) {
+            console.log('add param ' + propCode + ' (' + valueCode + ') to filter');
+        } else {
+            console.log('remove param ' + propCode + ' (' + valueCode + ') from filter');
+        }
+
+        console.log(this.state.filterParams);
+    }
+
     render() {
 
         const isWithSpinner = this.state.isWithSpinner;
@@ -106,7 +123,7 @@ class Catalog extends React.Component {
                             <aside className="col-sm-3">
                                 <div className="card card-filter">
                                     <FilterRangeParams rangeParams={rangeParams} references={references}/>
-                                    <FilterSelectParams selectParams={selectParams} references={references}/>
+                                    <FilterSelectParams selectParams={selectParams} references={references} filterSelectCheckboxCheck={this.filterSelectCheckboxCheck}/>
                                 </div>
                             </aside>
                             <ItemsList result={result}/>
@@ -231,10 +248,6 @@ class FilterSelectParams extends React.Component {
         super(props);
     }
 
-    /*this.filterSelectCheckboxCheck = function () {
-        console.log(1111);
-    };*/
-
     render() {
         return (
             this.props.selectParams.map((param) =>
@@ -248,7 +261,7 @@ class FilterSelectParams extends React.Component {
                                 {param["values"].map((value) =>
                                     <label key={value.value} className="form-check">
                                         <input className="form-check-input" value=""
-                                               type="checkbox"/>
+                                               name={param.code + '_' + value.value} type="checkbox" onChange={this.props.filterSelectCheckboxCheck} />
                                         <span className="form-check-label">
                                                                     <span
                                                                         className="float-right badge badge-light round">{value.count}</span>
