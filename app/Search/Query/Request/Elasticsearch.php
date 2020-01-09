@@ -137,6 +137,9 @@ class Elasticsearch extends Engine
      */
     public function getQuery(Search $search = null, Filter $filter = null)
     {
+        if(empty($filter->getRangeParams()) && empty($filter->getSelectParams())) {
+            $filter = null;
+        }
         $query = [];
         if ($filter !== null && $search !== null) {
             $query = [
