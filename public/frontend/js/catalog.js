@@ -107,10 +107,9 @@ class Catalog extends React.Component {
         let currFilterParams = JSON.parse(this.state.filterParams);
         let index = currFilterParams['filter']['selectParams'].findIndex(el => el.code === propCode);
         if (index !== -1) {
-            let paramValues = currFilterParams['filter']['selectParams'][index]['values'].filter(function (el) {
+            currFilterParams['filter']['selectParams'][index]['values'] = currFilterParams['filter']['selectParams'][index]['values'].filter(function (el) {
                 return el.value !== valueCode;
             });
-            currFilterParams['filter']['selectParams'][index]['values'] = paramValues;
             this.state.filterParams = JSON.stringify(currFilterParams);
         }
     }
