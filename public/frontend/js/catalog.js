@@ -18,6 +18,7 @@ class Catalog extends React.Component {
         this.filterSelectCheckboxHandle = this.filterSelectCheckboxHandle.bind(this);
         this.reload = this.reload.bind(this);
         this.addSelectParamToFilter = this.addSelectParamToFilter.bind(this);
+        this.removeSelectParamFromFilter = this.removeSelectParamFromFilter.bind(this);
     }
 
     componentDidMount() {
@@ -81,34 +82,52 @@ class Catalog extends React.Component {
         });
     }
 
-    addSelectParamToFilter(name) {
-        const splitName = name.split('_');
-        const propCode = splitName[0];
-        const valueCode = splitName[1];
+    addSelectParamToFilter(propCode, valueCode) {
         let currFilterParams = JSON.parse(this.state.filterParams);
+        let index = currFilterParams['filter']['selectParams'].findIndex(el => el.code === propCode);
 
-        currFilterParams['filter']['selectParams'].push({
-            "code": propCode,
-            "values": [
-                {
-                    "value": valueCode
-                }
-            ]
-        });
+        if (index === -1) {
+            currFilterParams['filter']['selectParams'].push({
+                "code": propCode,
+                "values": [
+                    {
+                        "value": valueCode
+                    }
+                ]
+            });
+        } else {
+            currFilterParams['filter']['selectParams'][index]["values"].push({
+                "value": valueCode
+            });
+        }
         this.state.filterParams = JSON.stringify(currFilterParams);
+    }
+
+    removeSelectParamFromFilter(propCode, valueCode) {
+        let currFilterParams = JSON.parse(this.state.filterParams);
+        let index = currFilterParams['filter']['selectParams'].findIndex(el => el.code === propCode);
+        if (index !== -1) {
+            let paramValues = currFilterParams['filter']['selectParams'][index]['values'].filter(function (el) {
+                return el.value !== valueCode;
+            });
+            currFilterParams['filter']['selectParams'][index]['values'] = paramValues;
+            this.state.filterParams = JSON.stringify(currFilterParams);
+        }
     }
 
     filterSelectCheckboxHandle(e) {
 
         const name = e.target.name;
+        const splitName = name.split('_');
+        const propCode = splitName[0];
+        const valueCode = splitName[1];
 
         if(e.target.checked) {
-            this.addSelectParamToFilter(name);
-
+            this.addSelectParamToFilter(propCode, valueCode);
         } else {
-            console.log('remove param ' + propCode + ' (' + valueCode + ') from filter');
+            this.removeSelectParamFromFilter(propCode, valueCode);
         }
-
+        this.reload();
 
     }
 

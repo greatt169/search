@@ -72,6 +72,9 @@ class Elasticsearch extends Engine
         foreach ($selectParams as $selectParam) {
             $paramCode = $selectParam->getCode();
             $values = $selectParam->getValues();
+            if(empty($values)) {
+                continue;
+            }
             /**
              * @var FilterValue $value
              */
@@ -137,16 +140,25 @@ class Elasticsearch extends Engine
      */
     public function getQuery(Search $search = null, Filter $filter = null)
     {
+        if(empty($filter)) {
+            $filter = null;
+        }
         if(empty($filter->getRangeParams()) && empty($filter->getSelectParams())) {
             $filter = null;
         }
         $query = [];
+        $convertedFilter = $filter !== null ? $this->getEngineConvertedFilter($filter): null;
+
+        if(empty($convertedFilter)) {
+            $filter = null;
+        }
+
         if ($filter !== null && $search !== null) {
             $query = [
                 'bool' => [
                     'must' => [
                         $this->getEngineConvertedSearch($search),
-                        $this->getEngineConvertedFilter($filter)
+                        $convertedFilter
                     ]
                 ]
             ];
@@ -157,7 +169,7 @@ class Elasticsearch extends Engine
         if ($filter !== null && $search === null) {
             $query = [
                 'constant_score' => [
-                    'filter' => $this->getEngineConvertedFilter($filter)
+                    'filter' => $convertedFilter
                 ]
             ];
         }
@@ -270,7 +282,7 @@ class Elasticsearch extends Engine
 
     /**
      * @param string $id
-     * @return mixed|void
+     * @return mixed
      * @throws ApiException
      */
     public function deleteElement(string $id)
@@ -384,6 +396,10 @@ class Elasticsearch extends Engine
          */
         foreach ($selectedParams as $selectedParam) {
             $termCode = $selectedParam->getCode();
+            $termValues = $selectedParam->getValues();
+            if(empty($termValues)) {
+                continue;
+            }
             $term = [$selectedParam];
             $termFilter = new Filter();
             $termFilter->setRangeParams([]);
@@ -522,6 +538,9 @@ class Elasticsearch extends Engine
                 continue;
             }
             $values = $filterSelectedParam->getValues();
+            if(empty($values)) {
+                continue;
+            }
             foreach ($values as $value) {
                 $val = $value->getValue();
                 $resultMatrix['select_params'][$code]['values'][$val]['selected'] = true;

@@ -34,8 +34,11 @@ class CatalogController extends Controller
                 ]
             ],
             "filter" => [
-                "selectParams" => [],
-                "rangeParams" => []
+                "selectParams" => [
+                ],
+                "rangeParams" => [
+
+                ]
             ]
         ];
 
