@@ -14,7 +14,7 @@ class CatalogController extends Controller
      */
     public function index(References $references)
     {
-        $apiUrl = 'http://' . $_SERVER['SERVER_ADDR'] . '/api/elasticsearch/_index/auto/catalog/search?page=1&pageSize=20';
+        $apiUrl = 'http://' . $_SERVER['HTTP_HOST'] . '/api/elasticsearch/_index/auto/catalog/search?page=1&pageSize=20';
 
         $requestParams = [
             "aggregations" => [

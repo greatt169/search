@@ -19,6 +19,7 @@ class Catalog extends React.Component {
         this.reload = this.reload.bind(this);
         this.addSelectParamToFilter = this.addSelectParamToFilter.bind(this);
         this.removeSelectParamFromFilter = this.removeSelectParamFromFilter.bind(this);
+        this.filterRangeHandle = this.filterRangeHandle.bind(this);
     }
 
     componentDidMount() {
@@ -114,6 +115,11 @@ class Catalog extends React.Component {
         }
     }
 
+    filterRangeHandle(type, value) {
+        console.log(type);
+        console.log(value);
+    }
+
     filterSelectCheckboxHandle(e) {
 
         const name = e.target.name;
@@ -156,7 +162,7 @@ class Catalog extends React.Component {
                         <div className="row">
                             <aside className="col-sm-3">
                                 <div className="card card-filter">
-                                    <FilterRangeParams rangeParams={rangeParams} references={references} />
+                                    <FilterRangeParams rangeParams={rangeParams} references={references} filterRangeHandle={this.filterRangeHandle} />
                                     <FilterSelectParams selectParams={selectParams} references={references} filterSelectCheckboxHandle={this.filterSelectCheckboxHandle}/>
                                 </div>
                             </aside>
@@ -243,9 +249,9 @@ class FilterRangeParams extends React.Component {
 
     componentDidMount() {
         let slider = document.getElementById('slider');
-
         let from = document.getElementById('slider-limit-value-from');
         let to = document.getElementById('slider-limit-value-to');
+        let component = this;
 
         noUiSlider.create(slider, {
             start: [from.innerHTML, to.innerHTML],
@@ -265,12 +271,10 @@ class FilterRangeParams extends React.Component {
             (handle ? to : from).innerHTML = values[handle];
         });
 
-
         slider.noUiSlider.on('end', function (values, handle) {
             let type = handle ? "max": "min";
             let value = values[handle];
-            console.log(type);
-            console.log(value);
+            component.props.filterRangeHandle(type, value);
         });
     }
 
@@ -291,7 +295,7 @@ class FilterRangeParams extends React.Component {
 
     render() {
 
-        const result = (
+        return (
             this.props.rangeParams.map((param) =>
                 <article key={param.code} className="card-group-item">
                     <header className="card-header">
@@ -320,8 +324,6 @@ class FilterRangeParams extends React.Component {
                 </article>
             )
         );
-
-        return result;
     }
 }
 
