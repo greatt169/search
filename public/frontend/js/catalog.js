@@ -156,7 +156,7 @@ class Catalog extends React.Component {
                         <div className="row">
                             <aside className="col-sm-3">
                                 <div className="card card-filter">
-                                    <FilterRangeParams rangeParams={rangeParams} references={references}/>
+                                    <FilterRangeParams rangeParams={rangeParams} references={references} />
                                     <FilterSelectParams selectParams={selectParams} references={references} filterSelectCheckboxHandle={this.filterSelectCheckboxHandle}/>
                                 </div>
                             </aside>
@@ -241,8 +241,50 @@ class FilterRangeParams extends React.Component {
         super(props);
     }
 
+    componentDidMount() {
+        let slider = document.getElementById('slider');
+
+        let from = document.getElementById('slider-limit-value-from');
+        let to = document.getElementById('slider-limit-value-to');
+
+        noUiSlider.create(slider, {
+            start: [from.innerHTML, to.innerHTML],
+            connect: true,
+            step: 1,
+            range: {
+                'min': Number(from.dataset.total),
+                'max': Number(to.dataset.total),
+            },
+            format: wNumb({
+                decimals: 0,
+                thousand: ' '
+            })
+        });
+
+        slider.noUiSlider.on('update', function (values, handle) {
+            (handle ? to : from).innerHTML = values[handle];
+        });
+
+    }
+
+    componentDidUpdate() {
+        let slider = document.getElementById('slider');
+
+        let from = document.getElementById('slider-limit-value-from');
+        let to = document.getElementById('slider-limit-value-to');
+
+        slider.noUiSlider.updateOptions({
+            start: [from.innerHTML, to.innerHTML],
+            range: {
+                'min': Number(from.dataset.total),
+                'max': Number(to.dataset.total),
+            }
+        });
+    }
+
     render() {
-        return (
+
+        const result = (
             this.props.rangeParams.map((param) =>
                 <article key={param.code} className="card-group-item">
                     <header className="card-header">
@@ -250,21 +292,18 @@ class FilterRangeParams extends React.Component {
                     </header>
                     <div className="filter-content collapse show" id="collapse33">
                         <div className="card-body">
-                            <input type="range" className="custom-range"
-                                   min={`${param.min.selected}`}
-                                   max={`${param.max.selected}`} name=""/>
+                            <div id="slider"></div>
+                            <hr/>
                             <div className="form-row">
                                 <div className="form-group col-md-6">
-                                    <label>min</label>
-                                    <input className="form-control"
-                                           placeholder={`${param.min.displayed}`}
-                                           type="number"/>
+                                    <label id="slider-limit-value-from" data-total={param.min.total}>
+                                        {param.min.displayed}
+                                    </label>
                                 </div>
                                 <div className="form-group text-right col-md-6">
-                                    <label>max</label>
-                                    <input className="form-control"
-                                           placeholder={`${param.max.displayed}`}
-                                           type="number"/>
+                                    <label id="slider-limit-value-to" data-total={param.max.total}>
+                                        {param.max.displayed}
+                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -272,6 +311,8 @@ class FilterRangeParams extends React.Component {
                 </article>
             )
         );
+
+        return result;
     }
 }
 
@@ -295,7 +336,7 @@ class FilterSelectParams extends React.Component {
                                 {param["values"].map((value) =>
                                     <label key={value.value} className="form-check">
                                         <input className="form-check-input" value=""
-                                               name={param.code + '_' + value.value} type="checkbox" onChange={this.props.filterSelectCheckboxHandle} />
+                                               name={param.code + '_' + value.value} type="checkbox"  disabled={value.count === 0} onChange={this.props.filterSelectCheckboxHandle} />
                                         <span className="form-check-label">
                                                                     <span
                                                                         className="float-right badge badge-light round">{value.count}</span>
@@ -325,3 +366,4 @@ ReactDOM.render(
     />,
     element
 );
+

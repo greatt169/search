@@ -19,6 +19,10 @@
     <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
 
+
+    <link href="/frontend/css/nouislider.min.css" rel="stylesheet" type="text/css"/>
+    <script src="/frontend/js/nouislider.min.js"></script>
+    <script src="/frontend/js/wNumb.min.js"></script>
 </head>
 <body>
 <header class="section-header">
