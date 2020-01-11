@@ -292,7 +292,9 @@ class FilterRangeParams extends React.Component {
                     </header>
                     <div className="filter-content collapse show" id="collapse33">
                         <div className="card-body">
-                            <div id="slider"></div>
+                            <div className="card-body">
+                                <div id="slider"></div>
+                            </div>
                             <hr/>
                             <div className="form-row">
                                 <div className="form-group col-md-6">
