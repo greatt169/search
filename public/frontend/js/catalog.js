@@ -265,6 +265,13 @@ class FilterRangeParams extends React.Component {
             (handle ? to : from).innerHTML = values[handle];
         });
 
+
+        slider.noUiSlider.on('end', function (values, handle) {
+            let type = handle ? "max": "min";
+            let value = values[handle];
+            console.log(type);
+            console.log(value);
+        });
     }
 
     componentDidUpdate() {
