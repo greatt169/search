@@ -588,7 +588,7 @@ class Elasticsearch extends Engine
             $resultMatrix['select_params'][$index]['values'] = array_values($selectParam['values']);
         }
 
-        //$resultMatrix['range_params'] = array_values($resultMatrix['range_params']);
+        $resultMatrix['range_params'] = array_values($resultMatrix['range_params']);
     }
 
     /**

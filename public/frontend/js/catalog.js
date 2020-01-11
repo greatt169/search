@@ -7,7 +7,7 @@ class Catalog extends React.Component {
             isHasError: false,
             errorMsg: "Something went wrong!",
             emptyMsg: "No results!",
-            result: {total: 0},
+            result: null,
             rangeParams: [],
             selectParams: [],
             filterParams: props.filter
@@ -115,9 +115,29 @@ class Catalog extends React.Component {
         }
     }
 
-    filterRangeHandle(type, value) {
-        console.log(type);
-        console.log(value);
+    filterRangeHandle(prop, type, value) {
+        let filterRangeParams = this.state.rangeParams;
+        let val = Number(value.replace(' ', ''));
+        let currFilterParams = JSON.parse(this.state.filterParams);
+        let index = currFilterParams['filter']['rangeParams'].findIndex(el => el.code === prop);
+        let otherType = type === 'maxValue' ? 'minValue': 'maxValue';
+        let otherTypeShort = type === 'maxValue' ? 'min': 'max';
+        let rangeIndex = filterRangeParams.findIndex(el => el.code === prop);
+        let otherTypeVal = Number(filterRangeParams[rangeIndex][otherTypeShort]['selected'].toString().replace(' ', ''));
+
+        if (index !== -1) {
+            currFilterParams['filter']['rangeParams'][index][type] = val;
+            currFilterParams['filter']['rangeParams'][index][otherType] = otherTypeVal;
+            this.state.filterParams = JSON.stringify(currFilterParams);
+        } else {
+            let rangeVal = {"code": prop};
+            rangeVal[type] = val;
+            rangeVal[otherType] = otherTypeVal;
+            currFilterParams['filter']['rangeParams'].push(rangeVal);
+        }
+
+        this.state.filterParams = JSON.stringify(currFilterParams);
+        this.reload();
     }
 
     filterSelectCheckboxHandle(e) {
@@ -141,7 +161,6 @@ class Catalog extends React.Component {
         const isWithSpinner = this.state.isWithSpinner;
         const isHasError = this.state.isHasError;
         const errorMsg = this.state.errorMsg;
-        const emptyMsg = this.state.emptyMsg;
         const result = this.state.result;
         const references = JSON.parse(this.props.references);
         const rangeParams = this.state.rangeParams;
@@ -155,90 +174,109 @@ class Catalog extends React.Component {
                 {isHasError &&
                 <div className='alert alert-danger'>{errorMsg.toString()}</div>
                 }
-                {result.total === 0 ? (
-                        <div className='alert alert-primary'>{emptyMsg.toString()}</div>
-                    ) :
-                    (
-                        <div className="row">
-                            <aside className="col-sm-3">
-                                <div className="card card-filter">
-                                    <FilterRangeParams rangeParams={rangeParams} references={references} filterRangeHandle={this.filterRangeHandle} />
-                                    <FilterSelectParams selectParams={selectParams} references={references} filterSelectCheckboxHandle={this.filterSelectCheckboxHandle}/>
-                                </div>
-                            </aside>
-                            <ItemsList result={result}/>
+                {result !== null &&
+                <div className="row">
+                    <aside className="col-sm-3">
+
+                        <div className="card card-filter">
+                            <FilterRangeParams rangeParams={rangeParams} references={references}
+                                               filterRangeHandle={this.filterRangeHandle}/>
+                            <FilterSelectParams selectParams={selectParams} references={references}
+                                                filterSelectCheckboxHandle={this.filterSelectCheckboxHandle}/>
                         </div>
-                    )}
+                    </aside>
+                    <ItemsList result={result}/>
+                </div>
+                }
             </div>
         )
     }
 }
 
-function ItemsList(props) {
-    return (
-        <main className="col-sm-9">
-            {props.result["items"].map((item) =>
-                <article key={item.id} className="card card-product">
-                    <div className="card-body">
-                        <div className="row">
-                            <aside className="col-sm-3">
-                                <div className="img-wrap">
-                                    <img alt={`${item.singleAttributes.name.value.value}`}
-                                         src={`${item.singleAttributes.picture.value.value}`}/>
-                                </div>
-                            </aside>
-                            <article className="col-sm-6">
-                                <h4 className="title">{item.singleAttributes.name.value.value}</h4>
-                                <p> {item.singleAttributes.preview.value.value}</p>
-                                <dl className="dlist-align">
-                                    <dt>Цвет</dt>
-                                    {item.multipleAttributes.color["values"].map((attrValue) =>
-                                        <dd key={attrValue.code}>{attrValue.value}</dd>
-                                    )}
-                                </dl>
-                                <dl className="dlist-align">
-                                    <dt>Марка</dt>
-                                    <dd>{item.singleAttributes.brand.value.value}</dd>
-                                </dl>
-                                <dl className="dlist-align">
-                                    <dt>Модель</dt>
-                                    <dd>{item.singleAttributes.model.value.value}</dd>
-                                </dl>
-                                <dl className="dlist-align">
-                                    <dt>Год вып.</dt>
-                                    <dd>{item.singleAttributes.year.value.value}</dd>
-                                </dl>
-                                <dl className="dlist-align">
-                                    <dt>Страховка</dt>
-                                    {item.multipleAttributes.insurance["values"].map((attrValue) =>
-                                        <dd key={attrValue.code}>{attrValue.value}</dd>
-                                    )}
-                                </dl>
-                            </article>
-                            <aside className="col-sm-3 border-left">
-                                <div className="action-wrap">
-                                    <div className="price-wrap h4">
+class ItemsList extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            emptyMsg: "No results!",
+        };
+    }
+
+    render() {
+        const emptyMsg = this.state.emptyMsg;
+
+        if(this.props.result.total === 0) {
+            return (
+                <div className='alert alert-primary'>{emptyMsg.toString()}</div>
+            );
+        }
+        return (
+            <main className="col-sm-9">
+                {this.props.result["items"].map((item) =>
+                    <article key={item.id} className="card card-product">
+                        <div className="card-body">
+                            <div className="row">
+                                <aside className="col-sm-3">
+                                    <div className="img-wrap">
+                                        <img alt={`${item.singleAttributes.name.value.value}`}
+                                             src={`${item.singleAttributes.picture.value.value}`}/>
+                                    </div>
+                                </aside>
+                                <article className="col-sm-6">
+                                    <h4 className="title">{item.singleAttributes.name.value.value}</h4>
+                                    <p> {item.singleAttributes.preview.value.value}</p>
+                                    <dl className="dlist-align">
+                                        <dt>Цвет</dt>
+                                        {item.multipleAttributes.color["values"].map((attrValue) =>
+                                            <dd key={attrValue.code}>{attrValue.value}</dd>
+                                        )}
+                                    </dl>
+                                    <dl className="dlist-align">
+                                        <dt>Марка</dt>
+                                        <dd>{item.singleAttributes.brand.value.value}</dd>
+                                    </dl>
+                                    <dl className="dlist-align">
+                                        <dt>Модель</dt>
+                                        <dd>{item.singleAttributes.model.value.value}</dd>
+                                    </dl>
+                                    <dl className="dlist-align">
+                                        <dt>Год вып.</dt>
+                                        <dd>{item.singleAttributes.year.value.value}</dd>
+                                    </dl>
+                                    <dl className="dlist-align">
+                                        <dt>Страховка</dt>
+                                        {item.multipleAttributes.insurance["values"].map((attrValue) =>
+                                            <dd key={attrValue.code}>{attrValue.value}</dd>
+                                        )}
+                                    </dl>
+                                </article>
+                                <aside className="col-sm-3 border-left">
+                                    <div className="action-wrap">
+                                        <div className="price-wrap h4">
                                                         <span
                                                             className="price"> {item.singleAttributes.price.value.value} руб. </span>
+                                        </div>
+                                        <p className="text-success">Нет участвовал в ДТП</p>
+                                        <p>
+                                            <a href="#"><i className="fa fa-heart"></i>Добавить в
+                                                избранное</a>
+                                        </p>
+                                        <p>
+                                            <a href="#" className="btn btn-secondary"> Подробнее </a>
+                                            &nbsp;
+                                            <a href="#" className="btn btn-primary"> Купить </a>
+                                        </p>
                                     </div>
-                                    <p className="text-success">Нет участвовал в ДТП</p>
-                                    <p>
-                                        <a href="#"><i className="fa fa-heart"></i>Добавить в
-                                            избранное</a>
-                                    </p>
-                                    <p>
-                                        <a href="#" className="btn btn-secondary"> Подробнее </a>
-                                        &nbsp;
-                                        <a href="#" className="btn btn-primary"> Купить </a>
-                                    </p>
-                                </div>
-                            </aside>
+                                </aside>
+                            </div>
                         </div>
-                    </div>
-                </article>
-            )}
-        </main>
-    );
+                    </article>
+                )}
+            </main>
+        );
+    }
+
+
 }
 
 class FilterRangeParams extends React.Component {
@@ -252,6 +290,7 @@ class FilterRangeParams extends React.Component {
         let from = document.getElementById('slider-limit-value-from');
         let to = document.getElementById('slider-limit-value-to');
         let component = this;
+        let prop = slider.dataset.prop;
 
         noUiSlider.create(slider, {
             start: [from.innerHTML, to.innerHTML],
@@ -272,9 +311,9 @@ class FilterRangeParams extends React.Component {
         });
 
         slider.noUiSlider.on('end', function (values, handle) {
-            let type = handle ? "max": "min";
+            let type = handle ? "maxValue": "minValue";
             let value = values[handle];
-            component.props.filterRangeHandle(type, value);
+            component.props.filterRangeHandle(prop, type, value);
         });
     }
 
@@ -304,7 +343,7 @@ class FilterRangeParams extends React.Component {
                     <div className="filter-content collapse show" id="collapse33">
                         <div className="card-body">
                             <div className="card-body">
-                                <div id="slider"></div>
+                                <div data-prop={param.code} id="slider"></div>
                             </div>
                             <hr/>
                             <div className="form-row">
