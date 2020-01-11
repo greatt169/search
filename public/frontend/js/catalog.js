@@ -39,7 +39,7 @@ class Catalog extends React.Component {
                 (result) => {
                     const rangeParams = [];
                     const selectParams = [];
-                    if (result.total > 0) {
+                    if (result !== null) {
                         for (let [code, param] of Object.entries(result.filter.rangeParams)) {
                             rangeParams.push(param);
                         }
@@ -120,8 +120,8 @@ class Catalog extends React.Component {
         let val = Number(value.replace(' ', ''));
         let currFilterParams = JSON.parse(this.state.filterParams);
         let index = currFilterParams['filter']['rangeParams'].findIndex(el => el.code === prop);
-        let otherType = type === 'maxValue' ? 'minValue': 'maxValue';
-        let otherTypeShort = type === 'maxValue' ? 'min': 'max';
+        let otherType = type === 'maxValue' ? 'minValue' : 'maxValue';
+        let otherTypeShort = type === 'maxValue' ? 'min' : 'max';
         let rangeIndex = filterRangeParams.findIndex(el => el.code === prop);
         let otherTypeVal = Number(filterRangeParams[rangeIndex][otherTypeShort]['selected'].toString().replace(' ', ''));
 
@@ -147,7 +147,7 @@ class Catalog extends React.Component {
         const propCode = splitName[0];
         const valueCode = splitName[1];
 
-        if(e.target.checked) {
+        if (e.target.checked) {
             this.addSelectParamToFilter(propCode, valueCode);
         } else {
             this.removeSelectParamFromFilter(propCode, valueCode);
@@ -167,10 +167,10 @@ class Catalog extends React.Component {
         const selectParams = this.state.selectParams;
         let spinnerClassName;
 
-        spinnerClassName = isWithSpinner ? "center spinner-border" : "";
+        spinnerClassName = isWithSpinner ? "row center spinner-border" : "";
 
         return (
-            <div className={`row ${spinnerClassName}`}>
+            <div className={spinnerClassName}>
                 {isHasError &&
                 <div className='alert alert-danger'>{errorMsg.toString()}</div>
                 }
@@ -205,9 +205,11 @@ class ItemsList extends React.Component {
     render() {
         const emptyMsg = this.state.emptyMsg;
 
-        if(this.props.result.total === 0) {
+        if (this.props.result.total === 0) {
             return (
-                <div className='alert alert-primary'>{emptyMsg.toString()}</div>
+                <main className="col-sm-9">
+                    <div className='alert alert-primary'>{emptyMsg.toString()}</div>
+                </main>
             );
         }
         return (
@@ -311,7 +313,7 @@ class FilterRangeParams extends React.Component {
         });
 
         slider.noUiSlider.on('end', function (values, handle) {
-            let type = handle ? "maxValue": "minValue";
+            let type = handle ? "maxValue" : "minValue";
             let value = values[handle];
             component.props.filterRangeHandle(prop, type, value);
         });
@@ -386,7 +388,9 @@ class FilterSelectParams extends React.Component {
                                 {param["values"].map((value) =>
                                     <label key={value.value} className="form-check">
                                         <input className="form-check-input" value=""
-                                               name={param.code + '_' + value.value} type="checkbox"  disabled={value.count === 0} onChange={this.props.filterSelectCheckboxHandle} />
+                                               name={param.code + '_' + value.value} type="checkbox"
+                                               disabled={value.count === 0}
+                                               onChange={this.props.filterSelectCheckboxHandle}/>
                                         <span className="form-check-label">
                                                                     <span
                                                                         className="float-right badge badge-light round">{value.count}</span>
