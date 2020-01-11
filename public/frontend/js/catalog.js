@@ -201,7 +201,6 @@ class ItemsList extends React.Component {
             emptyMsg: "No results!",
         };
     }
-
     render() {
         const emptyMsg = this.state.emptyMsg;
 
@@ -277,16 +276,12 @@ class ItemsList extends React.Component {
             </main>
         );
     }
-
-
 }
 
 class FilterRangeParams extends React.Component {
-
     constructor(props) {
         super(props);
     }
-
     componentDidMount() {
         let slider = document.getElementById('slider');
         let from = document.getElementById('slider-limit-value-from');
@@ -335,7 +330,6 @@ class FilterRangeParams extends React.Component {
     }
 
     render() {
-
         return (
             this.props.rangeParams.map((param) =>
                 <article key={param.code} className="card-group-item">
@@ -370,11 +364,9 @@ class FilterRangeParams extends React.Component {
 
 
 class FilterSelectParams extends React.Component {
-
     constructor(props) {
         super(props);
     }
-
     render() {
         return (
             this.props.selectParams.map((param) =>
