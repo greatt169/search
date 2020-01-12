@@ -21,11 +21,9 @@ class Catalog extends React.Component {
         this.removeSelectParamFromFilter = this.removeSelectParamFromFilter.bind(this);
         this.filterRangeHandle = this.filterRangeHandle.bind(this);
     }
-
     componentDidMount() {
         this.reload();
     }
-
     reload() {
         fetch(this.props.api, {
             method: 'POST',
@@ -70,19 +68,16 @@ class Catalog extends React.Component {
                 this.removeSpinner()
             )
     }
-
     addSpinner() {
         this.setState({
             isWithSpinner: true
         });
     }
-
     removeSpinner() {
         this.setState({
             isWithSpinner: false
         });
     }
-
     addSelectParamToFilter(propCode, valueCode) {
         let currFilterParams = JSON.parse(this.state.filterParams);
         let index = currFilterParams['filter']['selectParams'].findIndex(el => el.code === propCode);
@@ -103,7 +98,6 @@ class Catalog extends React.Component {
         }
         this.state.filterParams = JSON.stringify(currFilterParams);
     }
-
     removeSelectParamFromFilter(propCode, valueCode) {
         let currFilterParams = JSON.parse(this.state.filterParams);
         let index = currFilterParams['filter']['selectParams'].findIndex(el => el.code === propCode);
@@ -114,7 +108,6 @@ class Catalog extends React.Component {
             this.state.filterParams = JSON.stringify(currFilterParams);
         }
     }
-
     filterRangeHandle(prop, type, value) {
         let filterRangeParams = this.state.rangeParams;
         let val = Number(value.replace(' ', ''));
@@ -139,7 +132,6 @@ class Catalog extends React.Component {
         this.state.filterParams = JSON.stringify(currFilterParams);
         this.reload();
     }
-
     filterSelectCheckboxHandle(e) {
 
         const name = e.target.name;
@@ -155,7 +147,6 @@ class Catalog extends React.Component {
         this.reload();
 
     }
-
     render() {
 
         const isWithSpinner = this.state.isWithSpinner;
@@ -175,18 +166,53 @@ class Catalog extends React.Component {
                 <div className='alert alert-danger'>{errorMsg.toString()}</div>
                 }
                 {result !== null &&
-                <div className="row">
-                    <aside className="col-sm-3">
-
-                        <div className="card card-filter">
-                            <FilterRangeParams rangeParams={rangeParams} references={references}
-                                               filterRangeHandle={this.filterRangeHandle}/>
-                            <FilterSelectParams selectParams={selectParams} references={references}
-                                                filterSelectCheckboxHandle={this.filterSelectCheckboxHandle}/>
+                    <div>
+                        <div className="card">
+                            <div className="card-body">
+                                <div className="row">
+                                    <div className="col-md-3-24"><strong>Сортировать по:</strong></div>
+                                    <nav className="col-md-8-24">
+                                        <select className="custom-select" name="" id="">
+                                            <option value="1">Популярности</option>
+                                            <option value="2">Цене</option>
+                                        </select>
+                                    </nav>
+                                </div>
+                            </div>
                         </div>
-                    </aside>
-                    <ItemsList result={result}/>
-                </div>
+                        <br/>
+                        <div className="row">
+                            <aside className="col-sm-3">
+
+                                <div className="card card-filter">
+                                    <article className="card-group-item">
+
+                                        <div className="card-body">
+                                            <h4>Фильтр</h4>
+                                            <div>
+                                        <span>
+                                            Найдено: ({result.total})
+                                        </span>
+                                            </div>
+                                        </div>
+                                    </article>
+                                    <FilterRangeParams rangeParams={rangeParams} references={references}
+                                                       filterRangeHandle={this.filterRangeHandle}/>
+                                    <FilterSelectParams selectParams={selectParams} references={references}
+                                                        filterSelectCheckboxHandle={this.filterSelectCheckboxHandle}/>
+
+                                    <article className="card-group-item">
+                                        <div className="card-body">
+                                            <a href="#">Сбросить фильтр</a>
+                                        </div>
+                                    </article>
+
+                                </div>
+                            </aside>
+                            <ItemsList result={result}/>
+                        </div>
+                    </div>
+
                 }
             </div>
         )
@@ -194,7 +220,6 @@ class Catalog extends React.Component {
 }
 
 class ItemsList extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -273,7 +298,25 @@ class ItemsList extends React.Component {
                         </div>
                     </article>
                 )}
+
+                <nav aria-label="...">
+                    <ul className="pagination">
+                        <li className="page-item disabled">
+                            <a className="page-link" href="#" tabIndex="-1">Previous</a>
+                        </li>
+                        <li className="page-item"><a className="page-link" href="#">1</a></li>
+                        <li className="page-item active">
+                            <a className="page-link" href="#">2 <span className="sr-only">(current)</span></a>
+                        </li>
+                        <li className="page-item"><a className="page-link" href="#">3</a></li>
+                        <li className="page-item">
+                            <a className="page-link" href="#">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+
             </main>
+
         );
     }
 }
@@ -313,7 +356,6 @@ class FilterRangeParams extends React.Component {
             component.props.filterRangeHandle(prop, type, value);
         });
     }
-
     componentDidUpdate() {
         let slider = document.getElementById('slider');
 
@@ -328,7 +370,6 @@ class FilterRangeParams extends React.Component {
             }
         });
     }
-
     render() {
         return (
             this.props.rangeParams.map((param) =>
