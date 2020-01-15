@@ -20,6 +20,7 @@ class Catalog extends React.Component {
         this.addSelectParamToFilter = this.addSelectParamToFilter.bind(this);
         this.removeSelectParamFromFilter = this.removeSelectParamFromFilter.bind(this);
         this.filterRangeHandle = this.filterRangeHandle.bind(this);
+        this.resetFilter = this.resetFilter.bind(this);
     }
     componentDidMount() {
         this.reload();
@@ -147,6 +148,15 @@ class Catalog extends React.Component {
         this.reload();
 
     }
+
+    resetFilter()
+    {
+        let currFilterParams = JSON.parse(this.state.filterParams);
+        currFilterParams['filter'] = {"selectParams": [], "rangeParams": []};
+        this.state.filterParams = JSON.stringify(currFilterParams);
+        this.reload();
+    }
+
     render() {
 
         const isWithSpinner = this.state.isWithSpinner;
@@ -203,7 +213,7 @@ class Catalog extends React.Component {
 
                                     <article className="card-group-item">
                                         <div className="card-body">
-                                            <a href="#">Сбросить фильтр</a>
+                                            <a href="#" onClick={this.resetFilter}>Сбросить фильтр</a>
                                         </div>
                                     </article>
 
@@ -423,7 +433,7 @@ class FilterSelectParams extends React.Component {
                                         <input className="form-check-input" value=""
                                                name={param.code + '_' + value.value} type="checkbox"
                                                disabled={value.count === 0}
-                                               onChange={this.props.filterSelectCheckboxHandle}/>
+                                               onChange={this.props.filterSelectCheckboxHandle} checked={value.selected} />
                                         <span className="form-check-label">
                                                                     <span
                                                                         className="float-right badge badge-light round">{value.count}</span>
