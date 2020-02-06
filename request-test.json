@@ -1,0 +1,45 @@
+{
+  "filter": {
+    "rangeParams": [
+      {
+        "code": "price",
+        "minValue": 300000,
+        "maxValue": 450000
+      }
+    ],
+    "selectParams": [
+      {
+        "code": "color",
+        "values": [
+          {
+            "value": "white"
+          }
+        ]
+      },
+      {
+        "code": "year",
+        "values": [
+          {
+            "value": "2015"
+          }
+        ]
+      }
+    ]
+  },
+  "aggregations": {
+    "items": [
+      {
+        "field": "color",
+        "type": "checkbox"
+      },
+      {
+        "field": "year",
+        "type": "checkbox"
+      },
+      {
+        "field": "price",
+        "type": "range"
+      }
+    ]
+  }
+}

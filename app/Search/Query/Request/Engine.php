@@ -5,6 +5,7 @@ namespace App\Search\Query\Request;
 use App\Exceptions\ApiException;
 use App\Search\Entity\Interfaces\EntityInterface;
 use App\Search\Query\Interfaces\RequestEngineInterface;
+use App\Search\UseCases\Errors\Error;
 
 abstract class Engine implements RequestEngineInterface
 {
@@ -25,11 +26,20 @@ abstract class Engine implements RequestEngineInterface
      */
     protected $index;
 
+    /**
+     * Engine constructor.
+     * @param $engine
+     * @param $index
+     * @param EntityInterface $entity
+     * @throws ApiException
+     */
     protected function __construct($engine, $index, EntityInterface $entity)
     {
         $this->entity = $entity;
         $this->engine = $engine;
-        $this->index = $index;
+        $indexWithPrefix = $this->entity->getIndexWithPrefix($index);
+        $aliasIndex = $this->entity->getIndexByAlias($indexWithPrefix);
+        $this->index = $aliasIndex;
     }
 
     /**
@@ -37,6 +47,7 @@ abstract class Engine implements RequestEngineInterface
      * @param $index
      * @return mixed
      * @throws ApiException
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public static function getInstance($engine, $index)
     {
@@ -44,7 +55,7 @@ abstract class Engine implements RequestEngineInterface
         if (!array_key_exists($engine, static::$instances)) {
             if(!class_exists($className)) {
                 $debugMessage = sprintf('Class %s not found for engine %s', $className, $engine);
-                throw new ApiException('Internal Server Error', $debugMessage, 500);
+                throw new ApiException($debugMessage, Error::CODE_INTERNAL_SERVER_ERROR);
             }
             static::$instances[$engine] = app()->make($className, ['engine' => $engine, 'index' => $index]);
         }

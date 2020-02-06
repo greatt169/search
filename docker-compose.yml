@@ -8,6 +8,7 @@ services:
       - ~/.ssh:/root/.ssh:rw
       - ~/.ssh:/var/www/.ssh:rw
     links:
+      - redis
       - mysql
       - mail
       - elasticsearch
@@ -31,6 +32,13 @@ services:
             appbrige:
                ipv4_address: ${DOCKER_NETWORK_IP}
         restart: always
+  redis:
+        image: redis:3.0
+        container_name: ${DOCKER_PROJECT_PREFIX}redis
+        networks:
+          - appbrige
+        ports:
+          - "${INTERFACE}:${DOCKER_REDIS_PORT}:6379"
   mysql:
         build: ./.docker/mysql
         container_name: ${DOCKER_PROJECT_PREFIX}mysql
@@ -59,7 +67,8 @@ services:
         environment:
             - bootstrap.memory_lock=true
             - discovery.type=single-node
-            - "ES_JAVA_OPTS=-Xms128m -Xmx128m"
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+            - indices.breaker.request.limit=45%
         ulimits:
             memlock:
                 soft: -1
@@ -76,10 +85,11 @@ services:
         volumes:
             - ./.docker/logs/nginx:/var/log/nginx
             - ./.docker/logs/php:/var/log/php
+            - ./.docker/logs/supervisor:/var/log/supervisor
             - ./.docker/logs/mysql:/var/log/mysql
             - ./.docker/data/mysql:/var/lib/mysql
-            - .:/var/www:rw
             - ./.docker/logs/elasticsearch:/var/log/elasticsearch
+            - .:/var/www:rw
         networks:
             - appbrige
 networks:

@@ -17,12 +17,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         default-jdk-headless \
+        supervisor \
     && docker-php-ext-install \
+        pcntl \
         iconv \
         mbstring \
         mysqli \
         pdo_mysql \
         zip \
+        pcntl \
         soap
 
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
@@ -35,3 +38,8 @@ RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-di
 ADD ./php.ini /usr/local/etc/php/conf.d/php.ini
 
 WORKDIR "/var/www"
+
+COPY supervisord.conf /etc/supervisor
+COPY supervisorhorizon.conf /etc/supervisor/conf.d
+
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]

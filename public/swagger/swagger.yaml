@@ -15,10 +15,6 @@ responses:
     description: 'Ошибочный запрос, например, отсутствует один из параметров'
     schema:
       $ref: '#/definitions/Error'
-  401Error:
-    description: 'Требуется аутентификация'
-    schema:
-      $ref: '#/definitions/Error'
   403Error:
     description: 'Недостаточно прав для выполнения запроса'
     schema:
@@ -37,42 +33,198 @@ responses:
       $ref: '#/definitions/Error'
 
 paths:
-  "/catalog-list":
+  "/{engine}/_index/{index}/catalog/search":
     post:
-      summary: Получение списка элементов
+      summary: Поиск и фильтация элементов индекса
       description: Получение списка элементов
       parameters:
-        - in: query
+        - in: path
+          name: engine
+          type: string
+          required: true
+          description: Код поискового движка
+          schema:
+            $ref: '#/definitions/EngineParam'
+        - in: path
           name: index
+          type: string
           required: true
           description: Код индекса
           schema:
             type: string
             example: auto
+        - in: query
+          name: page
+          description: Номер запрашиваемой страницы результата
+          minimum: 1
+          type: integer
+          default: 1
+        - in: query
+          name: pageSize
+          type: integer
+          default: 20
+          description: Количество возвращаемых объектов на странице
         - in: body
           name: request
           required: true
           schema:
             type: object
             description: Параметры запроса
-            required:
-              - filter
-              - engine
             properties:
-              engine:
-                $ref: '#/definitions/Engine'
+              search:
+                $ref: '#/definitions/Search'
               filter:
                 $ref: '#/definitions/Filter'
+              sorts:
+                $ref: '#/definitions/Sorts'
+              aggregations:
+                $ref: '#/definitions/Aggregations'
+
       tags:
       - Catalog
       responses:
         200:
           description: Метод успешно отработал
           schema:
-            uniqueItems: false
-            type: array
-            items:
-              $ref: '#/definitions/ListItems'
+            $ref: '#/definitions/ListItems'
+        400:
+          $ref: '#/responses/400Error'
+        403:
+          $ref: '#/responses/403Error'
+        404:
+          $ref: '#/responses/404Error'
+        500:
+          $ref: '#/responses/500Error'
+
+  /{engine}/_index/{index}/reindex/:
+    post:
+      summary: Обновление индекса
+      description: Полное обновление элементов в индексе
+      parameters:
+        - in: path
+          name: engine
+          type: string
+          required: true
+          description: Код поискового движка
+          schema:
+            $ref: '#/definitions/EngineParam'
+        - in: path
+          name: index
+          type: string
+          required: true
+          description: Код индекса
+          schema:
+            type: string
+            example: auto
+        - in: query
+          name: dataLink
+          required: true
+          schema:
+            type: string
+            example: /var/www/public/data.json
+            description: Ссылка на json-файл с данными
+        - in: query
+          name: settingsLink
+          schema:
+            type: string
+            example: /var/www/public/settings.json
+            description: Ссылка на json-файл с настройками
+
+      tags:
+        - Index
+      responses:
+        200:
+          description: Метод успешно отработал
+          schema:
+            $ref: '#/definitions/ReindexResponse'
+        400:
+          $ref: '#/responses/400Error'
+        403:
+          $ref: '#/responses/403Error'
+        404:
+          $ref: '#/responses/404Error'
+        500:
+          $ref: '#/responses/500Error'
+
+  "/{engine}/_index/{index}/update/":
+    post:
+      summary: Обновление части элементов в индексе
+      description: Частичное обновление элементов в индексе
+      parameters:
+        - in: path
+          name: engine
+          type: string
+          required: true
+          description: Код поискового движка
+          schema:
+            $ref: '#/definitions/EngineParam'
+        - in: path
+          type: string
+          name: index
+          required: true
+          description: Код индекса
+          schema:
+            type: string
+            example: auto
+        - in: query
+          name: dataLink
+          required: true
+          schema:
+            type: string
+            example: /var/www/public/data-update.json
+            description: Ссылка на json-файл с данными
+
+      tags:
+        - Index
+      responses:
+        200:
+          description: Метод успешно отработал
+          schema:
+            $ref: '#/definitions/ReindexResponse'
+        400:
+          $ref: '#/responses/400Error'
+        403:
+          $ref: '#/responses/403Error'
+        404:
+          $ref: '#/responses/404Error'
+        500:
+          $ref: '#/responses/500Error'
+
+  "/{engine}/_index/{index}/_doc/{doc-id}":
+    delete:
+      summary: Удаление элемента из индекса
+      description: Частичное обновление элементов в индексе
+      parameters:
+        - in: path
+          name: engine
+          type: string
+          required: true
+          description: Код поискового движка
+          schema:
+            $ref: '#/definitions/EngineParam'
+        - in: path
+          name: index
+          type: string
+          required: true
+          description: Код индекса
+          schema:
+            type: string
+            example: auto
+        - in: path
+          type: string
+          name: doc-id
+          required: true
+          description: Id элемента для удаления
+          schema:
+            type: string
+            example: 1
+      tags:
+        - Index
+      responses:
+        200:
+          description: Метод успешно отработал
+          schema:
+            $ref: '#/definitions/ActionSuccessResult'
         400:
           $ref: '#/responses/400Error'
         403:
@@ -83,16 +235,114 @@ paths:
           $ref: '#/responses/500Error'
 
 definitions:
-  Engine:
+  ActionSuccessResult:
     type: object
-    description: Вид поискового движка
-    required:
-      - name
+    description: Ответ об успешном выполнении операции
     properties:
-      name:
+      code:
         type: string
-        example: elasticsearch
-        enum: [elasticsearch, sphinx]
+        description: Символьный код ответа при выполнении операции
+        example: success
+      message:
+        type: string
+        description: Текстовое сообщение при успешном выполнении
+        example: Операция успешно выполнена
+
+
+  ReindexResponse:
+    type: object
+    description: Объект успешного ответа при установки индексации в очередь
+    properties:
+      message:
+        type: string
+        example: 'Job has added in reindexing queue'
+      jobId:
+        type: string
+        example: '5d452f74de76c'
+
+  EngineParam:
+    type: string
+    default: elasticsearch
+    example: elasticsearch
+    enum: [elasticsearch, sphinx]
+
+  Sorts:
+    type: object
+    description: Объект, содержащий массив правил сортировки
+    required:
+      - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/Sort'
+
+  Aggregations:
+    type: object
+    description: Объект, содержащий массив правил для аггрегации (построение матрицы фильтров)
+    required:
+      - items
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/Aggregation'
+
+  Search:
+    type: object
+    description: Объект для параметров поиска
+    required:
+      - query
+      - fields
+    properties:
+      query:
+        type: string
+        description: Строка поиска
+        example: 'Polo'
+      fields:
+        type: array
+        items:
+          type: string
+          minItems: 1
+          example: 'model'
+
+  Sort:
+    type: object
+    description: Объект соритровки на вход
+    required:
+      - field
+      - order
+    properties:
+      field:
+        description: Поле для сорировки
+        type: string
+        default: 'price'
+        example: 'price'
+      order:
+        description: Направление для сорировки
+        type: string
+        default: 'asc'
+        example: 'asc'
+        enum: [asc, desc]
+
+  Aggregation:
+    type: object
+    description: Объект аггрегации на вход
+    required:
+      - field
+      - type
+    properties:
+      field:
+        description: Поле для аггрегации
+        type: string
+        default: 'color'
+        example: 'color'
+      type:
+        description: Тип аггрегации
+        type: string
+        default: ''
+        example: 'checkbox'
+        enum: [checkbox, range]
 
   Filter:
     type: object
@@ -135,7 +385,7 @@ definitions:
         type: number
         description: |
           Максимальное значение свойства
-        example: 10000
+        example: 1000000
 
   FilterParam:
     type: object
@@ -165,9 +415,119 @@ definitions:
         description: |
           Значение свойства
         example: 'white'
+
+
+  DisplayFilter:
+    type: object
+    description: Объект фильтрации для отображения
+    required:
+      - rangeParams
+      - selectParams
+    properties:
+      rangeParams:
+        type: array
+        description: |
+          Массив входных параметров фильтра типа range для отображения
+        items:
+          $ref: '#/definitions/DisplayFilterRangeParam'
+
+      selectParams:
+        type: array
+        description: |
+          Массив входных параметров фильтра остальных типов (checkbox, radio, select) для отображения
+        items:
+          $ref: '#/definitions/DisplayFilterParam'
+
+  DisplayFilterRangeParam:
+    type: object
+    required:
+      - code
+      - values
+    properties:
+      code:
+        type: string
+        description: |
+          Символьный код параметра
+        example: "price"
+      min:
+        $ref: '#/definitions/DisplayFilterRangeGroupParam'
+      max:
+        $ref: '#/definitions/DisplayFilterRangeGroupParam'
+
+  DisplayFilterRangeGroupParam:
+    type: object
+    required:
+      - total
+      - selected
+      - displayed
+    properties:
+      total:
+        type: number
+        description: |
+          Предельное (макс. или мин.) значение свойства
+        example: 100
+      selected:
+        type: number
+        description: |
+          Предельное (макс. или мин.) выбранное значение
+        example: 0
+      displayed:
+        type: number
+        description: |
+          Предельное (макс. или мин.) отображенное значение
+        example: 5000
+
+  DisplayFilterParam:
+    type: object
+    required:
+      - code
+      - values
+    properties:
+      code:
+        type: string
+        description: |
+          Символьный код параметра
+        example: "color"
+      values:
+        type: array
+        description: |
+          Массив значений параметра
+        items:
+          $ref: '#/definitions/DisplayFilterValue'
+
+  DisplayFilterValue:
+    type: object
+    required:
+      - value
+    properties:
+      selected:
+        type: boolean
+        description: Параметр явсляется выбранным
+        example: false
+      disabled:
+        type: boolean
+        description: Параметр явсляется недоступным для выбора
+        example: false
+      count:
+        type: integer
+        description: |
+          Количество элементов с установленным заначением свойства
+        example: 5
+      value:
+        type: string
+        description: |
+          Значение свойства
+        example: 'white'
+
+
   ListItems:
     type: object
     properties:
+      total:
+        type: integer
+        example: 10
+      filter:
+        $ref: '#/definitions/DisplayFilter'
       items:
         type: array
         items:
@@ -178,7 +538,7 @@ definitions:
   ListItem:
     type: object
     description: |
-        Объект элемента списка
+      Объект элемента списка
     required:
       - id
       - attributes
@@ -193,18 +553,145 @@ definitions:
         description: |
           Массив одиночных свойств элемента
         additionalProperties:
-          type: string
-          example: 'BMV'
+          $ref: '#/definitions/ListItemSingleAttribute'
+
       multipleAttributes:
         type: object
         description: |
           Массив множественных свойств элемента
         additionalProperties:
-          type: array
-          items:
-            type: string
-            example: 'red'
+          $ref: '#/definitions/ListItemMultipleAttribute'
 
+  ListItemSingleAttribute:
+    type: object
+    required:
+      - value
+    properties:
+      name:
+        type: string
+        description: |
+          Название аттрибута
+        example: 'Тип коробки передач'
+      description:
+        type: string
+        description: |
+          Описание аттрибута
+        example: 'Произвольное описание параметра'
+      img:
+        type: string
+        description: |
+          Картинка для аттрибута
+        example: 'https://cdn.fast.ru/files/1sdasd88dasdsad.jpg'
+      additionalInfo:
+        type: string
+        description: |
+          Дополнительная информация для значения аттрибута
+        example: 'string'
+      value:
+        $ref: '#/definitions/ListItemAttributeValue'
+
+  ListItemMultipleAttribute:
+    type: object
+    required:
+      - values
+    properties:
+      name:
+        type: string
+        description: |
+          Название аттрибута
+        example: 'Тип коробки передач'
+      description:
+        type: string
+        description: |
+          Описание аттрибута
+        example: 'Произвольное описание параметра'
+      img:
+        type: string
+        description: |
+          Картинка для аттрибута
+        example: 'https://cdn.fast.ru/files/1sdasd88dasdsad.jpg'
+      additionalInfo:
+        type: string
+        description: |
+          Дополнительная информация для значения аттрибута
+        example: 'string'
+      values:
+        type: array
+        description: |
+          Массив значений аттрибута
+        items:
+          $ref: '#/definitions/ListItemAttributeValue'
+
+  ListItemAttributeValue:
+    type: object
+    required:
+      - value
+    properties:
+      code:
+        type: string
+        description: |
+          Код значения аттрибута элемента
+        example: 'auto'
+      description:
+        type: string
+        description: |
+          Описание значения аттрибута
+        example: 'Произвольное описание параметра'
+      img:
+        type: string
+        description: |
+          Картинка для значения аттрибута
+        example: 'https://cdn.fast.ru/files/1sdasd88dasdsad.jpg'
+      additionalInfo:
+        type: string
+        description: |
+          Дополнительная информация для значения аттрибута
+        example: 'string'
+      value:
+        type: string
+        description: |
+          Значение аттрибута
+        example: 'АКПП'
+
+  SourceIndex:
+    type: object
+    description: |
+        Объект, содержащий данные для настроек индексации
+    required:
+      - indexSettings
+      - indexMapping
+    properties:
+      mapping:
+        type: object
+        description: |
+          Массив правил для индексации полей
+        additionalProperties:
+          type: object
+          properties:
+            type:
+              type: string
+              example: keyword
+              enum: [keyword, text, float, integer, boolean]
+
+      settings:
+        type: object
+        additionalProperties: true
+        description: |
+          Массив настроек для индекса поиска
+
+  SourceItems:
+    type: object
+    description: |
+        Объект, содержащий данные для индексации
+    required:
+      - items
+    properties:
+      items:
+        type: array
+        description: |
+            Массив элементов для индексации
+        items:
+          $ref: '#/definitions/ListItem'
 
   Error:
     description: Описание ошибки для всех методов
@@ -214,16 +701,16 @@ definitions:
           Код ошибки, к которому привел вызов метода
         type: string
         example: 'tooManyRequests'
-      debug:
-        description: |
-          Дополнительная отладочная информация
-        type: string
-        example: 'org.postgresql.util.PSQLException: ERROR: canceling statement due to user request'
       message:
         description: |
           Человекочитаемое сообщение об ошибке
         type: string
         example: 'Ошибка отправки СМС-сообщения'
+      debug:
+        description: |
+          Дополнительная отладочная информация
+        type: string
+        example: 'org.postgresql.util.PSQLException: ERROR: canceling statement due to user request'
     required:
       - applicationErrorCode
       - message

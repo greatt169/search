@@ -2,19 +2,32 @@
 
 namespace App\Search\Index\Manager;
 
+use App\Exceptions\ApiException;
+use App\Search\Entity\Interfaces\AttributeStorageInterface;
 use App\Search\Entity\Interfaces\EntityInterface;
 use App\Search\Index\Interfaces\SourceInterface;
-use App\Search\Index\Interfaces\TimerInterface;
+use App\Search\Index\Listeners\SourceListener;
+use App\Search\UseCases\Errors\Error;
 use Elasticsearch\Client;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use JsonStreamingParser\Parser;
 
 class Elasticsearch extends Base
 {
+    protected $indexCreatedMessageTemplate = 'Index created. Index name [%s]';
+    protected $aliasCreatedMessageTemplate = 'Alias created. Alias name [%s]';
+    protected $aliasRemovedMessageTemplate = 'Alias to current index removed. Alias name [%s]';
+    protected $indexRemovedMessageTemplate = 'Current index removed. Index name [%s]';
     /**
      * @var string
      */
     protected $index;
+
+    /**
+     * @var
+     */
+    protected $indexFrom;
 
     /**
      * @var string
@@ -29,7 +42,7 @@ class Elasticsearch extends Base
     /**
      * @var int
      */
-    private $bulkSize = 1000;
+    private $bulkSize = 500;
 
     /**
      * @var string
@@ -39,73 +52,128 @@ class Elasticsearch extends Base
     /**
      * @var string
      */
-    protected $devLogChannel = 'elasticsearch_dev';
+    protected $devLogChannel;
 
     /**
      * @var string
      */
-    protected $indexingStartMessageTemplate = 'Indexing from %s to %s has started';
+    protected $indexingStartMessageTemplate = 'Indexing started. Index from [%s], Index to [%s]';
 
     /**
      * @var string
      */
-    protected $indexingFinishMessageTemplate = 'Indexing from %s to %s has finished. Quantity of documents: %s';
-
-    /**
-     * @var array
-     */
-    protected $displayResultMessages = [];
+    protected $indexingFinishMessageTemplate = 'Indexing from %s to %s finished. Quantity total [%s]';
 
     /**
      * @var string
      */
-    protected $indexAllTimerLabel = 'full_index';
+    protected $indexingBatchParsedMessageTemplate = 'batch parsed. Quantity [%s] ';
 
     /**
      * @var string
      */
-    protected $prepareBulkTimerLabel = 'prepare_bulk';
+    protected $indexingBatchIndexedMessageTemplate = 'batch indexed. Quantity [%s] ';
 
     /**
      * @var string
      */
-    protected $indexBulkTimerLabel = 'index_bulk';
+    protected $indexingFinishMemoryTemplate = 'Used memory calculated. Quantity: [%s]';
 
-    protected function getIndexParams()
+    /**
+     * @var string
+     */
+    protected $indexMappingAppliedTemplate = 'Mapping applied. Answer [%s]. Rules applied [%s]';
+
+    /**
+     * @var string
+     */
+    protected $settingsPassedMessageTemplate = 'Settings are passed';
+
+    /**
+     * @var string
+     */
+    protected $mappingPassedMessageTemplate = 'Mapping are passed';
+
+    /**
+     * @var string
+     */
+    protected $settingsNotPassedMessageTemplate = 'Settings are not passed. Trying to get from current index';
+
+    /**
+     * @var string
+     */
+    protected $mappingNotPassedMessageTemplate = 'Mapping are not passed. Trying to get from current index';
+
+    /**
+     * @var string
+     */
+    private $reindexingStartMessageTemplate = 'Reindexing started';
+
+    /**
+     * @var string
+     */
+    private $updatingStartMessageTemplate = 'Updating started';
+
+    /**
+     * @return null|string
+     */
+    protected function getCurrentIndex()
+    {
+        $index = $this->entity->getIndexByAlias($this->baseAliasName);
+        return $index;
+    }
+
+    /**
+     * @param bool $withSettings
+     * @return array
+     */
+    protected function getIndexParams($withSettings = false)
     {
         $params = [
-            'index' => $this->index,
+            'index' => $this->index
         ];
+        if ($withSettings) {
+            $settings = $this->getSource()->getIndexSettings();
+            if($settings) {
+                $this->log($this->settingsPassedMessageTemplate);
+            } else {
+                $settings = $this->getSettingsFromCurrentIndex();
+            }
+            $params['body']['settings'] = $settings;
+        }
         return $params;
+    }
+
+    protected function init()
+    {
+        $this->devLogChannel = config('search.index.elasticsearch.dev_log_channel');
+        $this->baseAliasName = $this->entity->getIndexWithPrefix($this->source->getIndexName());
+        $indexByAlias = $this->getCurrentIndex();
+        if ($indexByAlias) {
+            $this->index = $indexByAlias;
+        } else {
+            $this->index = $this->baseAliasName;
+        }
+
     }
 
     /**
      * Elasticsearch constructor.
      * @param SourceInterface $source
      * @param EntityInterface $entity
-     * @param TimerInterface|null $timer
      */
-    public function __construct(SourceInterface $source, EntityInterface $entity, TimerInterface $timer = null)
+    public function __construct(SourceInterface $source, EntityInterface $entity)
     {
-        parent::__construct($source, $entity, $timer);
-        $this->baseAliasName = $this->getSourceIndex();
-        try {
-            $this->index = $this->entity->getIndexByAlias($this->baseAliasName);
-        } catch (Exception $e) {
-            $this->index = $this->baseAliasName;
-        }
-    }
-
-    private function getSourceIndex()
-    {
-        $sourceIndex = config('search.index.elasticsearch.prefix') . $this->source->getIndexName();
-        return $sourceIndex;
+        parent::__construct($source, $entity);
     }
 
     public function createIndex()
     {
-        $this->getClient()->indices()->create($this->getIndexParams());
+        $params = $this->getIndexParams(true);
+        $this->getClient()->indices()->create($params);
+        $this->log(sprintf($this->indexCreatedMessageTemplate, $params['index']));
         $this->addAlias($this->baseAliasName);
+        $this->log(sprintf($this->aliasCreatedMessageTemplate, $this->baseAliasName));
     }
 
     function dropIndex()
@@ -113,51 +181,24 @@ class Elasticsearch extends Base
         $this->getClient()->indices()->delete($this->getIndexParams());
     }
 
+    /**
+     * @return int
+     * @throws ApiException
+     */
     public function indexAll()
     {
-        $this->timer->start($this->indexAllTimerLabel);
-        $arSource = $this->getSource()->getElementsForIndexing();
-        $params = ['body' => []];
-        foreach ($arSource as $index => $document) {
-            $this->timer->start($this->prepareBulkTimerLabel);
-            $i = $index + 1;
-            $arDocAttributes = [];
+        $this->setMapping();
+        $total = $this->indexAllElements();
+        return $total;
+    }
 
-            foreach ($document['attributes'] as $attributeCode => $attributeValue) {
-                $arDocAttributes[$attributeCode] = $attributeValue;
-            }
-            $params['body'][] = [
-                'index' => [
-                    '_index' => $this->index,
-                    '_id' => $document['id']
-                ]
-            ];
-            $params['body'][] = $arDocAttributes;
-            $this->timer->end($this->prepareBulkTimerLabel);
-
-            // Every 1000 documents stop and send the bulk request
-            if ($i % $this->bulkSize == 0) {
-                $this->timer->start($this->indexBulkTimerLabel);
-                $responses = $this->getClient()->bulk($params);
-                $this->timer->end($this->indexBulkTimerLabel);
-                // erase the old bulk request
-                $params = ['body' => []];
-                // unset the bulk response when you are done to save memory
-                unset($responses);
-            }
-        }
-        // Send the last batch if it exists
-        if (!empty($params['body'])) {
-            $this->timer->start($this->indexBulkTimerLabel);
-            $responses = $this->getClient()->bulk($params);
-            $this->timer->end($this->indexBulkTimerLabel);
-
-            // unset the bulk response when you are done to save memory
-            unset($responses);
-        }
-
-        $total = count($arSource);
-        $this->timer->end($this->indexAllTimerLabel);
+    /**
+     * @return int
+     * @throws ApiException
+     */
+    public function updateElements()
+    {
+        $total = $this->indexAllElements();
         return $total;
     }
 
@@ -184,7 +225,7 @@ class Elasticsearch extends Base
      */
     public function addAlias($aliasName, $index = null)
     {
-        if($index === null) {
+        if ($index === null) {
             $index = $this->index;
         }
         $params['body'] = [
@@ -209,22 +250,27 @@ class Elasticsearch extends Base
      */
     public function removeAlias($aliasName, $index = null)
     {
-        if($index === null) {
+        if ($index === null) {
             $index = $this->index;
         }
+        $alias = $this->entity->getAliasWithPrefix($aliasName);
         $params['body'] = [
             'actions' => [
                 [
                     'remove' => [
                         'index' => $index,
-                        'alias' => $this->entity->getAliasWithPrefix($aliasName)
+                        'alias' => $alias
                     ],
                 ]
             ]
         ];
-
-        $this->getClient()->indices()->updateAliases($params);
-        return true;
+        $aliases = $this->getClient()->indices()->getAliases();
+        if (array_key_exists($alias, $aliases[$index])) {
+            $this->getClient()->indices()->updateAliases($params);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -254,26 +300,44 @@ class Elasticsearch extends Base
         }
     }
 
+    /**
+     * @throws ApiException
+     */
     public function reindex()
     {
-        $currentIndex = $this->getIndex();
+        $this->init();
+        $this->indexFrom = $this->getIndex();
         $newIndex = $this->getNewIndex();
-        $this->log(sprintf($this->indexingStartMessageTemplate, $currentIndex, $newIndex));
+        $this->log($this->reindexingStartMessageTemplate);
+        $this->log(sprintf($this->indexingStartMessageTemplate, $this->indexFrom, $newIndex));
         $this->createAuxIndexForReindex($newIndex);
         $total = $this->indexAll();
-        $this->deleteCurrentIndex($currentIndex);
-        $this->log(sprintf($this->indexingFinishMessageTemplate, $currentIndex, $newIndex, $total));
-        $arIntervalsSum = $this->timer->getIntervalsSum();
-        foreach ($arIntervalsSum as $field => $value) {
-            $this->log($field . ': ' . $value);
-        }
+        $this->deleteCurrentIndex($this->indexFrom);
+        $this->log(sprintf($this->indexingFinishMessageTemplate, $this->indexFrom, $newIndex, $total));
+        $this->log(sprintf($this->indexingFinishMemoryTemplate, $this->memory->calculateUsedMemory()));
+    }
+
+    /**
+     * @throws ApiException
+     */
+    public function update()
+    {
+        $this->init();
+        $this->indexFrom = $this->getIndex();
+        $this->log($this->updatingStartMessageTemplate);
+        $this->log(sprintf($this->indexingStartMessageTemplate, $this->indexFrom, $this->indexFrom));
+        $total = $this->updateElements();;
+        $this->log(sprintf($this->indexingFinishMessageTemplate, $this->indexFrom, $this->indexFrom, $total));
+        $this->log(sprintf($this->indexingFinishMemoryTemplate, $this->memory->calculateUsedMemory()));
     }
 
     public function deleteIndex()
     {
-        if($this->indexExists($this->index)) {
+        if ($this->indexExists($this->index)) {
             $this->removeAlias($this->baseAliasName, $this->index);
+            $this->log(sprintf($this->aliasRemovedMessageTemplate, $this->baseAliasName));
             $this->dropIndex();
+            $this->log(sprintf($this->indexRemovedMessageTemplate, $this->index));
         }
     }
 
@@ -308,7 +372,7 @@ class Elasticsearch extends Base
      */
     public function getNewIndex()
     {
-        $indexByAlias = $this->entity->getIndexByAlias($this->baseAliasName);
+        $indexByAlias = $this->getCurrentIndex();
         if ($indexByAlias === null) {
             $indexByAlias = $this->baseAliasName;
         }
@@ -336,24 +400,13 @@ class Elasticsearch extends Base
         $this->deleteIndex();
     }
 
-    public function removeAll()
-    {
-        // TODO: Implement removeAll() method.
-    }
-
-    public function indexElement($id)
-    {
-        // TODO: Implement indexElement() method.
-    }
-
     /**
      * @param string $message
      * @param string $level
      */
-    protected function log($message, $level = 'info')
+    public function log($message, $level = 'info')
     {
         $this->getLogger('devLogChannel')->$level($message);
-        $this->displayResultMessages[] = $message;
     }
 
     /**
@@ -366,10 +419,111 @@ class Elasticsearch extends Base
     }
 
     /**
+     * @return int
+     * @throws ApiException
+     */
+    protected function indexAllElements(): int
+    {
+        $listener = new SourceListener(function ($rawItems) {
+            $this->log(sprintf($this->indexingBatchParsedMessageTemplate, count($rawItems)));
+            $items = $this->source->getElementsForIndexing($rawItems);
+            $params = ['body' => []];
+            foreach ($items as $index => $document) {
+                $i = $index + 1;
+                $arDocAttributes = [];
+                foreach ($document['attributes'] as $attributeCode => $attributeValue) {
+                    $arDocAttributes[$attributeCode] = $attributeValue;
+                }
+                $arDocAttributes['raw_data'] = $document['raw_data'];
+                $arDocAttributes['search_data'] = $document['search_data'];
+                $arDocAttributes['ts'] = $this->startTime;
+                $params['body'][] = [
+                    'index' => [
+                        '_index' => $this->index,
+                        '_id' => $document['id']
+                    ]
+                ];
+                $params['body'][] = $arDocAttributes;
+
+                // Every 1000 documents stop and send the bulk request
+                if ($i % $this->bulkSize == 0) {
+                    $responses = $this->getClient()->bulk($params);
+                    $this->log(sprintf($this->indexingBatchIndexedMessageTemplate, count($items)));
+                    // erase the old bulk request
+                    $params = ['body' => []];
+                    // unset the bulk response when you are done to save memory
+                    unset($responses);
+                }
+            }
+            // Send the last batch if it exists
+            if (!empty($params['body'])) {
+                $responses = $this->getClient()->bulk($params);
+                $this->log(sprintf($this->indexingBatchIndexedMessageTemplate, count($items)));
+                // unset the bulk response when you are done to save memory
+                unset($responses);
+            }
+        });
+        $listener->setBatchSize($this->bulkSize);
+        $stream = fopen($this->source->getDataLink(), 'r');
+        try {
+            $parser = new Parser($stream, $listener);
+            $parser->parse();
+            $total = $listener->getTotal();
+            fclose($stream);
+        } catch (Exception $e) {
+            fclose($stream);
+            throw new ApiException($e->getMessage(), Error::CODE_INTERNAL_SERVER_ERROR);
+        }
+        return $total;
+    }
+
+
+    public function setMapping()
+    {
+        $mapping = $this->getSource()->getMappingForIndexing();
+        if($mapping) {
+            $this->log($this->mappingPassedMessageTemplate);
+        } else {
+            $mapping = $this->getMappingFromCurrentIndex();
+        }
+        $params = [
+            'index' => $this->index,
+            'body' => [
+                '_source' => [
+                    'enabled' => true
+                ],
+                'properties' => $mapping
+            ]
+        ];
+        $response = $this->getClient()->indices()->putMapping($params);
+        $this->log(sprintf($this->indexMappingAppliedTemplate, json_encode($response), count($mapping)));
+    }
+
+    /**
      * @return array
      */
-    public function getDisplayResultMessages()
+    protected function getSettingsFromCurrentIndex(): array
     {
-        return $this->displayResultMessages;
+        $this->log($this->settingsNotPassedMessageTemplate);
+        $settings = [];
+        $index = $this->getCurrentIndex();
+        $settingsParams = ['index' => $index];
+        $response = $this->getClient()->indices()->getSettings($settingsParams);
+        $responseSettings = $response[$index]['settings']['index'];
+        $settings['analysis'] = $responseSettings['analysis'];
+        return $settings;
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function getMappingFromCurrentIndex()
+    {
+        $this->log($this->mappingNotPassedMessageTemplate);
+        $index = $this->indexFrom;
+        $mappingParams = ['index' => $index];
+        $responseMapping = $this->getClient()->indices()->getMapping($mappingParams);
+        $mapping = $responseMapping[$index]['mappings']['properties'];
+        return $mapping;
     }
 }

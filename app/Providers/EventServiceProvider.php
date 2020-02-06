@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Event;
+use App\Events\Search\NewFeedReindexEvent;
+use App\Events\Search\NewFeedUpdateEvent;
+use App\Listeners\Search\NewFeedReindexEventListener;
+use App\Listeners\Search\NewFeedUpdateEventListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -13,8 +16,11 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\SomeEvent' => [
-            'App\Listeners\EventListener',
+        NewFeedReindexEvent::class => [
+            NewFeedReindexEventListener::class,
+        ],
+        NewFeedUpdateEvent::class => [
+            NewFeedUpdateEventListener::class,
         ],
     ];
 

@@ -10,16 +10,20 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'PagesController@index');
+Route::get('/test', 'TestController@index');
+Route::get('/test/json', 'TestController@jsonPack');
+Route::get('/swagger/index.html', 'PagesController@swagger')->name('swagger_page');
 
 Route::group([
-    'namespace' => 'Search',
-    'prefix' => '/search',
+    'namespace' => '\App\Demo\Controllers',
 ], function () {
-    Route::get('/', 'IndexController@index')->name('search_home');
+    Route::group([
+        'prefix' => '/demo',
+    ], function () {
+        Route::get('/', 'IndexController@index')->name('demo_home');
+        Route::get('/catalog', 'CatalogController@index')->name('demo_catalog');
+        Route::get('/search', 'SearchController@index')->name('demo_search');
+        Route::get('/update', 'UpdateController@index')->name('demo_update');
+    });
 });
-
-Route::get('/swagger/index.html')->name('search_swagger');
-Route::get('/frontend/index.html')->name('search_frontend');

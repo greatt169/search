@@ -1,0 +1,139 @@
+[
+  {
+    "id": 1,
+    "singleAttributes": [
+      {
+        "code": "name",
+        "name": "\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435",
+        "description": null,
+        "img": null,
+        "additionalInfo": null,
+        "value": {
+          "code": null,
+          "description": null,
+          "img": null,
+          "additionalInfo": null,
+          "value": "\u0412\u043d\u0435\u0434\u043e\u0440\u043e\u0436\u043d\u0438\u043a BMW-X5"
+        }
+      },
+      {
+        "code": "type",
+        "name": "\u0422\u0438\u043f \u044d\u043b\u0435\u043c\u0435\u043d\u0442\u0430",
+        "description": null,
+        "img": null,
+        "additionalInfo": null,
+        "value": {
+          "code": null,
+          "description": null,
+          "img": null,
+          "additionalInfo": null,
+          "value": "element"
+        }
+      },
+      {
+        "code": "brand",
+        "name": "\u041c\u0430\u0440\u043a\u0430 \u043c\u0430\u0448\u0438\u043d\u044b",
+        "description": null,
+        "img": null,
+        "additionalInfo": null,
+        "value": {
+          "code": "bmw",
+          "description": null,
+          "img": null,
+          "additionalInfo": null,
+          "value": "BMV"
+        }
+      },
+      {
+        "code": "model",
+        "name": "\u041c\u043e\u0434\u0435\u043b\u044c \u043c\u0430\u0448\u0438\u043d\u044b",
+        "description": null,
+        "img": null,
+        "additionalInfo": null,
+        "value": {
+          "code": "x5",
+          "description": null,
+          "img": null,
+          "additionalInfo": null,
+          "value": "X5"
+        }
+      },
+      {
+        "code": "year",
+        "name": "\u0413\u043e\u0434 \u0432\u044b\u043f\u0443\u0441\u043a\u0430",
+        "description": null,
+        "img": null,
+        "additionalInfo": null,
+        "value": {
+          "code": null,
+          "description": null,
+          "img": null,
+          "additionalInfo": null,
+          "value": "2018"
+        }
+      },
+      {
+        "code": "price",
+        "name": "\u0426\u0435\u043d\u0430",
+        "description": null,
+        "img": null,
+        "additionalInfo": null,
+        "value": {
+          "code": null,
+          "description": null,
+          "img": null,
+          "additionalInfo": null,
+          "value": "5000000"
+        }
+      }
+    ],
+    "multipleAttributes": [
+      {
+        "code": "color",
+        "name": "\u0426\u0432\u0435\u0442",
+        "description": null,
+        "img": null,
+        "additionalInfo": null,
+        "values": [
+          {
+            "code": "red",
+            "description": null,
+            "img": null,
+            "additionalInfo": null,
+            "value": "\u041a\u0440\u0430\u0441\u043d\u044b\u0439"
+          },
+          {
+            "code": "blue",
+            "description": null,
+            "img": null,
+            "additionalInfo": null,
+            "value": "\u0413\u043e\u043b\u0443\u0431\u043e\u0439"
+          }
+        ]
+      },
+      {
+        "code": "insurance",
+        "name": "\u0421\u0442\u0440\u0430\u0445\u043e\u0432\u043a\u0430",
+        "description": null,
+        "img": null,
+        "additionalInfo": null,
+        "values": [
+          {
+            "code": "kasko",
+            "description": null,
+            "img": null,
+            "additionalInfo": null,
+            "value": "\u041a\u0410\u0421\u041a\u041e"
+          },
+          {
+            "code": "osago",
+            "description": null,
+            "img": null,
+            "additionalInfo": null,
+            "value": "\u041e\u0421\u0410\u0413\u041e"
+          }
+        ]
+      }
+    ]
+  }
+]

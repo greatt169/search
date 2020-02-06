@@ -2,6 +2,7 @@
 
 namespace App\Search\Index\Interfaces;
 
+use App\Exceptions\ApiException;
 use App\Search\Entity\Interfaces\EntityInterface;
 
 interface ManagerInterface
@@ -10,11 +11,24 @@ interface ManagerInterface
 
     public function dropIndex();
 
+    public function setMapping();
+
     public function indexAll();
 
-    public function removeAll();
+    public function __construct(SourceInterface $source, EntityInterface $entity);
 
-    public function indexElement($id);
+    /**
+     * @throws ApiException
+     */
+    public function reindex();
 
-    public function __construct(SourceInterface $source, EntityInterface $entity, TimerInterface $timer = null);
+    /**
+     * @throws ApiException
+     */
+    public function update();
+
+    /**
+     * @return SourceInterface
+     */
+    public function getSource();
 }

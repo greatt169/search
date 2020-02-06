@@ -64,6 +64,13 @@ return [
             'retry_after' => 90,
         ],
 
+        'search_redis' => [
+            'driver' => 'redis',
+            'connection' => 'default',
+            'queue' => 'search_reindex',
+            'retry_after' => 90,
+        ],
+
     ],
 
     /*
